@@ -5,9 +5,9 @@
     <!-- Resolver -->
   
     <View>
-      <Name>Indented.DnsResolver.Message</Name>
+      <Name>Indented.Net.Dns.Message</Name>
       <ViewSelectedBy>
-        <TypeName>Indented.DnsResolver.Message</TypeName>
+        <TypeName>Indented.Net.Dns.Message</TypeName>
       </ViewSelectedBy>
       <ListControl>
         <ListEntries>
@@ -48,9 +48,9 @@
     </View>
 
     <View>
-      <Name>Indented.DnsResolver.Message.CacheRecord</Name>
+      <Name>Indented.Net.Dns.Message.CacheRecord</Name>
       <ViewSelectedBy>
-        <TypeName>Indented.DnsResolver.Message.CacheRecord</TypeName>
+        <TypeName>Indented.Net.Dns.Message.CacheRecord</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
