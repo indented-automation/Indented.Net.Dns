@@ -164,7 +164,8 @@ namespace Indented.IO
 
         public IPAddress ReadIPAddress(bool IPv6)
         {
-            if (IPv6) {
+            if (IPv6)
+            {
                 return new IPAddress(ReadBytes(16));
             }
             return ReadIPAddress();
