@@ -2,176 +2,194 @@ using System;
 using System.IO;
 using System.Net;
 
-namespace Indented.IO
+namespace Indented
 {
-    ///<summary>
-    ///A binary reader capable of reading byte streams with consideration for Endian o
-    ///</summary>
-    public class EndianBinaryReader : BinaryReader
+    public class EndianBitConverter : BitConverter
     {
-        long marker = 0;
-
-        public EndianBinaryReader(Stream BaseStream) : base(BaseStream) { }
-
-        public long Marker
-        {
-            get { return marker; }
-        }
-
-        public long MarkerOffset
-        {
-            get { return BaseStream.Position - marker; }
-        }
-
-        public void SetMarker()
-        {
-            marker = BaseStream.Position;
-        }
-
-        public byte PeekByte()
-        {
-            Byte value = base.ReadByte();
-            base.BaseStream.Seek(-1, System.IO.SeekOrigin.Current);
-            return value;
-        }   
-
-        public short ReadInt16(bool IsBigEndian)
+        public static byte[] GetBytes(ushort value, bool IsBigEndian)
         {
             if (IsBigEndian)
             {
-                Byte[] array = ReadBytes(2);
-                return (short)(
-                    array[1] |
-                    (array[0] << 8) );
-            }
-            return ReadInt16();
-        }
+                byte[] bytes = GetBytes(value);
+                Array.Reverse(bytes);
 
-        public ushort ReadUInt16(bool IsBigEndian)
+                return bytes;
+            }
+            return GetBytes(value);
+        }
+    }
+
+    namespace IO
+    {
+        ///<summary>
+        ///A binary reader capable of reading byte streams with consideration for Endian o
+        ///</summary>
+        public class EndianBinaryReader : BinaryReader
         {
-            if (IsBigEndian)
+            long marker = 0;
+
+            public EndianBinaryReader(Stream BaseStream) : base(BaseStream) { }
+
+            public long Marker
             {
-                Byte[] array = ReadBytes(2);
-                return (ushort) (
-                    array[1] |
-                    (array[0] << 8) );
+                get { return marker; }
             }
-            return ReadUInt16();
-        }
 
-        public int ReadInt32(bool IsBigEndian)
-        {
-            if (IsBigEndian)
+            public long MarkerOffset
             {
-                Byte[] array = ReadBytes(4);
-                return (int) (
-                    array[3] |
-                    (array[2] << 8) |
-                    (array[1] << 16) |
-                    (array[0] << 24) );
+                get { return BaseStream.Position - marker; }
             }
-            return ReadInt32();
-        }
 
-        public uint ReadUInt32(bool IsBigEndian)
-        {
-            if (IsBigEndian)
+            public void SetMarker()
             {
-                Byte[] array = ReadBytes(4);
-                return (uint) (
-                    array[3] |
-                    (array[2] << 8) |
-                    (array[1] << 16) |
-                    (array[0] << 24) );
+                marker = BaseStream.Position;
             }
-            return ReadUInt32();
-        }
 
-        public ulong ReadUInt48()
-        {
-            Byte[] array = ReadBytes(6);
-            ulong lowOrder = (ulong) (
-                array[0] |
-                (array[1] << 8) |
-                (array[2] << 16) |
-                (array[3] << 24) );
-            ulong highOrder = (ulong) (
-                array[4] |
-                (array[5] << 40) );
-            return lowOrder | (highOrder << 32);
-        }
+            public byte PeekByte()
+            {
+                Byte value = base.ReadByte();
+                base.BaseStream.Seek(-1, System.IO.SeekOrigin.Current);
+                return value;
+            }   
 
-        public ulong ReadUInt48(bool IsBigEndian)
-        {
-            if (IsBigEndian)
+            public short ReadInt16(bool IsBigEndian)
+            {
+                if (IsBigEndian)
+                {
+                    Byte[] array = ReadBytes(2);
+                    return (short)(
+                        array[1] |
+                        (array[0] << 8) );
+                }
+                return ReadInt16();
+            }
+
+            public ushort ReadUInt16(bool IsBigEndian)
+            {
+                if (IsBigEndian)
+                {
+                    Byte[] array = ReadBytes(2);
+                    return (ushort) (
+                        array[1] |
+                        (array[0] << 8) );
+                }
+                return ReadUInt16();
+            }
+
+            public int ReadInt32(bool IsBigEndian)
+            {
+                if (IsBigEndian)
+                {
+                    Byte[] array = ReadBytes(4);
+                    return (int) (
+                        array[3] |
+                        (array[2] << 8) |
+                        (array[1] << 16) |
+                        (array[0] << 24) );
+                }
+                return ReadInt32();
+            }
+
+            public uint ReadUInt32(bool IsBigEndian)
+            {
+                if (IsBigEndian)
+                {
+                    Byte[] array = ReadBytes(4);
+                    return (uint) (
+                        array[3] |
+                        (array[2] << 8) |
+                        (array[1] << 16) |
+                        (array[0] << 24) );
+                }
+                return ReadUInt32();
+            }
+
+            public ulong ReadUInt48()
             {
                 Byte[] array = ReadBytes(6);
                 ulong lowOrder = (ulong) (
-                    array[5] |
-                    (array[4] << 8) |
-                    (array[3] << 16) |
-                    (array[2] << 24) );
+                    array[0] |
+                    (array[1] << 8) |
+                    (array[2] << 16) |
+                    (array[3] << 24) );
                 ulong highOrder = (ulong) (
-                    array[1] |
-                    (array[0] << 8) );
+                    array[4] |
+                    (array[5] << 40) );
                 return lowOrder | (highOrder << 32);
             }
-            return ReadUInt48();
-        }
 
-        public long ReadInt64(bool IsBigEndian)
-        {
-            if (IsBigEndian)
+            public ulong ReadUInt48(bool IsBigEndian)
             {
-
-                Byte[] array = ReadBytes(8);
-                long lowOrder = (long) (
-                    array[7] |
-                    (array[6] << 8) |
-                    (array[5] << 16) |
-                    (array[4] << 24) );
-                long highOrder = (long) (
-                    array[3] |
-                    (array[2] << 8) |
-                    (array[1] << 16) |
-                    (array[0] << 24) );
-                return lowOrder | (highOrder << 32);
+                if (IsBigEndian)
+                {
+                    Byte[] array = ReadBytes(6);
+                    ulong lowOrder = (ulong) (
+                        array[5] |
+                        (array[4] << 8) |
+                        (array[3] << 16) |
+                        (array[2] << 24) );
+                    ulong highOrder = (ulong) (
+                        array[1] |
+                        (array[0] << 8) );
+                    return lowOrder | (highOrder << 32);
+                }
+                return ReadUInt48();
             }
-            return ReadInt64();
-        }
 
-        public ulong ReadUInt64(bool IsBigEndian)
-        {
-            if (IsBigEndian)
+            public long ReadInt64(bool IsBigEndian)
             {
-                Byte[] array = ReadBytes(8);
-                ulong lowOrder = (ulong) (
-                    array[7] |
-                    (array[6] << 8) |
-                    (array[5] << 16) |
-                    (array[4] << 24) );
-                ulong highOrder = (ulong) (
-                    array[3] |
-                    (array[2] << 8) |
-                    (array[1] << 16) |
-                    (array[0] << 24) );
-                return lowOrder | (highOrder << 32);
+                if (IsBigEndian)
+                {
+
+                    Byte[] array = ReadBytes(8);
+                    long lowOrder = (long) (
+                        array[7] |
+                        (array[6] << 8) |
+                        (array[5] << 16) |
+                        (array[4] << 24) );
+                    long highOrder = (long) (
+                        array[3] |
+                        (array[2] << 8) |
+                        (array[1] << 16) |
+                        (array[0] << 24) );
+                    return lowOrder | (highOrder << 32);
+                }
+                return ReadInt64();
             }
-            return ReadUInt64();
-        }
 
-        public IPAddress ReadIPAddress()
-        {
-            return new IPAddress(ReadBytes(4));
-        }
-
-        public IPAddress ReadIPAddress(bool IPv6)
-        {
-            if (IPv6)
+            public ulong ReadUInt64(bool IsBigEndian)
             {
-                return new IPAddress(ReadBytes(16));
+                if (IsBigEndian)
+                {
+                    Byte[] array = ReadBytes(8);
+                    ulong lowOrder = (ulong) (
+                        array[7] |
+                        (array[6] << 8) |
+                        (array[5] << 16) |
+                        (array[4] << 24) );
+                    ulong highOrder = (ulong) (
+                        array[3] |
+                        (array[2] << 8) |
+                        (array[1] << 16) |
+                        (array[0] << 24) );
+                    return lowOrder | (highOrder << 32);
+                }
+                return ReadUInt64();
             }
-            return ReadIPAddress();
+
+            public IPAddress ReadIPAddress()
+            {
+                return new IPAddress(ReadBytes(4));
+            }
+
+            public IPAddress ReadIPAddress(bool IPv6)
+            {
+                if (IPv6)
+                {
+                    return new IPAddress(ReadBytes(16));
+                }
+                return ReadIPAddress();
+            }
         }
     }
 }

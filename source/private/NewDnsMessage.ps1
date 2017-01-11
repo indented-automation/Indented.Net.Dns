@@ -20,12 +20,15 @@ function NewDnsMessage {
     #    /                                               /
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
+    # .OUTPUTS
+    #   Indented.Net.Dns.Message
     # .NOTES
     #   Author: Chris Dent
     #
     #   Change log:
     #     11/01/2017 - Chris Dent - Modernisation pass.
 
+    [OutputType([System.Management.Automation.PSObject])]
     param(
         [String]$Name = "",
 
