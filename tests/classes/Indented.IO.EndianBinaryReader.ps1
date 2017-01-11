@@ -2,8 +2,6 @@ if (-not ('Indented.IO.EndianBinaryReader' -as [Type])) {
     Add-Type -TypeDefinition (Get-Content "$psscriptroot\..\source\classes\Indented.IO.BinaryReader.cs" -Raw)
 }
 
-add-type -TypeDefinition (gc C:\Development\Indented.Net.Dns\source\classes\Indented.IO.BinaryReader.cs -raw)
-
 Describe Indented.IO.EndianBinaryReader {
     function New-BinaryReader {
         param(

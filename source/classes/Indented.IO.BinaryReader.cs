@@ -4,6 +4,9 @@ using System.Net;
 
 namespace Indented.IO
 {
+    ///<summary>
+    ///A binary reader capable of reading byte streams with consideration for Endian o
+    ///</summary>
     public class EndianBinaryReader : BinaryReader
     {
         long marker = 0;
