@@ -1,3 +1,6 @@
+using namespace Indented.Net.Dns
+using namespace System.Net.Sockets
+
 function NewDnsMessage {
     # .SYNOPSIS
     #   Create a new DNS message object.
@@ -28,14 +31,18 @@ function NewDnsMessage {
     #   Change log:
     #     11/01/2017 - Chris Dent - Modernisation pass.
 
-    [OutputType([System.Management.Automation.PSObject])]
+    [OutputType([PSObject])]
     param(
+        # The name passed into the question.
         [String]$Name = "",
 
-        [Indented.Net.Dns.RecordType]$RecordType = [Indented.Net.Dns.RecordType]::ANY,
+        # The record type passed into the question.
+        [RecordType]$RecordType = 'ANY',
 
-        [Indented.Net.Dns.RecordClass]$RecordClass = [Indented.Net.Dns.RecordClass]::IN,
+        # The record class passed into the question.
+        [RecordClass]$RecordClass = 'IN',
 
+        # An optional serial number, used for IXFR queries.
         [UInt32]$SerialNumber
     )
 
@@ -50,7 +57,7 @@ function NewDnsMessage {
         TimeTaken          = 0
     } | Add-Member -TypeName 'Indented.Net.Dns.Message' -PassThru
 
-    if ($SerialNumber -and $RecordType -eq [Indented.Net.Dns.RecordType]::IXFR) {
+    if ($SerialNumber -and $RecordType -eq [RecordType]::IXFR) {
         $dnsMessage.Header.NSCount = [UInt16]1
         $dnsMessage.Authority = NewDnsSOARecord -Name $Name -SerialNumber $SerialNumber
     }
@@ -88,13 +95,13 @@ function NewDnsMessage {
 
     # Method: SetAcceptDnsSec
     $dnsMessage | Add-Member SetAcceptDnsSec -MemberType ScriptMethod -Value {
-        $this.Header.Flags = [Indented.Net.Dns.Flags]([UInt16]$this.Header.Flags -bxor [UInt16][Indented.Net.Dns.Flags]::AD)
+        $this.Header.Flags = [Flags]([UInt16]$this.Header.Flags -bxor [UInt16][Flags]::AD)
     }
 
     # Method: ToByte
     $dnsMessage | Add-Member ToByte -MemberType ScriptMethod -Value {
         param(
-            [System.Net.Sockets.ProtocolType]$ProtocolType = [System.Net.Sockets.ProtocolType]::Udp
+            [ProtocolType]$ProtocolType = 'Udp'
         )
 
         $bytes = New-Object System.Collections.Generic.List[Byte]
@@ -113,7 +120,7 @@ function NewDnsMessage {
             }
         }
 
-        if ($ProtocolType -eq [System.Net.Sockets.ProtocolType]::Tcp) {
+        if ($ProtocolType -eq [ProtocolType]::Tcp) {
             # A value must be added to denote payload length when using a stream-based protocol.
             $length = [BitConverter]::GetBytes([UInt16]$bytes.Count)
             [Array]::Reverse($length)

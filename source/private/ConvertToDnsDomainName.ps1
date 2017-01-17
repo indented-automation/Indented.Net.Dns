@@ -1,3 +1,6 @@
+using namespace Indented.IO
+using namespace Indented.Net.Dns
+
 function ConvertToDnsDomainName {
     # .SYNOPSIS
     #   Converts a DNS domain name from a byte stream to a string.
@@ -11,7 +14,7 @@ function ConvertToDnsDomainName {
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
     # .INPUTS
-    #   Indented.IO.BinaryReader
+    #   Indented.IO.EndianBinaryReader
     # .OUTPUTS
     #   System.String
     # .LINK
@@ -22,11 +25,11 @@ function ConvertToDnsDomainName {
     #   Change log:
     #     11/01/2017 - Chris Dent - Modernisation pass.
 
-    [OutputType([System.String])]
+    [OutputType([String])]
     param(
         # A network response stream.
         [Parameter(Mandatory = $true)]
-        [Indented.IO.EndianBinaryReader]$BinaryReader
+        [EndianBinaryReader]$BinaryReader
     )
 
     $name = New-Object System.Text.StringBuilder
@@ -37,14 +40,14 @@ function ConvertToDnsDomainName {
         # The length or compression reference
         $length = $BinaryReader.ReadByte()
 
-        if (($length -band [Indented.Net.Dns.MessageCompression]::Enabled) -eq [Indented.Net.Dns.MessageCompression]::Enabled) {
+        if (($length -band [MessageCompression]::Enabled) -eq [MessageCompression]::Enabled) {
             # Record the current position as the start of the compression operation.
             # Reader will be returned here after this operation is complete.
             if ($compressionStart -eq 0) {
                 $compressionStart = $BinaryReader.BaseStream.Position
             }
             # Remove the compression flag bits to calculate the offset value (relative to the start of the message)
-            [UInt16]$offset = ([UInt16]($length -bxor [Indented.Net.Dns.MessageCompression]::Enabled) -shl 8) -bor $BinaryReader.ReadByte()
+            [UInt16]$offset = ([UInt16]($length -bxor [MessageCompression]::Enabled) -shl 8) -bor $BinaryReader.ReadByte()
             # Move to the offset
             $null = $BinaryReader.BaseStream.Seek($offset, 'Begin')
         } else {

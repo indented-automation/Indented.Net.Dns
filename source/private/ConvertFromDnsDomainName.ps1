@@ -1,3 +1,5 @@
+using namespace System.Text
+
 function ConvertFromDnsDomainName {
     # .SYNOPSIS
     #   Converts a DNS domain name from a string to a byte array.
@@ -20,8 +22,6 @@ function ConvertFromDnsDomainName {
     #    is treated as binary information, and can be up to 256 characters in
     #    length (including the length octet)."
     #
-    # .PARAMETER Name
-    #   The name to convert to a byte array.
     # .INPUTS
     #   System.String
     # .OUTPUTS
@@ -35,8 +35,9 @@ function ConvertFromDnsDomainName {
     #   Change log:
     #     11/01/2017 - Chris Dent - Modernisation pass.
 
-    [OutputType([System.Byte[]])]
+    [OutputType([Byte[]])]
     param(
+        # The name to convert to a byte array.
         [String]$Name
     )
 
@@ -47,7 +48,7 @@ function ConvertFromDnsDomainName {
     if ($Name) {
         foreach ($label in $Name.Split('.')) {
             $bytes.Add($label.Length)
-            $bytes.AddRange([System.Text.Encoding]::ASCII.GetBytes($label))
+            $bytes.AddRange([Encoding]::ASCII.GetBytes($label))
         }
     }
     # Add a zero length root label

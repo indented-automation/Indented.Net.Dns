@@ -1,3 +1,6 @@
+using namespace Indented
+using namespace Indented.Net.Dns
+
 function NewDnsMessageHeader {
     # .SYNOPSIS
     #   Creates a new DNS message header.
@@ -21,42 +24,42 @@ function NewDnsMessageHeader {
     # .INPUTS
     #   None
     # .OUTPUTS
-    #   Indented.Net.Dns.MessageHeader
+    #   Indented.Net.Dns.Header
     # .NOTES
     #   Author: Chris Dent
     #
     #   Change log:
     #     11/01/2017 - Chris Dent - Modernisation pass.
 
-    [OutputType([System.Management.Automation.PSObject])]
+    [OutputType([PSObject])]
     param( )
 
     $dnsMessageHeader = [PSCustomObject]@{
         ID      = [UInt16](Get-Random -Maximum ([Int32][UInt16]::MaxValue))
-        QR      = [Indented.Net.Dns.QR]::Query
-        OpCode  = [Indented.Net.Dns.OpCode]::Query
-        Flags   = [Indented.Net.Dns.Flags]::RD
-        RCode   = [Indented.Net.Dns.RCode]::NoError
+        QR      = [QR]::Query
+        OpCode  = [OpCode]::Query
+        Flags   = [Flags]::RD
+        RCode   = [RCode]::NoError
         QDCount = [UInt16]1
         ANCount = [UInt16]0
         NSCount = [UInt16]0
         ARCount = [UInt16]0
-    } | Add-Member -TypeName 'Indented.Net.Dns.Message.Header' -PassThru
+    } | Add-Member -TypeName 'Indented.Net.Dns.Header' -PassThru
 
     # Method: ToByte
     $dnsMessageHeader | Add-Member ToByte -MemberType ScriptMethod -Value {
         $bytes = New-Object System.Collections.Generic.List[Byte]
 
-        $bytes.AddRange([Indented.EndianBitConverter]::GetBytes($this.ID, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes($this.ID, $true))
 
         # The UInt16 value which comprises QR, OpCode, Flags (including Z) and RCode.
         $flags = [UInt16]([UInt16]$this.QR -bor [UInt16]$this.OpCode -bor [UInt16]$this.Flags -bor [UInt16]$this.RCode)
-        $bytes.AddRange([Indented.EndianBitConverter]::GetBytes($flags, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes($flags, $true))
 
-        $bytes.AddRange([Indented.EndianBitConverter]::GetBytes($this.QDCount, $true))
-        $bytes.AddRange([Indented.EndianBitConverter]::GetBytes($this.ANCount, $true))
-        $bytes.AddRange([Indented.EndianBitConverter]::GetBytes($this.NSCount, $true))
-        $bytes.AddRange([Indented.EndianBitConverter]::GetBytes($this.ARCount, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes($this.QDCount, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes($this.ANCount, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes($this.NSCount, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes($this.ARCount, $true))
 
         return ,$bytes.ToArray()
     }

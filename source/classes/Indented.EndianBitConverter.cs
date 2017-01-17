@@ -15,5 +15,17 @@ namespace Indented
             }
             return BitConverter.GetBytes(value);
         }
+
+        public static byte[] GetBytes(uint value, bool IsBigEndian)
+        {
+            if (IsBigEndian)
+            {
+                byte[] bytes = BitConverter.GetBytes(value);
+                Array.Reverse(bytes);
+
+                return bytes
+            }
+            return BitConverter.GetBytes(value);
+        }
     }
 }
