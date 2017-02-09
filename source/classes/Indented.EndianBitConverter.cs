@@ -27,5 +27,10 @@ namespace Indented
             }
             return BitConverter.GetBytes(value);
         }
+
+        public static string ToString(byte[] bytes)
+        {
+            return BitConverter.ToString(bytes).Replace("-", "")
+        }
     }
 }
