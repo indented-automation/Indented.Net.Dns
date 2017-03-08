@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace Indented
 {
@@ -23,14 +24,23 @@ namespace Indented
                 byte[] bytes = BitConverter.GetBytes(value);
                 Array.Reverse(bytes);
 
-                return bytes
+                return bytes;
             }
             return BitConverter.GetBytes(value);
         }
 
+        public static string ToBinary(byte[] bytes)
+        {
+            StringBuilder binaryString = new StringBuilder();
+            foreach (Byte byte in bytes) {
+                binaryString.Append(Convert.ToString(byte, 2).PadLeft(8, "0"))
+            }
+            return binaryString.ToString();
+        }
+
         public static string ToString(byte[] bytes)
         {
-            return BitConverter.ToString(bytes).Replace("-", "")
+            return BitConverter.ToString(bytes).Replace("-", "");
         }
     }
 }
