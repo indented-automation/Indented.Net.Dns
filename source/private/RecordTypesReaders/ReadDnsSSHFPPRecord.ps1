@@ -1,63 +1,48 @@
+using namespace Indented
+using namespace Indented.IO
+using namespace Indented.Net.Dns
+
 function ReadDnsSSHFPRecord {
-  # .SYNOPSIS
-  #   Reads properties for an SSHFP record from a byte stream.
-  # .DESCRIPTION
-  #   Internal use only.
-  #
-  #                                    1  1  1  1  1  1
-  #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |       ALGORITHM       |        FPTYPE         |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                  FINGERPRINT                  /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #
-  # .PARAMETER BinaryReader
-  #   A binary reader created by using New-BinaryReader containing a byte array representing a DNS resource record.
-  # .PARAMETER ResourceRecord
-  #   An Indented.DnsResolver.Message.ResourceRecord object created by ReadDnsResourceRecord.
-  # .INPUTS
-  #   System.IO.BinaryReader
-  #
-  #   The BinaryReader object must be created using New-BinaryReader 
-  # .OUTPUTS
-  #   Indented.DnsResolver.Message.ResourceRecord.SSHFP
-  # .LINK
-  #   http://www.ietf.org/rfc/rfc4255.txt
-  
-  [CmdLetBinding()]
-  param(
-    [Parameter(Mandatory = $true)]
-    [IO.BinaryReader]$BinaryReader,
-    
-    [Parameter(Mandatory = $true)]
-    [ValidateScript( { $_.PsObject.TypeNames -contains 'Indented.DnsResolver.Message.ResourceRecord' } )]
-    $ResourceRecord
-  )
+    # .SYNOPSIS
+    #   SSHFP record parser.
+    # .DESCRIPTION
+    #                                    1  1  1  1  1  1
+    #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |       ALGORITHM       |        FPTYPE         |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                  FINGERPRINT                  /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #
+    # .LINK
+    #   http://www.ietf.org/rfc/rfc4255.txt
+    # .NOTES
+    #   Author: Chris Dent
+    #
+    #   Change log:
+    #     09/03/2017 - Chris Dent - Modernisation pass.
 
-  $ResourceRecord.PsObject.TypeNames.Add("Indented.DnsResolver.Message.ResourceRecord.SSHFP")
+    [OutputType([Void])]
+    param(
+        [EndianBinaryReader]$BinaryReader,
 
-  # Property: Algorithm
-  $ResourceRecord | Add-Member Algorithm -MemberType NoteProperty -Value ([Indented.DnsResolver.SSHAlgorithm]$BinaryReader.ReadByte())
-  # Property: FPType
-  $ResourceRecord | Add-Member FPType -MemberType NoteProperty -Value ([Indented.DnsResolver.SSHFPType]$BinaryReader.ReadByte())
-  # Property: Fingerprint
-  $Bytes = $BinaryReader.ReadBytes($ResourceRecord.RecordDataLength - 2)
-  $HexString = ConvertTo-String $Bytes -Hexadecimal
-  $ResourceRecord | Add-Member Fingerprint -MemberType NoteProperty -Value $HexString
+        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
+        $ResourceRecord
+    )
 
-  # Property: RecordData
-  $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
-    [String]::Format("{0} {1} {2}",
-      ([Byte]$this.Algorithm).ToString(),
-      ([Byte]$this.FPType).ToString(),
-      $this.Fingerprint)
-  }
-  
-  return $ResourceRecord
+    # Property: Algorithm
+    $ResourceRecord | Add-Member Algorithm ([SSHAlgorithm]$BinaryReader.ReadByte())
+    # Property: FPType
+    $ResourceRecord | Add-Member FPType ([SSHFPType]$BinaryReader.ReadByte())
+    # Property: Fingerprint
+    $bytes = $BinaryReader.ReadBytes($ResourceRecord.RecordDataLength - 2)
+    $ResourceRecord | Add-Member Fingerprint ([EndianBitConverter]::ToString(,$bytes))
+
+    # Property: RecordData
+    $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
+        '{0} {1} {2}' -f [Byte]$this.Algorithm,
+                         [Byte]$this.FPType,
+                         $this.Fingerprint
+    }
 }
-
-
-
-

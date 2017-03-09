@@ -1,111 +1,97 @@
+using namespace Indented.IO
+using namespace Indented.Net.Dns
+
 function ReadDnsSIGRecord {
-  # .SYNOPSIS
-  #   Reads properties for an SIG record from a byte stream.
-  # .DESCRIPTION
-  #   Internal use only.
-  #
-  #                                    1  1  1  1  1  1
-  #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                 TYPE COVERED                  |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |       ALGORITHM       |         LABELS        |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                 ORIGINAL TTL                  |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |             SIGNATURE EXPIRATION              |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |              SIGNATURE INCEPTION              |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                    KEY TAG                    |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                 SIGNER'S NAME                 /
-  #    /                                               /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                   SIGNATURE                   /
-  #    /                                               /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #
-  # .PARAMETER BinaryReader
-  #   A binary reader created by using New-BinaryReader containing a byte array representing a DNS resource record.
-  # .PARAMETER ResourceRecord
-  #   An Indented.DnsResolver.Message.ResourceRecord object created by ReadDnsResourceRecord.
-  # .INPUTS
-  #   System.IO.BinaryReader
-  #
-  #   The BinaryReader object must be created using New-BinaryReader 
-  # .OUTPUTS
-  #   Indented.DnsResolverDns.Message.ResourceRecord.SIG
-  # .LINK
-  #   http://www.ietf.org/rfc/rfc2535.txt
-  #   http://www.ietf.org/rfc/rfc2931.txt
-  
-  [CmdLetBinding()]
-  param(
-    [Parameter(Mandatory = $true)]
-    [IO.BinaryReader]$BinaryReader,
-    
-    [Parameter(Mandatory = $true)]
-    [ValidateScript( { $_.PsObject.TypeNames -contains 'Indented.DnsResolver.Message.ResourceRecord' } )]
-    $ResourceRecord
-  )
+    # .SYNOPSIS
+    #   SIG record parser.
+    # .DESCRIPTION
+    #                                    1  1  1  1  1  1
+    #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                 TYPE COVERED                  |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |       ALGORITHM       |         LABELS        |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                 ORIGINAL TTL                  |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |             SIGNATURE EXPIRATION              |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |              SIGNATURE INCEPTION              |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                    KEY TAG                    |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                 SIGNER'S NAME                 /
+    #    /                                               /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                   SIGNATURE                   /
+    #    /                                               /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #
+    # .LINK
+    #   http://www.ietf.org/rfc/rfc2535.txt
+    #   http://www.ietf.org/rfc/rfc2931.txt
+    # .NOTES
+    #   Author: Chris Dent
+    #
+    #   Change log:
+    #     09/03/2017 - Chris Dent - Modernisation pass.
 
-  $ResourceRecord.PsObject.TypeNames.Add("Indented.DnsResolver.Message.ResourceRecord.SIG")
+    [OutputType([Void])]
+    param(
+        [EndianBinaryReader]$BinaryReader,
 
-  # Property: TypeCovered
-  $TypeCovered = $BinaryReader.ReadBEUInt16()
-  if ([Enum]::IsDefined([Indented.DnsResolver.RecordType], $TypeCovered)) {
-    $TypeCovered = [Indented.DnsResolver.RecordType]$TypeCovered
-  } else {
-    $TypeCovered = "UNKNOWN ($TypeCovered)"
-  }
-  $ResourceRecord | Add-Member TypeCovered -MemberType NoteProperty -Value $TypeCovered
-  # Property: Algorithm
-  $ResourceRecord | Add-Member Algorithm -MemberType NoteProperty -Value ([Indented.DnsResolver.EncryptionAlgorithm]$BinaryReader.ReadByte())
-  # Property: Labels
-  $ResourceRecord | Add-Member Labels -MemberType NoteProperty -Value $BinaryReader.ReadByte()
-  # Property: OriginalTTL
-  $ResourceRecord | Add-Member OriginalTTL -MemberType NoteProperty -Value $BinaryReader.ReadBEUInt32()
-  # Property: SignatureExpiration
-  $ResourceRecord | Add-Member SignatureExpiration -MemberType NoteProperty -Value ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadBEUInt32()))
-  # Property: SignatureInception
-  $ResourceRecord | Add-Member SignatureInception -MemberType NoteProperty -Value ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadBEUInt32()))
-  # Property: KeyTag
-  $ResourceRecord | Add-Member KeyTag -MemberType NoteProperty -Value $BinaryReader.ReadBEUInt16()
-  # Property: SignersName
-  $ResourceRecord | Add-Member SignersName -MemberType NoteProperty -Value (ConvertToDnsDomainName $BinaryReader)
-  # Property: Signature
-  $Bytes = $BinaryReader.ReadBytes($ResourceRecord.RecordDataLength - $BinaryReader.BytesFromMarker)
-  $Base64String = ConvertTo-String $Bytes -Base64
-  $ResourceRecord | Add-Member Signature -MemberType NoteProperty -Value $Base64String
+        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
+        $ResourceRecord
+    )
 
-  # Property: RecordData
-  $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
-    [String]::Format("{0} {1} {2} ( ; type-cov={0}, alg={1}, labels={2}`n" +
-                     "    {3} ; Signature expiration`n" +
-                     "    {4} ; Signature inception`n" +
-                     "    {5} ; Key identifier`n" +
-                     "    {6} ; Signer`n" +
-                     "    {7} ; Signature`n" +
-                     ")",
-      $this.TypeCovered,
-      (([Byte]$this.Algorithm).ToString()),
-      ([Byte]$this.Labels.ToString()),
-      $this.SignatureExpiration,
-      $this.SignatureInception,
-      $this.KeyTag,
-      $this.SignersName,
-      $this.Signature)
-  }
-  
-  return $ResourceRecord
+    # Property: TypeCovered
+    $typeCovered = $BinaryReader.ReadUInt16($true)
+    if ([Enum]::IsDefined([RecordType], $TypeCovered)) {
+        $typeCovered = [RecordType]$TypeCovered
+    } else {
+        $typeCovered = 'UNKNOWN ({0})' -f $TypeCovered
+    }
+    $ResourceRecord | Add-Member TypeCovered $typeCovered
+    # Property: Algorithm
+    $ResourceRecord | Add-Member Algorithm ([EncryptionAlgorithm]$BinaryReader.ReadByte())
+    # Property: Labels
+    $ResourceRecord | Add-Member Labels $BinaryReader.ReadByte()
+    # Property: OriginalTTL
+    $ResourceRecord | Add-Member OriginalTTL $BinaryReader.ReadUInt32($true)
+    # Property: SignatureExpiration
+    $ResourceRecord | Add-Member SignatureExpiration ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadUInt32($true)))
+    # Property: SignatureInception
+    $ResourceRecord | Add-Member SignatureInception ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadUInt32($true)))
+    # Property: KeyTags
+    $ResourceRecord | Add-Member KeyTag $BinaryReader.ReadUInt16($true)
+    # Property: SignersName
+    $length = 0
+    $ResourceRecord | Add-Member SignersName (ConvertToDnsDomainName $BinaryReader -BytesRead ([Ref]$length))
+    # Property: Signature
+    $bytes = $BinaryReader.ReadBytes($ResourceRecord.RecordDataLength - 18 - $length)
+    $ResourceRecord | Add-Member Signature ([Convert]::ToBase64String($bytes))
+
+    # Property: RecordData
+    $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
+        $string = '{0} {1} {2} ( ; type-cov={0}, alg={1}, labels={2}',
+                  '    {3} ; Signature expiration',
+                  '    {4} ; Signature inception',
+                  '    {5} ; Key identifier',
+                  '    {6} ; Signer',
+                  '    {7} ; Signature',
+                  ')' -join "`n"
+        $string -f $this.TypeCovered,
+                   [Byte]$this.Algorithm,
+                   [Byte]$this.Labels,
+                   $this.SignatureExpiration,
+                   $this.SignatureInception,
+                   $this.KeyTag,
+                   $this.SignersName,
+                   $this.Signature
+    }
 }
-
-
-
-

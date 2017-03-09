@@ -1,52 +1,37 @@
+using namespace Indented.IO
+
 function ReadDnsPTRRecord {
-  # .SYNOPSIS
-  #   Reads properties for an PTR record from a byte stream.
-  # .DESCRIPTION
-  #   Internal use only.
-  #
-  #                                    1  1  1  1  1  1
-  #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                   PTRDNAME                    /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #
-  # .PARAMETER BinaryReader
-  #   A binary reader created by using New-BinaryReader containing a byte array representing a DNS resource record.
-  # .PARAMETER ResourceRecord
-  #   An Indented.DnsResolver.Message.ResourceRecord object created by ReadDnsResourceRecord.
-  # .INPUTS
-  #   System.IO.BinaryReader
-  #
-  #   The BinaryReader object must be created using New-BinaryReader 
-  # .OUTPUTS
-  #   Indented.DnsResolver.Message.ResourceRecord.PTR
-  # .LINK
-  #   http://www.ietf.org/rfc/rfc1035.txt
-  
-  [CmdLetBinding()]
-  param(
-    [Parameter(Mandatory = $true)]
-    [IO.BinaryReader]$BinaryReader,
+    # .SYNOPSIS
+    #   PTR record parser.
+    # .DESCRIPTION
+    #                                    1  1  1  1  1  1
+    #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                   PTRDNAME                    /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #
+    # .LINK
+    #   http://www.ietf.org/rfc/rfc1035.txt
+    # .NOTES
+    #   Author: Chris Dent
+    #
+    #   Change log:
+    #     09/03/2017 - Chris Dent - Modernisation pass.
     
-    [Parameter(Mandatory = $true)]
-    [ValidateScript( { $_.PsObject.TypeNames -contains 'Indented.DnsResolver.Message.ResourceRecord' } )]
-    $ResourceRecord
-  )
+    [OutputType([Void])]
+    param(
+        [EndianBinaryReader]$BinaryReader,
 
-  $ResourceRecord.PsObject.TypeNames.Add("Indented.DnsResolver.Message.ResourceRecord.PTR")
+        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
+        $ResourceRecord
+    )
 
-  # Property: Hostname
-  $ResourceRecord | Add-Member Hostname -MemberType NoteProperty -Value (ConvertToDnsDomainName $BinaryReader)
+    # Property: Hostname
+    $ResourceRecord | Add-Member Hostname (ConvertToDnsDomainName $BinaryReader)
 
-  # Property: RecordData
-  $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
-    $this.Hostname
-  }
-  
-  return $ResourceRecord
+    # Property: RecordData
+    $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
+        $this.Hostname
+    }
 }
-
-
-
-

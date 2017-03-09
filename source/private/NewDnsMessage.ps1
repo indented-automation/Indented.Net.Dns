@@ -95,7 +95,7 @@ function NewDnsMessage {
 
     # Method: SetAcceptDnsSec
     $dnsMessage | Add-Member SetAcceptDnsSec -MemberType ScriptMethod -Value {
-        $this.Header.Flags = [Flags]([UInt16]$this.Header.Flags -bxor [UInt16][Flags]::AD)
+        $this.Header.Flags = [HeaderFlags]([UInt16]$this.Header.Flags -bxor [UInt16][HeaderFlags]::AD)
     }
 
     # Method: ToByte

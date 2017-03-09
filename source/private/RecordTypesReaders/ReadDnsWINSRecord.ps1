@@ -1,83 +1,70 @@
+using namespace Indented.IO
+using namespace Indented.Net.Dns
+using namespace System.Collections.Generic
+
 function ReadDnsWINSRecord {
-  # .SYNOPSIS
-  #   Reads properties for an WINS record from a byte stream.
-  # .DESCRIPTION
-  #   Internal use only.
-  #
-  #                                    1  1  1  1  1  1
-  #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                  LOCAL FLAG                   |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                LOOKUP TIMEOUT                 |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                 CACHE TIMEOUT                 |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |               NUMBER OF SERVERS               |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                SERVER IP LIST                 /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+  
-  #
-  # .PARAMETER BinaryReader
-  #   A binary reader created by using New-BinaryReader containing a byte array representing a DNS resource record.
-  # .PARAMETER ResourceRecord
-  #   An Indented.DnsResolver.Message.ResourceRecord object created by ReadDnsResourceRecord.
-  # .INPUTS
-  #   System.IO.BinaryReader
-  #
-  #   The BinaryReader object must be created using New-BinaryReader 
-  # .OUTPUTS
-  #   Indented.DnsResolver.Message.ResourceRecord.WINS
-  # .LINK
-  #   http://msdn.microsoft.com/en-us/library/ms682748%28VS.85%29.aspx
-  
-  [CmdLetBinding()]
-  param(
-    [Parameter(Mandatory = $true)]
-    [IO.BinaryReader]$BinaryReader,
-    
-    [Parameter(Mandatory = $true)]
-    [ValidateScript( { $_.PsObject.TypeNames -contains 'Indented.DnsResolver.Message.ResourceRecord' } )]
-    $ResourceRecord
-  )
+    # .SYNOPSIS
+    #   WINS record parser.
+    # .DESCRIPTION
+    #                                    1  1  1  1  1  1
+    #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                  LOCAL FLAG                   |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                LOOKUP TIMEOUT                 |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                 CACHE TIMEOUT                 |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |               NUMBER OF SERVERS               |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                SERVER IP LIST                 /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+  
+    #
+    # .LINK
+    #   http://msdn.microsoft.com/en-us/library/ms682748%28VS.85%29.aspx
+    # .NOTES
+    #   Author: Chris Dent
+    #
+    #   Change log:
+    #     09/03/2017 - Chris Dent - Modernisation pass.
 
-  $ResourceRecord.PsObject.TypeNames.Add("Indented.DnsResolver.Message.ResourceRecord.WINS")
+    [OutputType([Void])]
+    param(
+        [EndianBinaryReader]$BinaryReader,
 
-  # Property: MappingFlag
-  $ResourceRecord | Add-Member MappingFlag -MemberType NoteProperty -Value ([Indented.DnsResolver.WINSMappingFlag]$BinaryReader.ReadBEUInt32())
-  # Property: LookupTimeout
-  $ResourceRecord | Add-Member LookupTimeout -MemberType NoteProperty -Value $BinaryReader.ReadBEUInt32()
-  # Property: CacheTimeout
-  $ResourceRecord | Add-Member CacheTimeout -MemberType NoteProperty -Value $BinaryReader.ReadBEUInt32()
-  # Property: NumberOfServers
-  $ResourceRecord | Add-Member NumberOfServers -MemberType NoteProperty -Value $BinaryReader.ReadBEUInt32()
-  # Property: ServerList
-  $ResourceRecord | Add-Member ServerList -MemberType NoteProperty -Value @()
-  
-  for ($i = 0; $i -lt $ResourceRecord.NumberOfServers; $i++) {
-    $ResourceRecord.ServerList += $BinaryReader.ReadIPv4Address()  
-  }
+        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
+        $ResourceRecord
+    )
 
-  # Property: RecordData
-  $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
-    $Value = [String]::Format("L{0} C{1} ( {2} )",
-      $this.LookupTimeout,
-      $this.CacheTimeout,
-      "$($this.ServerList)")
-    if ($this.MappingFlag -eq [Indented.DnsResolver.WINSMappingFlag]::NoReplication) {
-      $Value = "LOCAL $Value"
+    # Property: MappingFlag
+    $ResourceRecord | Add-Member MappingFlag ([WINSMappingFlag]$BinaryReader.ReadUInt32($true))
+    # Property: LookupTimeout
+    $ResourceRecord | Add-Member LookupTimeout $BinaryReader.ReadUInt32($true)
+    # Property: CacheTimeout
+    $ResourceRecord | Add-Member CacheTimeout $BinaryReader.ReadUInt32($true)
+    # Property: NumberOfServers
+    $ResourceRecord | Add-Member NumberOfServers $BinaryReader.ReadUInt32($true)
+
+    $serverList = New-Object List[IPAddress]
+    for ($i = 0; $i -lt $ResourceRecord.NumberOfServers; $i++) {
+        $serverList.Add($BinaryReader.ReadIPv4Address())  
     }
-    $Value
-  }
-  
-  return $ResourceRecord
+    # Property: ServerList
+    $ResourceRecord | Add-Member ServerList $serverList.ToArray()
+
+    # Property: RecordData
+    $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
+        $Value = 'L{0} C{1} ( {2} )' -f $this.LookupTimeout,
+                                        $this.CacheTimeout,
+                                        ($this.ServerList -join ' ')
+        if ($this.MappingFlag -eq 0x10000) {
+            return 'LOCAL {0}' -f $Value
+        }
+        return $Value
+    }
 }
-
-
-
-

@@ -1,99 +1,85 @@
+using namespace Indented
+using namespace Indented.IO
+using namespace Indented.Net.Dns
+
 function ReadDnsTSIGRecord {
-  # .SYNOPSIS
-  #   Reads properties for an TSIG record from a byte stream.
-  # .DESCRIPTION
-  #   Internal use only.
-  #
-  #                                    1  1  1  1  1  1
-  #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                   ALGORITHM                   /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                   TIMESIGNED                  |
-  #    |                                               |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                     FUDGE                     |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                    MACSIZE                    |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                      MAC                      /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                  ORIGINALID                   |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                     ERROR                     |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                   OTHERSIZE                   |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                   OTHERDATA                   /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #
-  # .PARAMETER BinaryReader
-  #   A binary reader created by using New-BinaryReader containing a byte array representing a DNS resource record.
-  # .PARAMETER ResourceRecord
-  #   An Indented.DnsResolver.Message.ResourceRecord object created by ReadDnsResourceRecord.
-  # .INPUTS
-  #   System.IO.BinaryReader
-  #
-  #   The BinaryReader object must be created using New-BinaryReader 
-  # .OUTPUTS
-  #   Indented.DnsResolver.Message.ResourceRecord.TSIG
-  # .LINK
-  #   http://www.ietf.org/rfc/rfc2845.txt
-  
-  [CmdLetBinding()]
-  param(
-    [Parameter(Mandatory = $true)]
-    [IO.BinaryReader]$BinaryReader,
+    # .SYNOPSIS
+    #   TSIG record parser.
+    # .DESCRIPTION
+    #                                    1  1  1  1  1  1
+    #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                   ALGORITHM                   /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                   TIMESIGNED                  |
+    #    |                                               |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                     FUDGE                     |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                    MACSIZE                    |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                      MAC                      /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                  ORIGINALID                   |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                     ERROR                     |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                   OTHERSIZE                   |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                   OTHERDATA                   /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #
+    # .LINK
+    #   http://www.ietf.org/rfc/rfc2845.txt
+    # .NOTES
+    #   Author: Chris Dent
+    #
+    #   Change log:
+    #     09/03/2017 - Chris Dent - Modernisation pass.
+
+    [OutputType([Void])]
+    param(
+        [EndianBinaryReader]$BinaryReader,
+
+        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
+        $ResourceRecord
+    )
     
-    [Parameter(Mandatory = $true)]
-    [ValidateScript( { $_.PsObject.TypeNames -contains 'Indented.DnsResolver.Message.ResourceRecord' } )]
-    $ResourceRecord
-  )
+    # Property: Algorithm
+    $ResourceRecord | Add-Member Algorithm (ConvertToDnsDomainName $BinaryReader)
+    # Property: TimeSigned
+    $ResourceRecord | Add-Member TimeSigned ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadUInt48($true)))
+    # Property: Fudge
+    $ResourceRecord | Add-Member Fudge ((New-TimeSpan -Seconds ($BinaryReader.ReadUInt16($true))).TotalMinutes)
+    # Property: MACSize
+    $ResourceRecord | Add-Member MACSize $BinaryReader.ReadBEUInt16()
+    # Property: MAC
+    $bytes = $BinaryReader.ReadBytes($ResourceRecord.KeySize)
+    $ResourceRecord | Add-Member MAC ([EndianBitConverter]::ToString(,$bytes))
+    # Property: Error
+    $ResourceRecord | Add-Member Error ([RCode]$BinaryReader.ReadUInt16($true))
+    # Property: OtherSize
+    $ResourceRecord | Add-Member OtherSize $BinaryReader.ReadUInt16($true)
 
-  $ResourceRecord.PsObject.TypeNames.Add("Indented.DnsResolver.Message.ResourceRecord.TSIG")
-  
-  # Property: Algorithm
-  $ResourceRecord | Add-Member Algorithm -MemberType NoteProperty -Value (ConvertToDnsDomainName $BinaryReader)
-  # Property: TimeSigned
-  $ResourceRecord | Add-Member TimeSigned -MemberType NoteProperty -Value ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadBEUInt48()))
-  # Property: Fudge
-  $ResourceRecord | Add-Member Fudge -MemberType NoteProperty -Value ((New-TimeSpan -Seconds ($BinaryReader.ReadBEUInt16())).TotalMinutes)
-  # Property: MACSize
-  $ResourceRecord | Add-Member KeySize -MemberType NoteProperty -Value $BinaryReader.ReadBEUInt16()
-  # Property: MAC
-  $Bytes = $BinaryReader.ReadBytes($ResourceRecord.KeySize)
-  $HexString = ConvertTo-String $Bytes -Hexadecimal
-  $ResourceRecord | Add-Member KeyData -MemberType NoteProperty -Value $HexString
-  # Property: Error
-  $ResourceRecord | Add-Member Expiration -MemberType NoteProperty -Value ([Indented.DnsResolver.RCode]$BinaryReader.ReadBEUInt16())
-  # Property: OtherSize
-  $ResourceRecord | Add-Member OtherSize -MemberType NoteProperty -Value $BinaryReader.ReadBEUInt16()
+    $otherData = ''
+    if ($ResourceRecord.OtherSize -gt 0) {
+        $bytes = $BinaryReader.ReadBytes($ResourceRecord.OtherSize)
+        $otherData = [EndianBitConverter]::ToString(,$bytes)
+    }
 
-  if ($ResourceRecord.OtherSize -gt 0) {
-    $Bytes = $BinaryReader.ReadBytes($ResourceRecord.OtherSize)
-    $HexString = ConvertTo-String $Bytes -Hexadecimal
-  }
+    # Property: OtherData
+    $ResourceRecord | Add-Member OtherData $otherData
 
-  # Property: OtherData
-  $ResourceRecord | Add-Member KeyData -MemberType NoteProperty -Value $HexString
-  
-  # Property: RecordData
-  $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
-    [String]::Format("{0} {1} {2} {3} {4}",
-      $this.Algorithm,
-      $this.TimeSigned,
-      $this.Fudge,
-      $this.MAC,
-      $this.OtherData)
-  }
-  
-  return $ResourceRecord
+    # Property: RecordData
+    $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
+        '{0} {1} {2} {3} {4}' -f $this.Algorithm,
+                                 $this.TimeSigned,
+                                 $this.Fudge,
+                                 $this.MAC,
+                                 $this.OtherData
+    }
 }
-
-
-
-

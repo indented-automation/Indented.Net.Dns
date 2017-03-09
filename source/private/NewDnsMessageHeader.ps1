@@ -38,7 +38,7 @@ function NewDnsMessageHeader {
         ID      = [UInt16](Get-Random -Maximum ([Int32][UInt16]::MaxValue))
         QR      = [QR]::Query
         OpCode  = [OpCode]::Query
-        Flags   = [Flags]::RD
+        Flags   = [HeaderFlags]::RD
         RCode   = [RCode]::NoError
         QDCount = [UInt16]1
         ANCount = [UInt16]0
@@ -65,17 +65,17 @@ function NewDnsMessageHeader {
     }
 
     # Method: ToString
-    $DnsMessageHeader | Add-Member ToString -MemberType ScriptMethod -Force -Value {
-        return 'ID: {0} QR: {1} OpCode: {2} RCode: {3} Flags: {4} Query: {5} Answer: {6} Authority: {7} Additional: {8}' -f
-            $this.ID.ToString(),
-            $this.QR.ToString().ToUpper(),
-            $this.OpCode.ToString().ToUpper(),
-            $this.RCode.ToString().ToUpper(),
-            $this.Flags,
-            $this.QDCount,
-            $this.ANCount,
-            $this.NSCount,
-            $this.ARCount
+    $dnsMessageHeader | Add-Member ToString -MemberType ScriptMethod -Force -Value {
+        $string = 'ID: {0} QR: {1} OpCode: {2} RCode: {3} Flags: {4} Query: {5} Answer: {6} Authority: {7} Additional: {8}'
+        $string -f $this.ID,
+                   $this.QR.ToString().ToUpper(),
+                   $this.OpCode.ToString().ToUpper(),
+                   $this.RCode.ToString().ToUpper(),
+                   $this.Flags,
+                   $this.QDCount,
+                   $this.ANCount,
+                   $this.NSCount,
+                   $this.ARCount
     }
 
     return $dnsMessageHeader

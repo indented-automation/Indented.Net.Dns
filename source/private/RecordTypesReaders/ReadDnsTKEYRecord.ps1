@@ -1,99 +1,86 @@
+using namespace Indented
+using namespace Indented.IO
+using namespace Indented.Net.Dns
+
 function ReadDnsTKEYRecord {
-  # .SYNOPSIS
-  #   Reads properties for an TKEY record from a byte stream.
-  # .DESCRIPTION
-  #   Internal use only.
-  #
-  #                                    1  1  1  1  1  1
-  #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                   ALGORITHM                   /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                   INCEPTION                   |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                   EXPIRATION                  |
-  #    |                                               |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                     MODE                      |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                     ERROR                     |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                    KEYSIZE                    |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                    KEYDATA                    /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    |                   OTHERSIZE                   |
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #    /                   OTHERDATA                   /
-  #    /                                               /
-  #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-  #
-  # .PARAMETER BinaryReader
-  #   A binary reader created by using New-BinaryReader containing a byte array representing a DNS resource record.
-  # .PARAMETER ResourceRecord
-  #   An Indented.DnsResolver.Message.ResourceRecord object created by ReadDnsResourceRecord.
-  # .INPUTS
-  #   System.IO.BinaryReader
-  #
-  #   The BinaryReader object must be created using New-BinaryReader 
-  # .OUTPUTS
-  #   Indented.DnsResolver.Message.ResourceRecord.TKEY
-  # .LINK
-  #   http://www.ietf.org/rfc/rfc2930.txt
-  
-  [CmdLetBinding()]
-  param(
-    [Parameter(Mandatory = $true)]
-    [IO.BinaryReader]$BinaryReader,
-    
-    [Parameter(Mandatory = $true)]
-    [ValidateScript( { $_.PsObject.TypeNames -contains 'Indented.DnsResolver.Message.ResourceRecord' } )]
-    $ResourceRecord
-  )
+    # .SYNOPSIS
+    #   TKEY record parser.
+    # .DESCRIPTION
+    #                                    1  1  1  1  1  1
+    #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                   ALGORITHM                   /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                   INCEPTION                   |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                   EXPIRATION                  |
+    #    |                                               |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                     MODE                      |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                     ERROR                     |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                    KEYSIZE                    |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                    KEYDATA                    /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    |                   OTHERSIZE                   |
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #    /                   OTHERDATA                   /
+    #    /                                               /
+    #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    #
+    # .LINK
+    #   http://www.ietf.org/rfc/rfc2930.txt
+    # .NOTES
+    #   Author: Chris Dent
+    #
+    #   Change log:
+    #     09/03/2017 - Chris Dent - Modernisation pass.
 
-  $ResourceRecord.PsObject.TypeNames.Add("Indented.DnsResolver.Message.ResourceRecord.TKEY")
-  
-  # Property: Algorithm
-  $ResourceRecord | Add-Member Algorithm -MemberType NoteProperty -Value (ConvertToDnsDomainName $BinaryReader)
-  # Property: Inception
-  $ResourceRecord | Add-Member Inception -MemberType NoteProperty -Value ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadBEUInt32()))
-  # Property: Expiration
-  $ResourceRecord | Add-Member Expiration -MemberType NoteProperty -Value ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadBEUInt32()))
-  # Property: Mode
-  $ResourceRecord | Add-Member Expiration -MemberType NoteProperty -Value ([Indented.DnsResolver.TKEYMode]$BinaryReader.ReadBEUInt16())
-  # Property: Error
-  $ResourceRecord | Add-Member Expiration -MemberType NoteProperty -Value ([Indented.DnsResolver.RCode]$BinaryReader.ReadBEUInt16())
-  # Property: KeySize
-  $ResourceRecord | Add-Member KeySize -MemberType NoteProperty -Value $BinaryReader.ReadBEUInt16()
-  # Property: KeyData
-  $Bytes = $BinaryReader.ReadBytes($ResourceRecord.KeySize)
-  $HexString = ConvertTo-String $Bytes -Hexadecimal
-  $ResourceRecord | Add-Member KeyData -MemberType NoteProperty -Value $HexString
-  
-  if ($ResourceRecord.OtherSize -gt 0) {
-    $Bytes = $BinaryReader.ReadBytes($ResourceRecord.OtherSize)
-    $HexString = ConvertTo-String $Bytes -Hexadecimal
-  }
+    [OutputType([Void])]
+    param(
+        [EndianBinaryReader]$BinaryReader,
 
-  # Property: OtherData
-  $ResourceRecord | Add-Member KeyData -MemberType NoteProperty -Value $HexString
-  
-  # Property: RecordData
-  $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
-    [String]::Format("{0} {1} {2} {3} {4}",
-      $this.Algorithm,
-      $this.Inception,
-      $this.Expiration,
-      $this.Mode,
-      $this.KeyData)
-  }
-  
-  return $ResourceRecord
+        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
+        $ResourceRecord
+    )
+
+    # Property: Algorithm
+    $ResourceRecord | Add-Member Algorithm (ConvertToDnsDomainName $BinaryReader)
+    # Property: Inception
+    $ResourceRecord | Add-Member Inception ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadUInt32($true)))
+    # Property: Expiration
+    $ResourceRecord | Add-Member Expiration ((Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadUInt32($true)))
+    # Property: Mode
+    $ResourceRecord | Add-Member Mode ([TKEYMode]$BinaryReader.ReadUInt16($true))
+    # Property: Error
+    $ResourceRecord | Add-Member Error ([RCode]$BinaryReader.ReadUInt16($true))
+    # Property: KeySize
+    $ResourceRecord | Add-Member KeySize $BinaryReader.ReadUInt16($true)
+    # Property: KeyData
+    $bytes = $BinaryReader.ReadBytes($ResourceRecord.KeySize)
+    $ResourceRecord | Add-Member KeyData ([EndianBitConverter]::ToString($bytes))
+
+    $otherData = ''
+    if ($ResourceRecord.OtherSize -gt 0) {
+        $bytes = $BinaryReader.ReadBytes($ResourceRecord.OtherSize)
+        $otherData = [EndianBitConverter]::ToString($bytes)
+    }
+
+    # Property: OtherData
+    $ResourceRecord | Add-Member OtherData -MemberType NoteProperty -Value $otherData
+
+    # Property: RecordData
+    $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
+        '{0} {1} {2} {3} {4} {5}' -f $this.Algorithm,
+                                     $this.Inception,
+                                     $this.Expiration,
+                                     $this.Mode,
+                                     $this.KeyData,
+                                     $this.OtherData
+    }
 }
-
-
-
-
