@@ -48,7 +48,7 @@
     </View>
 
     <View>
-      <Name>Indented.Net.Dns.Message.CacheRecord</Name>
+      <Name>Indented.Net.Dns.CacheRecord</Name>
       <ViewSelectedBy>
         <TypeName>Indented.Net.Dns.Message.CacheRecord</TypeName>
       </ViewSelectedBy>

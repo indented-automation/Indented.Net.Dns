@@ -587,14 +587,15 @@ function Get-Dns {
                 # Create a TCP socket, connect and send the message.
                 $Socket = New-Socket -SendTimeout $Timeout -ReceiveTimeout $Timeout
                 try {
-                Connect-Socket $Socket -RemoteIPAddress $Server -RemotePort $Port
+                    Connect-Socket $Socket -RemoteIPAddress $Server -RemotePort $Port
                 } catch [Net.Sockets.SocketException] {
-                $ErrorRecord = New-Object Management.Automation.ErrorRecord(
-                (New-Object Net.Sockets.SocketException ($_.Exception.InnerException.NativeErrorCode)),
-                "TCP connection to Server ($Server/$Port) failed",
-                [Management.Automation.ErrorCategory]::ConnectionError,
-                $Socket)
-                $pscmdlet.ThrowTerminatingError($ErrorRecord)
+                    $ErrorRecord = New-Object Management.Automation.ErrorRecord(
+                        (New-Object Net.Sockets.SocketException ($_.Exception.InnerException.NativeErrorCode)),
+                        "TCP connection to Server ($Server/$Port) failed",
+                        [Management.Automation.ErrorCategory]::ConnectionError,
+                        $Socket
+                    )
+                    $pscmdlet.ThrowTerminatingError($ErrorRecord)
                 }
                 Send-Bytes $Socket -Data ($DnsQuery.ToByte([Net.Sockets.ProtocolType]::Tcp))
 
