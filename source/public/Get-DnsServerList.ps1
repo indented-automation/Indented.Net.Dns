@@ -13,8 +13,6 @@ function Get-DnsServerList {
     # .EXAMPLE
     #   Get-DnsServerList -IPv6
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation passd
     #     04/09/2012 - Chris Dent - Created.
@@ -33,8 +31,9 @@ function Get-DnsServerList {
     if ([NetworkInterface]::GetIsNetworkAvailable()) {
         [NetworkInterface]::GetAllNetworkInterfaces() |
             Where-Object { $_.OperationalStatus -eq 'Up' -and $_.NetworkInterfaceType -match 'Ethernet|Wireless' } |
-            ForEach-Object { $_.GetIPProperties() } |
+            ForEach-Object -MemberName GetIPProperties |
             Select-Object -ExpandProperty DnsAddresses -Unique |
-            Where-Object AddressFamily -eq $AddressFamily
+            Where-Object AddressFamily -eq $AddressFamily |
+            Select-Object -ExpandProperty IPAddressToString
     }
 }

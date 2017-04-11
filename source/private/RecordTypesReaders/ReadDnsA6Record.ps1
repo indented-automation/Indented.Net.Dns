@@ -20,8 +20,6 @@ function ReadDnsA6Record {
     #   http://www.ietf.org/rfc/rfc2874.txt
     #   http://www.ietf.org/rfc/rfc3226.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.
 

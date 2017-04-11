@@ -16,8 +16,6 @@ function ReadDnsRTRecord {
     # .LINK
     #   http://www.ietf.org/rfc/rfc1183.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
 

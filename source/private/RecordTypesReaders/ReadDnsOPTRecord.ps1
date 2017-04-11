@@ -116,8 +116,6 @@ function ReadDnsOPTRecord {
     #   http://www.ietf.org/rfc/rfc6975.txt
     #   http://www.ietf.org/id/draft-vandergaast-edns-client-subnet-02.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     08/03/2017 - Chris Dent - Modernisation pass.
     

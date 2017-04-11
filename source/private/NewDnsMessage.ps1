@@ -23,15 +23,11 @@ function NewDnsMessage {
     #    /                                               /
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .OUTPUTS
-    #   Indented.Net.Dns.Message
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     11/01/2017 - Chris Dent - Modernisation pass.
 
-    [OutputType([PSObject])]
+    [OutputType('Indented.Net.Dns.Message')]
     param(
         # The name passed into the question.
         [String]$Name = "",

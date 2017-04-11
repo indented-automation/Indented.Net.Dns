@@ -3,7 +3,7 @@ using namespace Indented.Net.Dns
 
 function NewDnsMessageHeader {
     # .SYNOPSIS
-    #   Creates a new DNS message header.
+    #   Create a new DNS message header.
     # .DESCRIPTION
     #                                    1  1  1  1  1  1
     #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -21,17 +21,11 @@ function NewDnsMessageHeader {
     #    |                    ARCOUNT                    |
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .INPUTS
-    #   None
-    # .OUTPUTS
-    #   Indented.Net.Dns.Header
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     11/01/2017 - Chris Dent - Modernisation pass.
 
-    [OutputType([PSObject])]
+    [OutputType('Indented.Net.Dns.Header')]
     param( )
 
     $dnsMessageHeader = [PSCustomObject]@{

@@ -14,8 +14,6 @@ function ReadDnsNIMLOCRecord {
     # .LINK
     #   http://ana-3.lcs.mit.edu/~jnc/nimrod/dns.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     08/03/2017 - Chris Dent - Modernisation pass.
 

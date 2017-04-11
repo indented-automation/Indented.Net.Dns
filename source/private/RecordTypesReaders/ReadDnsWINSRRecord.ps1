@@ -28,8 +28,6 @@ function ReadDnsWINSRRecord {
     # .LINK
     #   http://msdn.microsoft.com/en-us/library/ms682748%28VS.85%29.aspx
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
 

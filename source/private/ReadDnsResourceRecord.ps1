@@ -3,7 +3,7 @@ using namespace Indented.Net.Dns
 
 function ReadDnsResourceRecord {
     # .SYNOPSIS
-    #   Reads common DNS resource record fields from a byte stream.
+    #   Read common DNS resource record fields from a byte stream.
     # .DESCRIPTION
     #   Reads a byte array in the following format:
     #
@@ -26,19 +26,14 @@ function ReadDnsResourceRecord {
     #    /                                               /
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .INPUTS
-    #   Indented.IO.EndianBinaryReader
-    # .OUTPUTS
-    #   Indented.Net.Dns.ResourceRecord
     # .LINK
     #   http://www.ietf.org/rfc/rfc1035.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.
 
     [CmdletBinding()]
+    [OutputType('Indented.Net.Dns.ResourceRecord')]
     param(
         # A binary reader.
         [Parameter(Mandatory = $true)]
@@ -51,7 +46,7 @@ function ReadDnsResourceRecord {
         return 
     }
 
-    $resourceRecord = New-Object PsObject -Property ([Ordered]@{
+    $resourceRecord = [PSCustomObject]@{
         Name             = ''
         TTL              = [UInt32]0
         RecordClass      = [RecordClass]::IN

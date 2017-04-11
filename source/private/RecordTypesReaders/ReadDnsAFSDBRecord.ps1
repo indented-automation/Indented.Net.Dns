@@ -17,8 +17,6 @@ function ReadDnsAFSDBRecord {
     # .LINK
     #   http://www.ietf.org/rfc/rfc1183.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.
 

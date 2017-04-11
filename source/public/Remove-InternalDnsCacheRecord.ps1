@@ -9,15 +9,11 @@ function Remove-InternalDnsCacheRecord {
     #   A time property is used to age entries out of the cache. If permanent is set the time is not, the value will not be purged based on the TTL.
     # .INPUTS
     #   Indented.DnsResolver.RecordType
-    #   System.Net.IPAddress
-    #   System.String
     # .EXAMPLE
     #   Get-InternalDnsCacheRecord a.root-servers.net | Remove-InternalDnsCacheRecord
     # .EXAMPLE
     #   Remove-InternalDnsCacheRecord -AllExpired
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     23/03/2017 - Chris Dent - Modernisation passd
     #     28/04/2014 - Chris Dent - Released.
@@ -25,7 +21,7 @@ function Remove-InternalDnsCacheRecord {
     [CmdletBinding(DefaultParameterSetName = 'CacheRecord')]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CacheRecord')]
-        [ValidateScript( { $_.PsObject.TypeNames -contains 'Indented.DnsResolver.Message.CacheRecord' } )]
+        [PSTypeName('Indented.Net.Dns.CacheRecord')]
         $CacheRecord,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'AllExpired')]

@@ -1,6 +1,6 @@
 function ReadDnsMessage {
     # .SYNOPSIS
-    #   Reads a DNS message from a byte stream.
+    #   Read a DNS message from a byte stream.
     # .DESCRIPTION
     #                                    1  1  1  1  1  1
     #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -25,20 +25,12 @@ function ReadDnsMessage {
     #   A binary reader created by using New-BinaryReader containing a byte array representing a DNS message.
     #
     #   If a binary reader is not passed as an argument an empty DNS message is returned.
-    # .INPUTS
-    #   Indented.Net.Sockets.Response
-    #
-    #   Response data is generated using Receive-Bytes.
-    # .OUTPUTS
-    #   Indented.Net.Dns.Message  
     # .NOTES
-    #   Author: Chris Dent
-    #   Team:   Core Technologies
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass
     #     14/01/2015 - Chris Dent - Refactored to fit in Indented.DnsResolver.
 
+    [OutputType('Indented.Net.Dns.Message')]
     param(
         [Parameter(Mandatory = $true)]
         [PSTypeName('Indented.Net.Sockets.Response')]

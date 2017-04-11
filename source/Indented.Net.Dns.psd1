@@ -9,10 +9,10 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = 'Indented.Net.Dns'
+RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '4.0'
+ModuleVersion = '5.0'
 
 # ID used to uniquely identify this module
 GUID = '3571e61d-687b-4bda-bcad-4152cff91bda'
@@ -30,7 +30,7 @@ Copyright = '(c) 2017 Chris Dent. All rights reserved.'
 Description = 'DNS debugging tools.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '4.0'
+PowerShellVersion = '5.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -66,16 +66,16 @@ FormatsToProcess = 'Indented.Net.Dns.Format.ps1xml'
 # NestedModules = @()
 
 # Functions to export from this module
-# FunctionsToExport = @()
+FunctionsToExport = @()
 
 # Cmdlets to export from this module
-CmdletsToExport = '*'
+# CmdletsToExport = '*'
 
 # Variables to export from this module
-VariablesToExport = '*'
+# VariablesToExport = '*'
 
 # Aliases to export from this module
-AliasesToExport = '*'
+# AliasesToExport = '*'
 
 # List of all modules packaged with this module
 # ModuleList = @()

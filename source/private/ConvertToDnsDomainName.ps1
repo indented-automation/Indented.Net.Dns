@@ -4,7 +4,7 @@ using namespace System.Text
 
 function ConvertToDnsDomainName {
     # .SYNOPSIS
-    #   Converts a DNS domain name from a byte stream to a string.
+    #   Convert a DNS domain name from a byte stream to a string.
     # .DESCRIPTION
     #   DNS messages implement compression to avoid bloat by repeated use of labels.
     #
@@ -14,15 +14,9 @@ function ConvertToDnsDomainName {
     #    | 1  1|                OFFSET                   |
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .INPUTS
-    #   Indented.IO.EndianBinaryReader
-    # .OUTPUTS
-    #   System.String
     # .LINK
     #   http://www.ietf.org/rfc/rfc1035.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     08/03/2017 - Chris Dent - Added BytesRead.
     #     11/01/2017 - Chris Dent - Modernisation pass.

@@ -1,3 +1,5 @@
+using namespace Indented.Net.Dns
+
 function Initialize-InternalDnsCache {
     # .SYNOPSIS
     #   Initializes a basic DNS cache for use by Get-Dns.
@@ -8,13 +10,12 @@ function Initialize-InternalDnsCache {
     # .EXAMPLE
     #   Initialize-InternalDnsCache
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     23/03/2017 - Chris Dent - Modernisation passd
     #     08/01/2014 - Chris Dent - Released.
 
     [CmdletBinding()]
+    [OutputType([Void])]
     param( )
 
     # These two variables are consumed by all other -InternalDnsCacheRecord CmdLets.
@@ -38,7 +39,7 @@ function Initialize-InternalDnsCache {
                 [PSCustomObject]@{
                     Name       = $matches.Name;
                     TTL        = [UInt32]$matches.TTL;
-                    RecordType = [Indented.DnsResolver.RecordType]$matches.RecordType;
+                    RecordType = [RecordType]$matches.RecordType;
                     IPAddress  = [IPAddress]$matches.IPAddress;
                 } | Add-Member -TypeName 'Indented.Net.Dns.CacheRecord' -PassThru |
                     Add-InternalDnsCacheRecord -Permanent -ResourceType Hint -PassThru

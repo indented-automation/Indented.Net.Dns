@@ -12,21 +12,9 @@ function ReadDnsRPRecord {
     #    /                    EMAILBX                    /
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .PARAMETER BinaryReader
-    #   A binary reader created by using New-BinaryReader containing a byte array representing a DNS resource record.
-    # .PARAMETER ResourceRecord
-    #   An Indented.DnsResolver.Message.ResourceRecord object created by ReadDnsResourceRecord.
-    # .INPUTS
-    #   System.IO.BinaryReader
-    #
-    #   The BinaryReader object must be created using New-BinaryReader 
-    # .OUTPUTS
-    #   Indented.DnsResolver.Message.ResourceRecord.RP
     # .LINK
     #   http://www.ietf.org/rfc/rfc1183.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
 

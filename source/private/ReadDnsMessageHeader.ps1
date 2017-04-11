@@ -3,10 +3,8 @@ using namespace Indented.Net.Dns
 
 function ReadDnsMessageHeader {
     # .SYNOPSIS
-    #   Reads a DNS message header from a byte stream.
+    #   Read a DNS message header from a byte stream.
     # .DESCRIPTION
-    #   Internal use only.
-    #
     #                                    1  1  1  1  1  1
     #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
@@ -23,17 +21,11 @@ function ReadDnsMessageHeader {
     #    |                    ARCOUNT                    |
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .INPUTS
-    #   Indented.IO.EndianBinaryReader
-    # .OUTPUTS
-    #   Indented.Net.Dns.Header
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.  
 
-    [OutputType([PSObject])]
+    [OutputType('Indented.Net.Dns.Header')]
     param(
         # A binary reader instance attached to the network stream.
         [Parameter(Mandatory = $true)]

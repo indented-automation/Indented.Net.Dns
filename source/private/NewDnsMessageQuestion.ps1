@@ -3,7 +3,7 @@ using namespace Indented.Net.Dns
 
 function NewDnsMessageQuestion {
     # .SYNOPSIS
-    #   Creates a new DNS message question.
+    #   Create a new DNS message question.
     # .DESCRIPTION
     #                                    1  1  1  1  1  1
     #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -16,19 +16,11 @@ function NewDnsMessageQuestion {
     #    |                     QCLASS                    |
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .INPUTS
-    #   System.String
-    #   Indented.Net.Dns.RecordClass
-    #   Indented.Net.Dns.RecordType
-    # .OUTPUTS
-    #   Indented.Net.Dns.Question
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     12/01/2017 - Chris Dent - Modernisation pass.
 
-    [OutputType([PSObject])]
+    [OutputType('Indented.Net.Dns.Question')]
     param(
         # A domain-name.
         [String]$Name,

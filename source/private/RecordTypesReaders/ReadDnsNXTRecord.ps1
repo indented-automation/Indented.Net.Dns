@@ -20,8 +20,6 @@ function ReadDnsNXTRecord {
     #   http://www.ietf.org/rfc/rfc2535.txt
     #   http://www.ietf.org/rfc/rfc3755.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     08/03/2017 - Chris Dent - Modernisation pass.
     

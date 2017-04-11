@@ -18,8 +18,6 @@ function ReadDnsSSHFPRecord {
     # .LINK
     #   http://www.ietf.org/rfc/rfc4255.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
 

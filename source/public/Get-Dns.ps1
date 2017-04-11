@@ -106,8 +106,6 @@ function Get-Dns {
     #   http://www.ietf.org/rfc/rfc1035.txt
     #   http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Moderisation pass
     #     28/04/2014 - Chris Dent - Released.
@@ -118,6 +116,7 @@ function Get-Dns {
         [Parameter(Position = 1, ParameterSetName = 'IterativeQuery')]
         [Parameter(Position = 1, ParameterSetName = 'NSSearch')]
         [Parameter(Position = 1, ParameterSetName = 'ZoneTransfer')]
+        [ValidateDnsName()]
         [String]$Name = ".",
 
         [Parameter(Position = 2, ParameterSetname = 'RecursiveQuery')]
@@ -182,7 +181,7 @@ function Get-Dns {
         [Parameter(ParameterSetName = 'Version')]
         [Parameter(ParameterSetName = 'ZoneTransfer')]
         [Alias('ComputerName')]
-        [String]$Server,
+        [String]$Server = (Get-DnsServerList -IPv6:$IPv6 | Select-Object -First 1),
 
         [Parameter(ParameterSetName = 'RecursiveQuery')]
         [Parameter(ParameterSetName = 'Version')]
@@ -216,7 +215,7 @@ function Get-Dns {
     $GlobalOptions = @{}
     if ($NoEDns -and $DnsSec) {
         Write-Warning "Get-Dns: EDNS support is mandatory for DNSSEC. Enabling EDNS for this request."
-        $NoDns = $false
+        $NoEDns = $false
     }
     if ($NoEDns) {
         $GlobalOptions.Add('NoEDns', $true) 
@@ -228,63 +227,6 @@ function Get-Dns {
     }
     if ($NoTcpFallback) {
         $GlobalOptions.Add('NoTcpFallback', $true) 
-    }
-
-    #
-    # Name parameter
-    #
-
-    $isValidName = $false
-    # Test and correct the input value, if an IP address is entered it will be converted to an appropriate format and in-addr.arpa will be appended.
-    $IPAddress = [IPAddress]0
-    if ([IPAddress]::TryParse($Name, [Ref]$IPAddress)) {
-        # Convert IPv4 addresses into in-addr.arpa format.
-        $IPAddressBytes = $IPAddress.GetAddressBytes()
-        if ($IPAddress.AddressFamily -eq [AddressFamily]::InterNetwork) {
-            [Array]::Reverse($IPAddressBytes)
-            $Name = ($IPAddressBytes -join '.') + '.in-addr.arpa.'
-        } elseif ($IPAddress.AddressFamily -eq [AddressFamily]::InterNetworkv6) {
-            # Convert IPv6 addresses into ip6.arpa format.     
-            $IPAddressString = ConvertTo-String $IPAddressBytes -Hexadecimal        
-            $Name = ((($IPAddressString.Length - 1)..0 | ForEach-Object { $IPAddressString[$_] }) -join '.') + '.ip6.arpa.'
-        }
-        $isValidName = $true
-    }
-    if (-not $isValidName -and $Name -eq '.') {
-        $isValidName = $true
-    }
-    if (-not $isValidName -and $Name -match '^([A-Z0-9]|_[A-Z])(([\w\-]{0,61})[^_\-])?(\.([A-Z0-9]|_[A-Z])(([\w\-]{0,61})[^_\-])?)*$|^\.$') {
-        $isValidName = $true
-    }
-    if (-not $isValidName) {
-        # SerialNumber is required, throw an error and abandon this.
-        $errorRecord = New-Object ErrorRecord(
-            (New-Object ArgumentException "The value for Name ($Name) is not a valid format."),
-            'InvalidName',
-            [ErrorCategory]::InvalidArgument,
-            $Name
-        )
-        $pscmdlet.ThrowTerminatingError($errorRecord)
-    }
-
-    # Server parameter
-
-    if (-not ($psboundparameters.ContainsKey("Server"))) {
-        if ($IPv6) {
-            $Server = (Get-DnsServerList -IPv6 | Select-Object -ExpandProperty IPAddressToString | Select-Object -First 1)
-        } else {
-            $Server = (Get-DnsServerList | Select-Object -ExpandProperty IPAddressToString | Select-Object -First 1)
-        }
-    }
-    if (-not $Server) {
-        # Failed to resolve name. Return an error.
-        $errorRecord = New-Object ErrorRecord(
-            (New-Object ArgumentException 'No name servers available.'),
-            'InvalidServer',
-            [ErrorCategory]::InvalidArgument,
-            $Server
-        )
-        $pscmdlet.ThrowTerminatingError($errorRecord)
     }
 
     if ($IPv6) {
@@ -385,8 +327,8 @@ function Get-Dns {
     if ($Version) {
         # RFC 4892 (http://www.ietf.org/rfc/rfc4892.txt)
         $Name = "version.bind."
-        $RecordType = [Indented.DnsResolver.RecordType]::TXT
-        $RecordClass = [Indented.DnsResolver.RecordClass]::CH
+        $RecordType = [RecordType]::TXT
+        $RecordClass = [RecordClass]::CH
     }
 
     #
@@ -402,7 +344,7 @@ function Get-Dns {
         while ($NoError -and $NoAnswer) {
             $DnsResponse = Get-Dns $Name -RecordType $RecordType -RecordClass $RecordClass -NoRecursion -Server $Server @GlobalOptions
 
-            if ($DnsResponse.Header.RCode -ne [Indented.DnsResolver.RCode]::NoError)  {
+            if ($DnsResponse.Header.RCode -ne [RCode]::NoError)  {
                 $NoError = $false
             } else {
                 if ($DnsResponse.Header.ANCount -gt 0) {
@@ -412,7 +354,7 @@ function Get-Dns {
 
                     # Attempt to match between Authority and Additional. No need to execute another lookup if we have the information.
                     $Server = $DnsResponse.Additional |
-                        Where-Object { $_.Name -eq $Authority.Hostname -and $_.RecordType -eq [Indented.DnsResolver.RecordType]::A } |
+                        Where-Object { $_.Name -eq $Authority.Hostname -and $_.RecordType -eq [RecordType]::A } |
                         Select-Object -ExpandProperty IPAddress |
                         Select-Object -First 1
                     if ($Server) {
@@ -440,10 +382,10 @@ function Get-Dns {
         if ($DnsDebug) {
             $DnsResponse
         }
-        if ($DnsResponse.Header.RCode -eq [Indented.DnsResolver.RCode]::NoError -and $DnsResponse.Header.ANCount -gt 0) {
-            $ZoneName = $DnsResponse.Answer | Where-Object RecordType -eq ([Indented.DnsResolver.RecordType]::SOA) | Select-Object -ExpandProperty Name
-        } elseif ($DnsResponse.Header.RCode -eq [Indented.DnsResolver.RCode]::NoError -and $DnsResponse.Header.NSCount -gt 0) {
-            $ZoneName = $DnsResponse.Authority | Where-Object RecordType -eq ([Indented.DnsResolver.RecordType]::SOA) | Select-Object -ExpandProperty Name
+        if ($DnsResponse.Header.RCode -eq [RCode]::NoError -and $DnsResponse.Header.ANCount -gt 0) {
+            $ZoneName = $DnsResponse.Answer | Where-Object RecordType -eq ([RecordType]::SOA) | Select-Object -ExpandProperty Name
+        } elseif ($DnsResponse.Header.RCode -eq [RCode]::NoError -and $DnsResponse.Header.NSCount -gt 0) {
+            $ZoneName = $DnsResponse.Authority | Where-Object RecordType -eq ([RecordType]::SOA) | Select-Object -ExpandProperty Name
         }
 
         # Get the name servers for the zone
@@ -452,12 +394,12 @@ function Get-Dns {
         if ($DnsDebug) {
             $DnsResponse
         }
-        $AuthoritativeServerList = $DnsResponse.Answer | Where-Object RecordType -eq ([Indented.DnsResolver.RecordType]::NS) | ForEach-Object {
+        $AuthoritativeServerList = $DnsResponse.Answer | Where-Object RecordType -eq ([RecordType]::NS) | ForEach-Object {
             $NameServer = $_
             $NameServerIP = $DnsResponse.Additional |
                 Where-Object {
                     $_.Name -eq $NameServer.Hostname -and 
-                    ($_.RecordType -eq [Indented.DnsResolver.RecordType]::A -or $_.RecordType -eq [Indented.DnsResolver.RecordType]::AAAA)
+                    ($_.RecordType -eq [RecordType]::A -or $_.RecordType -eq [RecordType]::AAAA)
                 } |
                 Select-Object -ExpandProperty IPAddress 
             if ($NameServerIP) {
@@ -589,15 +531,15 @@ function Get-Dns {
                 try {
                     Connect-Socket $Socket -RemoteIPAddress $Server -RemotePort $Port
                 } catch [Net.Sockets.SocketException] {
-                    $ErrorRecord = New-Object Management.Automation.ErrorRecord(
+                    $ErrorRecord = New-Object ErrorRecord(
                         (New-Object Net.Sockets.SocketException ($_.Exception.InnerException.NativeErrorCode)),
                         "TCP connection to Server ($Server/$Port) failed",
-                        [Management.Automation.ErrorCategory]::ConnectionError,
+                        [ErrorCategory]::ConnectionError,
                         $Socket
                     )
                     $pscmdlet.ThrowTerminatingError($ErrorRecord)
                 }
-                Send-Bytes $Socket -Data ($DnsQuery.ToByte([Net.Sockets.ProtocolType]::Tcp))
+                Send-Bytes $Socket -Data ($DnsQuery.ToByte([ProtocolType]::Tcp))
 
             } elseif ($IPv6) {
 

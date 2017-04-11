@@ -3,7 +3,7 @@ using namespace Indented.Net.Dns
 
 function ReadDnsMessageQuestion {
     # .SYNOPSIS
-    #   Reads a DNS question from a byte stream.
+    #   Read a DNS question from a byte stream.
     # .DESCRIPTION
     #                                    1  1  1  1  1  1
     #      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -16,17 +16,12 @@ function ReadDnsMessageQuestion {
     #    |                     QCLASS                    |
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .INPUTS
-    #   Indented.IO.EndianBinaryReader
-    # .OUTPUTS
-    #   Indented.Net.Dns.Question
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.
 
     [CmdletBinding(DefaultParameterSetName = 'NewQuestion')]
+    [OutputType('Indented.Net.Dns.Question')]
     param(
         # A domain-name
         [Parameter(Position = 1, ParameterSetName = 'NewQuestion')]

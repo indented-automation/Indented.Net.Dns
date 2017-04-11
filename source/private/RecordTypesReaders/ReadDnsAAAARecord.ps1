@@ -20,8 +20,6 @@ function ReadDnsAAAARecord {
     # .LINK
     #   http://www.ietf.org/rfc/rfc3596.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.
 

@@ -13,8 +13,6 @@ function ReadDnsNSAPRecord {
     # .LINK
     #   http://www.ietf.org/rfc/rfc1706.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     08/03/2017 - Chris Dent - Modernisation pass.
 

@@ -17,8 +17,6 @@ function ReadDnsNINFORecord {
     #   http://tools.ietf.org/html/draft-lewis-dns-undocumented-types-01
     #   http://tools.ietf.org/html/draft-reid-dnsext-zs-01
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     08/03/2017 - Chris Dent - Modernisation pass.    
 

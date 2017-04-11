@@ -16,8 +16,6 @@ function ReadDnsSINKRecord {
     # .LINK
     #   http://tools.ietf.org/id/draft-eastlake-kitchen-sink-02.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
 

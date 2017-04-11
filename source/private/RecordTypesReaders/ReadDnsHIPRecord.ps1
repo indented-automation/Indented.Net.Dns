@@ -25,7 +25,9 @@ function ReadDnsHIPRecord {
     #
     # .LINK
     #   http://www.ietf.org/rfc/rfc5205.txt
-
+    #   Change log:
+    #     09/02/2017 - Chris Dent - Modernisation pass.
+    
     [OutputType([Void])]
     param(
         [EndianBinaryReader]$BinaryReader,

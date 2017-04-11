@@ -50,7 +50,7 @@
     <View>
       <Name>Indented.Net.Dns.CacheRecord</Name>
       <ViewSelectedBy>
-        <TypeName>Indented.Net.Dns.Message.CacheRecord</TypeName>
+        <TypeName>Indented.Net.Dns.CacheRecord</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>

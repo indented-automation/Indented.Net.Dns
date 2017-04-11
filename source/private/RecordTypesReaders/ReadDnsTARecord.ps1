@@ -20,8 +20,6 @@ function ReadDnsTARecord {
     # .LINK
     #   http://tools.ietf.org/html/draft-lewis-dns-undocumented-types-01
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
 

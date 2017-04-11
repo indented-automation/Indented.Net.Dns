@@ -14,8 +14,6 @@ function ReadDnsEIDRecord {
     # .LINK
     #   http://cpansearch.perl.org/src/MIKER/Net-DNS-Codes-0.11/extra_docs/draft-ietf-nimrod-dns-02.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/02/2017 - Chris Dent - Modernisation pass.
 

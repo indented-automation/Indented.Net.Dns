@@ -14,25 +14,24 @@ function Add-InternalDnsCacheRecord {
     # .PARAMETER Permanent
     #   A time property is used to age entries out of the cache. If permanent is set the time is not, the value will not be purged based on the TTL.
     # .INPUTS
-    #   Indented.DnsResolver.Message.CacheRecord
+    #   Indented.Net.Dns.CacheRecord
     # .EXAMPLE
     #   $CacheRecord | Add-InternalDnsCacheRecord
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
     #     07/04/2015 - Chris Dent - BugFix: Type check for CacheRecord.
     #     13/01/2015 - Chris Dent - Forked from source module.
 
     [CmdletBinding(DefaultParameterSetName = 'CacheRecord')]
+    [OutputType('Indented.Net.Dns.CacheRecord')]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CacheRecord')]
-        [PSTypeName('Indented.DnsResolver.Message.CacheRecord')]
+        [PSTypeName('Indented.Net.Dns.CacheRecord')]
         $CacheRecord,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ResourceRecord')]
-        [PSTypeName('Indented.DnsResolver.Message.ResourceRecord')]
+        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
         $ResourceRecord,
 
         [ValidateSet('Address', 'Hint')]
@@ -50,7 +49,7 @@ function Add-InternalDnsCacheRecord {
     process {
         if ($ResourceRecord) {
             $CacheRecord = $ResourceRecord | Select-Object Name, TTL, RecordType, IPAddress |
-                Add-Member -TypeName 'Indented.DnsResolver.Message.CacheRecord' -PassThru
+                Add-Member -TypeName 'Indented.Net.Dns.CacheRecord' -PassThru
         }
 
         $CacheRecord |

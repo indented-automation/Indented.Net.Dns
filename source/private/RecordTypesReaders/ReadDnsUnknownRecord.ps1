@@ -12,8 +12,6 @@ function ReadDnsUnknownRecord {
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
 

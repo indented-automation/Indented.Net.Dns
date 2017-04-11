@@ -1,32 +1,30 @@
+using namespace Indented.Net.Dns
+
 function Get-InternalDnsCacheRecord {
     # .SYNOPSIS
     #   Get the content of the internal DNS cache used by Get-Dns.
     # .DESCRIPTION
     #   Get-InternalDnsCacheRecord displays records held in the cache.
     # .INPUTS
-    #   Indented.DnsResolver.RecordType
-    #   System.Net.IPAddress
-    #   System.String
-    # .OUTPUTS
-    #   Indented.DnsResolver.Message.CacheRecord
+    #   Indented.Net.Dns.CacheRecord
+    #   Indented.Net.Dns.ResourceRecord
     # .EXAMPLE
     #   Get-InternalDnsCacheRecord
     # .EXAMPLE
     #   Get-InternalDnsCacheRecord a.root-servers.net A
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     23/03/2017 - Chris Dent - Modernisation passd
     #     13/01/2015 - Chris Dent - Forked from source module.
 
     [CmdletBinding()]
+    [OutputType('Indented.Net.Dns.CacheRecord')]
     param(
         [Parameter(Position = 1, ValueFromPipelineByPropertyName = $true)]
         [String]$Name,
 
         [Parameter(Position = 2, ValueFromPipelineByPropertyName = $true)]
-        [Indented.DnsResolver.RecordType]$RecordType,
+        [RecordType]$RecordType,
 
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [IPAddress]$IPAddress,

@@ -2,10 +2,8 @@ using namespace System.Text
 
 function ConvertFromDnsDomainName {
     # .SYNOPSIS
-    #   Converts a DNS domain name from a string to a byte array.
+    #   Convert a DNS domain name from a string to a byte array.
     # .DESCRIPTION
-    #   Internal use only.
-    #
     #   RFC 1034:
     #
     #   "Internally, programs that manipulate domain names should represent them
@@ -22,16 +20,10 @@ function ConvertFromDnsDomainName {
     #    is treated as binary information, and can be up to 256 characters in
     #    length (including the length octet)."
     #
-    # .INPUTS
-    #   System.String
-    # .OUTPUTS
-    #   System.Byte[]
     # .LINK
     #   http://www.ietf.org/rfc/rfc1034.txt
     #   http://www.ietf.org/rfc/rfc1035.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     11/01/2017 - Chris Dent - Modernisation pass.
 

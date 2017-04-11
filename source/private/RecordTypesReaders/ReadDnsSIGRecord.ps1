@@ -36,8 +36,6 @@ function ReadDnsSIGRecord {
     #   http://www.ietf.org/rfc/rfc2535.txt
     #   http://www.ietf.org/rfc/rfc2931.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/03/2017 - Chris Dent - Modernisation pass.
 

@@ -22,8 +22,6 @@ function ReadDnsIPSECKEYRecord {
     # .LINK
     #   http://www.ietf.org/rfc/rfc4025.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     09/02/2017 - Chris Dent - Modernisation pass.
 

@@ -4,10 +4,8 @@ using namespace System.Text
 
 function NewDnsSOARecord {
     # .SYNOPSIS
-    #   Creates a new SOA record instance for use with IXFR queries.
+    #   Create a new SOA record instance for use with IXFR queries.
     # .DESCRIPTION
-    #   Internal use only.
-    #
     #   Modified / simplified SOA record structure for executing IXFR transfers. 
     #
     #                                    1  1  1  1  1  1
@@ -44,18 +42,11 @@ function NewDnsSOARecord {
     #    |                                               |
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .INPUTS
-    #   System.String
-    #   System.UInt32
-    # .OUTPUTS
-    #   System.Management.Automation.PSObject
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.  
 
-    [OutputType([PSObject])]
+    [OutputType('Indented.Net.Dns.SOARecord')]
     param(
         # Name is passed into this command as an optional aesthetic value. 
         #

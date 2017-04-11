@@ -19,8 +19,6 @@ function ReadDnsAPLRecord {
     # .LINK
     #   http://tools.ietf.org/html/rfc3123
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.
 

@@ -3,7 +3,7 @@ using namespace Indented.Net.Dns
 
 function NewDnsOPTRecord {
     # .SYNOPSIS
-    #   Creates a new OPT record instance for advertising DNSSEC support.
+    #   Create a new OPT record instance for advertising DNSSEC support.
     # .DESCRIPTION
     #   Modified / simplified OPT record structure for advertising DNSSEC support. 
     #  
@@ -23,17 +23,13 @@ function NewDnsOPTRecord {
     #    |                   RDLENGTH                    |  
     #    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #
-    # .OUTPUTS
-    #   Indented.Net.Dns.OPTRecord
     # .LINK
     #   http://www.ietf.org/rfc/rfc2671.txt
     # .NOTES
-    #   Author: Chris Dent
-    #
     #   Change log:
     #     17/01/2017 - Chris Dent - Modernisation pass.
 
-    [OutputType([PSObject])]
+    [OutputType('Indented.Net.Dns.OPTRecord')]
     param( )
     
     $resourceRecord = [PSCustomObject]@{
