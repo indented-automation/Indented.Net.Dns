@@ -18,7 +18,7 @@ class DnsQuestion {
 
     [RecordType]$RecordType
 
-    [RecordClass]$RecordClass
+    [Object]$RecordClass
 
     DnsQuestion() { }
 
@@ -28,7 +28,18 @@ class DnsQuestion {
         $this.RecordClass = $class
     }
 
-    [Byte[]] GetBytes() {
+    DnsQuestion([EndianBinaryReader]$binaryReader) {
+        $this.Name = [DnsMessage]::ReadDnsName($binaryReader)
+        $this.RecordType = [RecordType]$BinaryReader.ReadUInt16($true)
+    
+        if ($this.RecordType -eq [RecordType]::OPT) {
+            $this.RecordClass = $BinaryReader.ReadUInt16($true)
+        } else {
+            $this.RecordClass = [RecordClass]$BinaryReader.ReadUInt16($true)
+        }
+    }
+
+    [Byte[]] ToByteArray() {
         $bytes = [List[Byte]]::new()
 
         $bytes.AddRange((ConvertFromDnsDomainName $this.Name))

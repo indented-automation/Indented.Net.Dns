@@ -1,5 +1,6 @@
 using namespace System.Collections.Generic
 using namespace System.Text
+using namespace System.IO
 
 class DnsMessage {
     <#
@@ -21,16 +22,18 @@ class DnsMessage {
     #>
 
     [DnsHeader]$Header = [DnsHeader]::new()
-    [DnsQuestion]$Question = [DnsQuestion]::new()
-    [List[ResourceRecord]]$Answer = [List[ResourceRecord]]::new()
-    [List[ResourceRecord]]$Authority = [List[ResourceRecord]]::new()
-    [List[ResourceRecord]]$Additional = [List[ResourceRecord]]::new()
 
-    [String]$Server = ""
+    [List[DnsQuestion]]$Question = [List[DnsQuestion]]::new()
 
-    [Int]$Size = 0
+    [List[DnsResourceRecord]]$Answer = [List[DnsResourceRecord]]::new()
 
-    [Int]$TimeTaken = 0
+    [List[DnsResourceRecord]]$Authority = [List[DnsResourceRecord]]::new()
+
+    [List[DnsResourceRecord]]$Additional = [List[DnsResourceRecord]]::new()
+
+    [Int]$Size
+
+    [Int]$TimeTaken
 
     # Constructors
 
@@ -40,6 +43,27 @@ class DnsMessage {
         $this.Question.Add(
             [DnsQuestion]::new($name, $recordType, $recordClass)
         )
+    }
+
+    DnsMessage([Byte[]]$message) {
+        $stream = [MemoryStream]::new($message)
+        $binaryReader = [EndianBinaryReader]::new($stream)
+        $this.Size = $message.Length
+    
+        $this.Header = [DnsHeader]::new($binaryReader)
+
+        for ($i = 0; $i -lt $dnsMessage.Header.QDCount; $i++) {
+            $this.Question.Add([DnsQuestion]::new($binaryReader))
+        }
+        for ($i = 0; $i -lt $dnsMessage.Header.ANCount; $i++) {
+            $this.Answer.Add([DnsResourceRecord]::new($binaryReader))
+        }
+        for ($i = 0; $i -lt $dnsMessage.Header.NSCount; $i++) {
+            $this.Authority.Add([DnsResourceRecord]:new($binaryReader))
+        }
+        for ($i = 0; $i -lt $dnsMessage.Header.ARCount; $i++) {
+            $this.Additional.Add([DnsResourceRecord]::new($binaryReader))
+        }
     }
 
     # Methods
@@ -87,7 +111,7 @@ class DnsMessage {
         return $this.GetBytes($false)
     }
 
-    [Byte[]] GetBytes([Boolean]$tcp) {
+    [Byte[]] ToByteArray([Boolean]$tcp) {
         $bytes = [List[Byte]]::new()
 
         $bytes.AddRange($this.Header.GetBytes())

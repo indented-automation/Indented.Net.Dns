@@ -51,7 +51,7 @@ class DnsHeader {
         $this | Add-Member RCode -MemberType ScriptProperty -Value { [RCode]($this.RawFlags -band 0x8000) }
     }
 
-    [Byte[]] GetBytes() {
+    [Byte[]] ToByteArray() {
         $bytes = [List[Byte]]::new()
 
         $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.ID, $true))
