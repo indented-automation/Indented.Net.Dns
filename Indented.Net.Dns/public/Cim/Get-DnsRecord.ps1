@@ -44,7 +44,7 @@ function Get-DnsRecord {
     }
 
     process {
-        $Filter = switch ($null) {
+        $wqlFilter = switch ($null) {
             { $Cache }     { 'ContainerName="..Cache"'; break }
             { $RootHints } { 'ContainerName="..RootHint"'; break }
             { $ZoneName }  { 'ContainerName="{0}"' -f $ZoneName; break }
@@ -55,7 +55,7 @@ function Get-DnsRecord {
             $params = @{
                 ClassName = $cimClass
                 Namespace = 'root/MicrosoftDNS'
-                Filter    = $Filter
+                Filter    = $wqlFilter
             }
             if ($psboundparameters.ContainsKey('CimSession')) {
                 $params.Add('CimSession', $CimSession)
