@@ -1,0 +1,4 @@
+@{
+    TXT = 'CGluZGVudGVkAmNvAnVrAAAQAAE='
+    A   = ''
+}

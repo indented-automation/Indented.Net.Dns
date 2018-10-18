@@ -29,7 +29,7 @@ class DnsQuestion {
     }
 
     DnsQuestion([EndianBinaryReader]$binaryReader) {
-        $this.Name = [DnsMessage]::ReadDnsName($binaryReader)
+        $this.Name = $binaryReader.ReadDnsDomainName()
         $this.RecordType = [RecordType]$BinaryReader.ReadUInt16($true)
     
         if ($this.RecordType -eq [RecordType]::OPT) {

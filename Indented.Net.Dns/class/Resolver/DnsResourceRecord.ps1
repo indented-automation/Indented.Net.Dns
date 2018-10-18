@@ -35,7 +35,7 @@ class DnsResourceRecord {
     DnsResourceRecord() { }
 
     DnsResourceRecord([EndianBinaryReader]$binaryReader) {
-        $this.Name = [DnsMessage]::ReadDnsName($binaryReader)
+        $this.Name = $binaryReader.ReadDnsDomainName()
 
         if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + 10)) {
             $type = $binaryReader.ReadUInt16($true)
@@ -76,7 +76,7 @@ class DnsResourceRecord {
     
     # Child classes should override this method
     Hidden [String] GetRecordData() {
-        return
+        return ''
     }
 
     # Overrides ToString

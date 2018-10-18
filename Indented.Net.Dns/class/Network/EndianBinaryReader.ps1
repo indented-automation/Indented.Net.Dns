@@ -1,4 +1,6 @@
+using namespace System.Collections.Generic
 using namespace System.IO
+using namespace System.Text
 
 class EndianBinaryReader : BinaryReader {
     EndianBinaryReader([Stream]$BaseStream) : base($BaseStream) { }
@@ -93,9 +95,9 @@ class EndianBinaryReader : BinaryReader {
         while ($this.PeekByte() -ne 0) {
             # The length or compression reference
             $length = $this.ReadByte()
-            if (-not $isCompressed) {
-                $BytesRead.Value++
-            }
+            # if (-not $isCompressed) {
+            #     $BytesRead.Value++
+            # }
 
             if (($length -band [MessageCompression]::Enabled) -eq [MessageCompression]::Enabled) {
                 $isCompressed = $true
@@ -114,9 +116,9 @@ class EndianBinaryReader : BinaryReader {
                 $null = $name.Append($this.ReadChars($length))
                 $null = $name.Append('.')
 
-                if (-not $isCompressed) {
-                    $BytesRead.Value += $length
-                }
+                # if (-not $isCompressed) {
+                #     $BytesRead.Value += $length
+                # }
             }
         }
         # If expansion was used, return to the starting point (plus 1 byte)
@@ -125,7 +127,7 @@ class EndianBinaryReader : BinaryReader {
         }
         # Read off and discard the null termination on the end of the name
         $null = $this.ReadByte()
-        $BytesRead.Value++
+        # $BytesRead.Value++
 
         if ($name[-1] -ne '.') {
             $null = $name.Append('.')
@@ -161,7 +163,7 @@ class EndianBinaryReader : BinaryReader {
         if ($Name) {
             foreach ($label in $Name.Split('.')) {
                 $bytes.Add($label.Length)
-                $bytes.AddRange([Char[]]$label))
+                $bytes.AddRange([Char[]]$label)
             }
         }
         # Add a zero length root label

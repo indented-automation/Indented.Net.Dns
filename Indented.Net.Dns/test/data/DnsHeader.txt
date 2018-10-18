@@ -1,0 +1,4 @@
+@{
+    NoError = 'AAKBgAABAAYAAAAA'
+    NXDomain = 'AAOBgwABAAAAAQAA'
+}

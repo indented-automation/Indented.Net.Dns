@@ -1,3 +1,4 @@
+using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Text
 using namespace System.IO
@@ -59,7 +60,7 @@ class DnsMessage {
             $this.Answer.Add([DnsResourceRecord]::new($binaryReader))
         }
         for ($i = 0; $i -lt $dnsMessage.Header.NSCount; $i++) {
-            $this.Authority.Add([DnsResourceRecord]:new($binaryReader))
+            $this.Authority.Add([DnsResourceRecord]::new($binaryReader))
         }
         for ($i = 0; $i -lt $dnsMessage.Header.ARCount; $i++) {
             $this.Additional.Add([DnsResourceRecord]::new($binaryReader))
