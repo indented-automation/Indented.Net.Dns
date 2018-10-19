@@ -12,15 +12,12 @@ class A6 : DnsResourceRecord {
        /                                               /
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
-    
-    [Byte]$PrefixLength
 
-    [IPAddress]$AddressSuffix
-
-    [String]$PrefixName
+    [Byte]      $PrefixLength
+    [IPAddress] $AddressSuffix
+    [String]    $PrefixName
 
     A6() { }
-    A6([EndianBinaryReader]$binaryReader) : base($binaryReader) { }
 
     [Void] ReadRecordData([EndianBinaryReader]$binaryReader) {
         $this.PrefixLength = $binaryReader.ReadByte()
@@ -41,7 +38,7 @@ class A6 : DnsResourceRecord {
         $this.PrefixName = $binaryReader.ReadDnsDomainName()
     }
 
-    Hidden [String] GetRecordData() {
+    [String] RecordDataToString() {
         return '{0} {1} {2}' -f $this.PrefixLength,
                                 $this.AddressSuffix.IPAddressToString,
                                 $this.PrefixName

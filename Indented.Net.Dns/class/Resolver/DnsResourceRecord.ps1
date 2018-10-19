@@ -1,3 +1,5 @@
+using namespace System.IO
+
 class DnsResourceRecord {
     <#
                                       1  1  1  1  1  1
@@ -17,65 +19,67 @@ class DnsResourceRecord {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
        /                     RDATA                     /
        /                                               /
-       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+    
+       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String]$Name
+    [String]      $Name
+    [UInt32]      $TTL
+    [RecordClass] $RecordClass      = [RecordClass]::IN
+    [Object]      $RecordType       = [RecordType]::Empty
+    [UInt16]      $RecordDataLength
 
-    [UInt32]$TTL
+    Hidden [Boolean] $IsTruncated
 
-    [RecordClass]$RecordClass = [RecordClass]::IN
+    static [DnsResourceRecord] Parse([Byte[]]$bytes) {
+        $binaryReader = [EndianBinaryReader][MemoryStream]$bytes
 
-    [Object]$RecordType = [RecordType]::Empty
+        return [DnsResourceRecord]::Parse($binaryReader)
+    }
 
-    [UInt16]$RecordDataLength
+    static [DnsResourceRecord] Parse([EndianBinaryReader]$binaryReader) {
+        $resourceRecord = [DnsResourceRecord]::new()
 
-    Hidden [Boolean]$IsTruncated
-
-    DnsResourceRecord() { }
-
-    DnsResourceRecord([EndianBinaryReader]$binaryReader) {
-        $this.Name = $binaryReader.ReadDnsDomainName()
+        $resourceRecord.Name = $binaryReader.ReadDnsDomainName()
 
         if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + 10)) {
-            $type = $binaryReader.ReadUInt16($true)
+            [Int32]$type = $binaryReader.ReadUInt16($true)
             if ([Enum]::IsDefined([RecordType], $type)) {
-                $this.RecordType = [RecordType]$type
+                $resourceRecord.RecordType = [RecordType]$type
             } else {
-                $this.RecordType = 'UNKNOWN ({0})' -f $type
+                $resourceRecord.RecordType = 'UNKNOWN ({0})' -f $type
             }
 
-            if ($this.RecordType -eq [RecordType]::OPT) {
-                $this.RecordClass = $binaryReader.ReadUInt16($true)
+            if ($resourceRecord.RecordType -eq [RecordType]::OPT) {
+                $resourceRecord.RecordClass = $binaryReader.ReadUInt16($true)
             } else {
-                $this.RecordClass = [RecordClass]$binaryReader.ReadUInt16($true)
+                $resourceRecord.RecordClass = [RecordClass]$binaryReader.ReadUInt16($true)
             }
-    
-            $this.TTL = $binaryReader.ReadUInt32($true)
-            $this.RecordDataLength = $binaryReader.ReadUInt16($true)
 
-            if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + $this.RecordDataLength)) {
-                $this.ReadRecordData($binaryReader)
+            $resourceRecord.TTL = $binaryReader.ReadUInt32($true)
+            $resourceRecord.RecordDataLength = $binaryReader.ReadUInt16($true)
+
+            if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + $resourceRecord.RecordDataLength)) {
+                if ($resourceRecord.RecordType -is [RecordType] -and $resourceRecord.RecordType.ToString() -as [Type]) {
+                    $resourceRecord = $resourceRecord -as ($resourceRecord.RecordType.ToString() -as [Type])
+                }
             } else {
-                $this.IsTruncated = $true
+                $resourceRecord.IsTruncated = $true
             }
         } else {
-            $this.IsTruncated = $true
+            $resourceRecord.IsTruncated = $true
         }
+
+        $resourceRecord.ReadRecordData($binaryReader)
+        return $resourceRecord
     }
 
-    # Fabricates a RecordData property
-    Hidden [Void] AddProperties() {
-        Add-Member RecordData -MemberType ScriptProperty -Value { $this.GetRecordData() } -Force
-    }
-    
     # Child classes should override this method
     [Void] ReadRecordData([EndianBinaryReader]$binaryReader) {
         $binaryReader.ReadBytes($this.RecordDataLength)
     }
-    
+
     # Child classes should override this method
-    Hidden [String] GetRecordData() {
+    [String] RecordDataToString() {
         return ''
     }
 
@@ -85,6 +89,6 @@ class DnsResourceRecord {
                                         $this.TTL.ToString().PadRight(10, ' '),
                                         $this.RecordClass.ToString().PadRight(5, ' '),
                                         $this.RecordType.ToString().PadRight(5, ' '),
-                                        $this.RecordData
+                                        $this.RecordDataToString()
     }
 }

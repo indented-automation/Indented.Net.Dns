@@ -7,7 +7,7 @@ class EndianBinaryReader : BinaryReader {
 
     [UInt16] ReadUInt16([Boolean]$isBigEndian) {
         if ($isBigEndian) {
-            return [UInt16](($this.ReadByte() -shl 8) -bor $this.ReadByte())
+            return [UInt16](([UInt16]$this.ReadByte() -shl 8) -bor $this.ReadByte())
         } else {
             return $this.ReadUInt16()
         }
@@ -16,9 +16,9 @@ class EndianBinaryReader : BinaryReader {
     [UInt32] ReadUInt32([Boolean]$isBigEndian) {
         if ($isBigEndian) {
             return [UInt32](
-                ($this.ReadByte() -shl 24) -bor
-                ($this.ReadByte() -shl 16) -bor
-                ($this.ReadByte() -shl 8) -bor
+                ([UInt32]$this.ReadByte() -shl 24) -bor
+                ([UInt32]$this.ReadByte() -shl 16) -bor
+                ([UInt32]$this.ReadByte() -shl 8) -bor
                 $this.ReadByte())
         } else {
             return $this.ReadUInt32()
@@ -28,13 +28,13 @@ class EndianBinaryReader : BinaryReader {
     [UInt64] ReadUInt64([Boolean]$isBigEndian) {
         if ($isBigEndian) {
             return [UInt64](
-                ($this.ReadByte() -shl 56) -bor
-                ($this.ReadByte() -shl 48) -bor
-                ($this.ReadByte() -shl 40) -bor
-                ($this.ReadByte() -shl 32) -bor
-                ($this.ReadByte() -shl 24) -bor
-                ($this.ReadByte() -shl 16) -bor
-                ($this.ReadByte() -shl 8) -bor
+                ([UInt64]$this.ReadByte() -shl 56) -bor
+                ([UInt64]$this.ReadByte() -shl 48) -bor
+                ([UInt64]$this.ReadByte() -shl 40) -bor
+                ([UInt64]$this.ReadByte() -shl 32) -bor
+                ([UInt64]$this.ReadByte() -shl 24) -bor
+                ([UInt64]$this.ReadByte() -shl 16) -bor
+                ([UInt64]$this.ReadByte() -shl 8) -bor
                 $this.ReadByte())
         } else {
             return $this.ReadUInt64()
@@ -57,17 +57,7 @@ class EndianBinaryReader : BinaryReader {
     }
 
     [IPAddress] ReadIPv6Address() {
-        # Should use ctor for IPAddress
-        return [IPAddress]::Parse(
-            "{0:X}:{1:X}:{2:X}:{3:X}:{4:X}:{5:X}:{6:X}:{7:X}" -f 
-                $this.ReadUInt16($true),
-                $this.ReadUInt16($true),
-                $this.ReadUInt16($true),
-                $this.ReadUInt16($true),
-                $this.ReadUInt16($true),
-                $this.ReadUInt16($true),
-                $this.ReadUInt16($true),
-                $this.ReadUInt16($true))
+        return [IPAddress]::new($this.ReadBytes(16))
     }
 
     # http://www.ietf.org/rfc/rfc1035.txt

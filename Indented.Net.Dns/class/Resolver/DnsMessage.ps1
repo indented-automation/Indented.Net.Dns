@@ -22,48 +22,39 @@ class DnsMessage {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [DnsHeader]$Header = [DnsHeader]::new()
-
-    [List[DnsQuestion]]$Question = [List[DnsQuestion]]::new()
-
-    [List[DnsResourceRecord]]$Answer = [List[DnsResourceRecord]]::new()
-
-    [List[DnsResourceRecord]]$Authority = [List[DnsResourceRecord]]::new()
-
-    [List[DnsResourceRecord]]$Additional = [List[DnsResourceRecord]]::new()
-
-    [Int]$Size
-
-    [Int]$TimeTaken
+    [DnsHeader]           $Header
+    [DnsQuestion[]]       $Question
+    [DnsResourceRecord[]] $Answer
+    [DnsResourceRecord[]] $Authority
+    [DnsResourceRecord[]] $Additional
+    [Int]                 $Size
+    [Int]                 $TimeTaken
 
     # Constructors
 
     DnsMessage() { }
 
     DnsMessage([String]$name, [RecordType]$recordType, [RecordClass]$recordClass) {
-        $this.Question.Add(
-            [DnsQuestion]::new($name, $recordType, $recordClass)
-        )
+        $this.Question = [DnsQuestion]::new($name, $recordType, $recordClass)
     }
 
     DnsMessage([Byte[]]$message) {
-        $stream = [MemoryStream]::new($message)
-        $binaryReader = [EndianBinaryReader]::new($stream)
+        $binaryReader = [EndianBinaryReader][MemoryStream]$message
         $this.Size = $message.Length
-    
-        $this.Header = [DnsHeader]::new($binaryReader)
 
-        for ($i = 0; $i -lt $dnsMessage.Header.QDCount; $i++) {
-            $this.Question.Add([DnsQuestion]::new($binaryReader))
+        $this.Header = [DnsHeader]$binaryReader
+
+        $this.Question = for ($i = 0; $i -lt $this.Header.QuestionCount; $i++) {
+            [DnsQuestion]$binaryReader
         }
-        for ($i = 0; $i -lt $dnsMessage.Header.ANCount; $i++) {
-            $this.Answer.Add([DnsResourceRecord]::new($binaryReader))
+        $this.Answer = for ($i = 0; $i -lt $this.Header.AnswerCount; $i++) {
+            [DnsResourceRecord]::Parse($binaryReader)
         }
-        for ($i = 0; $i -lt $dnsMessage.Header.NSCount; $i++) {
-            $this.Authority.Add([DnsResourceRecord]::new($binaryReader))
+        $this.Authority = for ($i = 0; $i -lt $this.Header.AuthorityCount; $i++) {
+            [DnsResourceRecord]::Parse($binaryReader)
         }
-        for ($i = 0; $i -lt $dnsMessage.Header.ARCount; $i++) {
-            $this.Additional.Add([DnsResourceRecord]::new($binaryReader))
+        $this.Additional = for ($i = 0; $i -lt $this.Header.AdditionalCount; $i++) {
+            [DnsResourceRecord]::Parse($binaryReader)
         }
     }
 
@@ -98,14 +89,14 @@ class DnsMessage {
     }
 
     [Void] SetEDnsBufferSize([UInt16]$EDnsBufferSize) {
-        $this.Header.ARCount = 1
-        $this.Additional.Add([OPTRecord]@{
+        $this.Header.AdditionalCount = 1
+        $this.Additional = [OPT]@{
             MaximumPayloadSize = $EDnsBufferSize
-        })
+        }
     }
 
     [Void] SetAcceptDnsSec() {
-        $this.Header.RawFlags = $this.Header.RawFlags -bor [HeaderFlags]::AD
+        $this.Header.Flags = $this.Header.Flags -bor [HeaderFlags]::AD
     }
 
     [Byte[]] GetBytes() {
@@ -115,17 +106,17 @@ class DnsMessage {
     [Byte[]] ToByteArray([Boolean]$tcp) {
         $bytes = [List[Byte]]::new()
 
-        $bytes.AddRange($this.Header.GetBytes())
-        $bytes.AddRange($this.Question.GetBytes())
+        $bytes.AddRange($this.Header.ToByteArray())
+        $bytes.AddRange($this.Question.ToByteArray())
 
-        if ($this.Header.NSCount -gt 0) {
+        if ($this.Header.AuthorityCount -gt 0) {
             foreach ($resourceRecord in $this.Authority) {
-                $bytes.AddRange($resourceRecord.GetBytes())                
+                $bytes.AddRange($resourceRecord.ToByteArray())
             }
         }
-        if ($this.Header.ARCount -gt 0) {
+        if ($this.Header.AdditionalCount -gt 0) {
             foreach ($resourceRecord in $this.Additional) {
-                $bytes.AddRange($resourceRecord.GetBytes())
+                $bytes.AddRange($resourceRecord.ToByteArray())
             }
         }
 

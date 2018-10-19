@@ -14,11 +14,9 @@ class DnsQuestion {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String]$Name
-
-    [RecordType]$RecordType
-
-    [Object]$RecordClass
+    [String]     $Name
+    [RecordType] $RecordType
+    [Object]     $RecordClass
 
     DnsQuestion() { }
 
@@ -31,7 +29,7 @@ class DnsQuestion {
     DnsQuestion([EndianBinaryReader]$binaryReader) {
         $this.Name = $binaryReader.ReadDnsDomainName()
         $this.RecordType = [RecordType]$BinaryReader.ReadUInt16($true)
-    
+
         if ($this.RecordType -eq [RecordType]::OPT) {
             $this.RecordClass = $BinaryReader.ReadUInt16($true)
         } else {

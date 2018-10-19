@@ -6,17 +6,16 @@ class A : DnsResourceRecord {
        |                    ADDRESS                    |
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
-    
-    [IPAddress]$IPAddress
+
+    [IPAddress] $IPAddress
 
     A() { }
-    A([EndianBinaryReader]$binaryReader) : base($binaryReader) { }
 
     [Void] ReadRecordData([EndianBinaryReader]$binaryReader) {
         $this.IPAddress = $BinaryReader.ReadIPv4Address()
     }
 
-    Hidden [String] GetRecordData() {
+    [String] RecordDataToString() {
         return $this.IPAddress.IPAddressToString
     }
 }

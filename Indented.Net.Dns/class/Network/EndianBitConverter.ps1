@@ -5,8 +5,9 @@ class EndianBitConverter {
         if ([BitConverter]::IsLittleEndian -and $isLittleEndian) {
             return [BitConverter]::GetBytes($value)
         } elseif ([BitConverter]::IsLittleEndian) {
-            $value = [IPAddress]::HostToNetworkOrder($value)
-            return [BitConverter]::GetBytes($value)
+            return [BitConverter]::GetBytes(
+                [IPAddress]::HostToNetworkOrder([Int32]$value)
+            )[2, 3]
         } else {
             return [BitConverter]::GetBytes($value)
         }
@@ -16,8 +17,9 @@ class EndianBitConverter {
         if ([BitConverter]::IsLittleEndian -and $isLittleEndian) {
             return [BitConverter]::GetBytes($value)
         } elseif ([BitConverter]::IsLittleEndian) {
-            $value = [IPAddress]::HostToNetworkOrder($value)
-            return [BitConverter]::GetBytes($value)
+            return [BitConverter]::GetBytes(
+                [IPAddress]::HostToNetworkOrder([Int64]$value)
+            )[3..7]
         } else {
             return [BitConverter]::GetBytes($value)
         }
