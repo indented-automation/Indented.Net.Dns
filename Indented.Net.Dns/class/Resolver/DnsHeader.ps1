@@ -66,11 +66,8 @@ class DnsHeader {
         $bytes[2], $bytes[3] = [EndianBitConverter]::GetBytes($value, $false)
 
         $bytes[4], $bytes[5] = [EndianBitConverter]::GetBytes($this.QDCount, $false)
-
         $bytes[6], $bytes[7] = [EndianBitConverter]::GetBytes($this.ANCount, $false)
-
         $bytes[8], $bytes[9] = [EndianBitConverter]::GetBytes($this.NSCOUNT, $false)
-
         $bytes[10], $bytes[11] = [EndianBitConverter]::GetBytes($this.ARCOUNT, $false)
 
         return $bytes
