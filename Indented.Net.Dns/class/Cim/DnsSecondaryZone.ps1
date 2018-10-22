@@ -1,23 +1,36 @@
-class DnsSecondaryZone {
-    if ((UInt32)wmiZone.Properties["LastSuccessfulSoaCheck"].Value != 0)
-    {
-        this.LastSuccessfulSoaCheck = new DateTime(1970, 01, 01).AddSeconds(
-           (UInt32)wmiZone.Properties["LastSuccessfulSoaCheck"].Value);
+class DnsSecondaryZone : DnsZone {
+    [DateTime]     $LastSuccessfulSoaCheck
+    [DateTime]     $LastSuccessfulXfr
+    [String[]]     $MasterServers
+    [String[]]     $LocalMasterServers
+
+    # Zone Transfer
+
+    [ZoneTransfer] $ZoneTransfer
+    [String[]]     $SecondaryServers
+    [Notify]       $Notify
+    [String[]]     $NotifyServers
+
+    DnsSecondaryZone([CimInstance]$CimInstance) : base($CimInstance) { }
+
+    Hidden [Void] UpdateProperties() {
+        if ($this.CimInstance.LastSuccessfulSoaCheck -ne 0) {
+            $this.LastSuccessfulSoaCheck = [DateTime]::new(1970, 1, 1).AddSeconds(
+                $this.CimInstance.LastSuccessfulSoaCheck
+            )
+        }
+        if ($this.CimInstance.LastSuccessfulXfr -ne 0) {
+            $this.LastSuccessfulXfr = [DateTime]::new(1970, 1, 1).AddSeconds(
+                $this.CimInstance.LastSuccessfulXfr
+            )
+        }
+
+        $this.MasterServers = $this.CimInstance.MasterServers
+        $this.LocalMasterServers = $this.CimInstance.LocalMasterServers
+        
+        $this.ZoneTransfer = $this.CimInstance.SecureSecondaries
+        $this.SecondaryServers = $this.CimInstance.SecondaryServers
+        $this.Notify = $this.CimInstance.Notify
+        $this.NotifyServers = $this.CimInstance.NotifyServers
     }
-
-    if ((UInt32)wmiZone.Properties["LastSuccessfulXfr"].Value != 0)
-    {
-        this.LastSuccessfulXfr = new DateTime(1970, 01, 01).AddSeconds(
-            (UInt32)wmiZone.Properties["LastSuccessfulXfr"].Value);
-    }
-
-    this.MasterServers = (String[])wmiZone.Properties["MasterServers"].Value;
-    this.LocalMasterServers = (String[])wmiZone.Properties["LocalMasterServers"].Value;
-    
-    // Zone Transfers
-
-    this.ZoneTransferSetting = (ZoneTransfer)(UInt32)wmiZone.Properties["SecureSecondaries"].Value;
-    this.SecondaryServers = (String[])wmiZone.Properties["SecondaryServers"].Value;
-    this.NotifySetting = (Notify)(UInt32)wmiZone.Properties["Notify"].Value;
-    this.NotifyServers = (String[])wmiZone.Properties["NotifyServers"].Value;    
 }

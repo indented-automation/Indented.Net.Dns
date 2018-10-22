@@ -1,10 +1,13 @@
-class DnsConditionalForwarder {
-    this.ForwarderUseRecursion = (Boolean)wmiZone.Properties["ForwarderSlave"].Value;
-    this.ForwarderTimeOut = (UInt32)wmiZone.Properties["ForwarderTimeOut"].Value;
+class DnsConditionalForwarder : DnsZone {
+    [Boolean] $ForwarderUseRecursion
+    [UInt32]  $ForwarderTimeOut
 
-    public String GetDistinguishedName()
-    {
-        return (String)this.wmiZone.InvokeMethod("GetDistinguishedName", new object[] { });
+    Hidden [Void] UpdateProperties() {
+        $this.ForwarderUseRecursion = $this.CimInstance.ForwarderSlave
+        $this.ForwarderTimeOut = $this.CimInstance.ForwarderTimeOut
     }
 
+    [String] GetDistinguishedName() {
+        return $this.CimInstance | Invoke-CimMethod -MethodName 'GetDistinguishedName'
+    }
 }

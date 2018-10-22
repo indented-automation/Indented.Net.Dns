@@ -30,13 +30,17 @@ class DnsResourceRecord {
 
     Hidden [Boolean] $IsTruncated
 
-    static [DnsResourceRecord] Parse([Byte[]]$bytes) {
+    static [DnsResourceRecord] Parse(
+        [Byte[]]$bytes
+    ) {
         $binaryReader = [EndianBinaryReader][MemoryStream]$bytes
 
         return [DnsResourceRecord]::Parse($binaryReader)
     }
 
-    static [DnsResourceRecord] Parse([EndianBinaryReader]$binaryReader) {
+    static [DnsResourceRecord] Parse(
+        [EndianBinaryReader]$binaryReader
+    ) {
         $resourceRecord = [DnsResourceRecord]::new()
 
         $resourceRecord.Name = $binaryReader.ReadDnsDomainName()
@@ -74,7 +78,9 @@ class DnsResourceRecord {
     }
 
     # Child classes should override this method
-    [Void] ReadRecordData([EndianBinaryReader]$binaryReader) {
+    [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $binaryReader.ReadBytes($this.RecordDataLength)
     }
 

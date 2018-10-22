@@ -24,17 +24,21 @@ class DnsZone {
     DnsZone() { }
     DnsZone([CimInstance]$instance) {
         $this.CimInstance = $instance
+
         $this.ZoneName = $instance.Name
+        $this.AutoCreated = $instance.AutoCreated
+        $this.DataFile = $instance.DataFile
+        $this.DnsServerName = $instance.DnsServerName
+        $this.ZoneType = $instance.ZoneType
+        $this.DsIntegrated = $instance.DsIntegrated
+        $this.Reverse = $instance.Reverse
+        $this.Paused = $instance.Paused
+        $this.Shutdown = $instance.Shutdown
+
         $this.UpdateProperties()
     }
 
-    Hidden [Void] UpdateProperties() {
-        foreach ($property in $this.CimInstance.PSObject.Properties) {
-            if ($this.PSObject.Properties.Item($property.Name)) {
-                $this.$($property.Name) = $property.Value
-            }
-        }
-    }
+    Hidden [Void] UpdateProperties() { }
 
     # ChangeZoneType
     #
@@ -155,7 +159,7 @@ class DnsZone {
             $params.Arguments.Add('NotifyServers', $newNotifyServers)
         }
         # Work on this
-        $return = $this.CimInstance | Invoke-CimMethod @params
+        $this.CimInstance | Invoke-CimMethod @params
     }
 
     [Void] UpdateFromDS() {

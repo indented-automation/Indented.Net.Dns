@@ -1,23 +1,22 @@
-class A : DnsResourceRecord {
+class DHCID : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        |                    ADDRESS                    |
+        /                  <anything>                   /
+        /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+        http://www.ietf.org/rfc/rfc4701.txt
     #>
 
-    [IPAddress] $IPAddress
+    [Byte[]] $BinaryData
 
-    A() { }
+    DHCID() { }
 
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
-        $this.IPAddress = $BinaryReader.ReadIPv4Address()
-    }
-
-    [String] RecordDataToString() {
-        return $this.IPAddress.IPAddressToString
+        $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
     }
 }

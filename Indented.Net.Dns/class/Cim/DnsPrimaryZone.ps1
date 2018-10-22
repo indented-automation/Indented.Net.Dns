@@ -1,56 +1,68 @@
-class DnsPrimaryZone {
+class DnsPrimaryZone : DnsZone {
+    # Aging and scavenging
 
+    [Boolean]           $Aging
+    [ZoneDynamicUpdate] $DynamicUpdate
+    [DateTime]          $AvailForScavengeTime
+    [TimeSpan]          $NoRefreshInterval
+    [TimeSpan]          $RefreshInterval
+    [String[]]          $ScavengeServers
 
-    # Aging and Scavenging
+    # Zone Transfer
 
-    this.Aging = (Boolean)wmiZone.Properties["Aging"].Value;
-    this.DynamicUpdate = (ZoneDynamicUpdate)(UInt32)wmiZone.Properties["AllowUpdate"].Value;
+    [ZoneTransfer]      $ZoneTransfer
+    [String[]]          $SecondaryServers
+    [Notify]            $Notify
+    [String[]]          $NotifyServers
 
-    if ((UInt32)wmiZone.Properties["AvailForScavengeTime"].Value != 0)
-    {
-        this.AvailForScavengeTime = new DateTime(1601, 1, 1).AddHours(
-            (UInt32)wmiZone.Properties["AvailForScavengeTime"].Value);
-    }
+    # WINS
 
-    this.NoRefreshInterval = new TimeSpan((Int32)(UInt32)wmiZone.Properties["NoRefreshInterval"].Value, 0, 0);
-    this.RefreshInterval = new TimeSpan((Int32)(UInt32)wmiZone.Properties["RefreshInterval"].Value, 0, 0);
-    this.ScavengeServers = (String[])wmiZone.Properties["ScavengeServers"].Value;
+    [Boolean]           $DisableWINSRecordReplication
 
-    // Zone Transfers
+    DnsPrimaryZone([CimInstance]$CimInstance) : base($CimInstance) { }
 
-    this.ZoneTransferSetting = (ZoneTransfer)(UInt32)wmiZone.Properties["SecureSecondaries"].Value;
-    this.SecondaryServers = (String[])wmiZone.Properties["SecondaryServers"].Value;
-    this.NotifySetting = (Notify)(UInt32)wmiZone.Properties["Notify"].Value;
-    this.NotifyServers = (String[])wmiZone.Properties["NotifyServers"].Value;
-
-    // WINS
-
-    this.DisableWINSRecordReplication = false;
-    if (wmiZone.Properties["DisableWINSRecordReplication"].Value != null)
-    {
-        this.DisableWINSRecordReplication = (Boolean)wmiZone.Properties["DisableWINSRecordReplication"].Value;
-    }
-    this.UseWins = (Boolean)wmiZone.Properties["UseWins"].Value;
-
-    // Wrapper for AgeAllRecords Method
-    //
-    // This method call will fail if:
-    //   NodeName is not fully-qualified or @
-    //   NodeName does not exist
-
-    internal UInt32 AgeAllRecords(String NodeName, Boolean ApplyToSubtree)
-    {
-        if (NodeName != "@" | !NodeName.Contains(this.ZoneName))
-        {
-            return 1;
+    Hidden [Void] UpdateProperties() {
+        $this.Aging = $this.CimInstance.Aging
+        $this.DynamicUpdate = $this.CimInstance.AllowUpdate
+        
+        if ($this.CimInstance.AvailForScavengeTime -ne 0) {
+            $this.AvailForScavengeTime = [DateTime]::new(1601, 1, 1).AddHours(
+                $this.CimInstance.AvailForScavengeTime
+            )
         }
 
-        return (UInt32)this.wmiZone.InvokeMethod("AgeAllRecords", new object[] { NodeName, ApplyToSubtree });
+        $this.NoRefreshInterval = [TimeSpan]::new($this.CimInstance.NoRefreshInterval)
+        $this.RefreshInterval = [TimeSpan]::new($this.CimInstance.RefreshInterval)
+        $this.ScavengeServers = $this.CimInstance.ScavengeServers
+
+        $this.ZoneTransfer = $this.CimInstance.SecureSecondaries
+        $this.SecondaryServers = $this.CimInstance.SecondaryServers
+        $this.Notify = $this.CimInstance.Notify
+        $this.NotifyServers = $this.CimInstance.NotifyServers
+
+        $this.DisableWINSRecordReplication = $this.CimInstance.DisableWINSRecordReplication
+        $this.UseWins = $this.CimInstance.UseWins
     }
 
-    public String GetDistinguishedName()
-    {
-        return (String)this.wmiZone.InvokeMethod("GetDistinguishedName", new object[] { });
+    # This method call will fail if:
+    #   NodeName is not fully-qualified or @
+    #   NodeName does not exist
+    [Void] AgeAllRecords(
+        [String]  $nodeName,
+        [Boolean] $applyToSubtree
+    ) {
+        if ($nodeName -ne '@' -and -not $nodeName.ToLower().Contains($this.ZoneName.ToLower())) {
+            throw 'InvalidNodeName'
+        }
+
+        # Work on this
+        $this.CimInstance | Invoke-CimMethod -MethodName 'ResumeZone' -Arguments @{
+            $nodeName,
+            $applyToSubtree
+        }
     }
 
+    [String] GetDistinguishedName() {
+        return $this.CimInstance | Invoke-CimMethod -MethodName 'GetDistinguishedName'
+    }
 }

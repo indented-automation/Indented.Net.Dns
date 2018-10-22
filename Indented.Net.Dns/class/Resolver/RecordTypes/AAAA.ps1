@@ -1,23 +1,25 @@
 class AAAA : DnsResourceRecord {
     <#
-                                       1  1  1  1  1  1
-         0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-       |                    ADDRESS                    |
-       |                                               |
-       |                                               |
-       |                                               |
-       |                                               |
-       |                                               |
-       |                                               |
-       |                                               |
-       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                                        1  1  1  1  1  1
+          0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+        |                    ADDRESS                    |
+        |                                               |
+        |                                               |
+        |                                               |
+        |                                               |
+        |                                               |
+        |                                               |
+        |                                               |
+        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
     [IPAddress] $IPAddress
 
     AAAA() { }
-    AAAA([DnsResourceRecord]$resourceRecord) {
+    AAAA(
+        [DnsResourceRecord] $resourceRecord
+    ) {
         foreach ($name in $resourceRecord.PSObject.Properties.Name) {
             $this.$name = $resourceRecord.$name
         }

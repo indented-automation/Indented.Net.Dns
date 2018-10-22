@@ -1,14 +1,24 @@
-if ((UInt32)wmiZone.Properties["LastSuccessfulSoaCheck"].Value != 0)
-{
-    this.LastSuccessfulSoaCheck = new DateTime(1970, 01, 01).AddSeconds(
-       (UInt32)wmiZone.Properties["LastSuccessfulSoaCheck"].Value);
-}
+class DnsStubZone : DnsZone {
+    [DateTime] $LastSuccessfulSoaCheck
+    [DateTime] $LastSuccessfulXfr
+    [String[]] $MasterServers
+    [String[]] $LocalMasterServers
 
-if ((UInt32)wmiZone.Properties["LastSuccessfulXfr"].Value != 0)
-{
-    this.LastSuccessfulXfr = new DateTime(1970, 01, 01).AddSeconds(
-        (UInt32)wmiZone.Properties["LastSuccessfulXfr"].Value);
-}
+    DnsStubZone([CimInstance]$CimInstance) : base($CimInstance) { }
 
-this.MasterServers = (String[])wmiZone.Properties["MasterServers"].Value;
-this.LocalMasterServers = (String[])wmiZone.Properties["LocalMasterServers"].Value;
+    Hidden [Void] UpdateProperties() {
+        if ($this.CimInstance.LastSuccessfulSoaCheck -ne 0) {
+            $this.LastSuccessfulSoaCheck = [DateTime]::new(1970, 1, 1).AddSeconds(
+                $this.CimInstance.LastSuccessfulSoaCheck
+            )
+        }
+        if ($this.CimInstance.LastSuccessfulXfr -ne 0) {
+            $this.LastSuccessfulXfr = [DateTime]::new(1970, 1, 1).AddSeconds(
+                $this.CimInstance.LastSuccessfulXfr
+            )
+        }
+
+        $this.MasterServers = $this.CimInstance.MasterServers
+        $this.LocalMasterServers = $this.CimInstance.LocalMasterServers
+    }
+}

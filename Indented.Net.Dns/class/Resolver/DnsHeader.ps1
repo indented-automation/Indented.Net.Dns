@@ -31,7 +31,9 @@ class DnsHeader {
 
     DnsHeader() { }
 
-    DnsHeader([EndianBinaryReader]$binaryReader) {
+    DnsHeader(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.ID = $binaryReader.ReadUInt16($true)
 
         $value = $binaryReader.ReadUInt16($true)
@@ -46,7 +48,10 @@ class DnsHeader {
         $this.AdditionalCount = $binaryReader.ReadUInt16($true)
     }
 
-    DnsHeader([Boolean]$recursionDesired, [UInt16]$questionCount) {
+    DnsHeader(
+        [Boolean] $recursionDesired,
+        [UInt16]  $questionCount
+    ) {
         if ($recursionDesired) {
             $this.Flags = $this.Flags -bor ([HeaderFlags]::RD -shr 8)
         }

@@ -5,7 +5,9 @@ using namespace System.Text
 class EndianBinaryReader : BinaryReader {
     EndianBinaryReader([Stream]$BaseStream) : base($BaseStream) { }
 
-    [UInt16] ReadUInt16([Boolean]$isBigEndian) {
+    [UInt16] ReadUInt16(
+        [Boolean] $isBigEndian
+    ) {
         if ($isBigEndian) {
             return [UInt16](([UInt16]$this.ReadByte() -shl 8) -bor $this.ReadByte())
         } else {
@@ -13,7 +15,9 @@ class EndianBinaryReader : BinaryReader {
         }
     }
 
-    [UInt32] ReadUInt32([Boolean]$isBigEndian) {
+    [UInt32] ReadUInt32(
+        [Boolean] $isBigEndian
+    ) {
         if ($isBigEndian) {
             return [UInt32](
                 ([UInt32]$this.ReadByte() -shl 24) -bor
@@ -25,7 +29,9 @@ class EndianBinaryReader : BinaryReader {
         }
     }
 
-    [UInt64] ReadUInt64([Boolean]$isBigEndian) {
+    [UInt64] ReadUInt64(
+        [Boolean] $isBigEndian
+    ) {
         if ($isBigEndian) {
             return [UInt64](
                 ([UInt64]$this.ReadByte() -shl 56) -bor
@@ -80,18 +86,12 @@ class EndianBinaryReader : BinaryReader {
         $name = [StringBuilder]::new()
         [UInt64]$CompressionStart = 0
 
-        $isCompressed = $false
         # Read until we find the null terminator
         while ($this.PeekByte() -ne 0) {
             # The length or compression reference
             $length = $this.ReadByte()
-            # if (-not $isCompressed) {
-            #     $BytesRead.Value++
-            # }
 
             if (($length -band [MessageCompression]::Enabled) -eq [MessageCompression]::Enabled) {
-                $isCompressed = $true
-
                 # Record the current position as the start of the compression operation.
                 # Reader will be returned here after this operation is complete.
                 if ($compressionStart -eq 0) {
@@ -105,10 +105,6 @@ class EndianBinaryReader : BinaryReader {
                 # Read a label
                 $null = $name.Append($this.ReadChars($length))
                 $null = $name.Append('.')
-
-                # if (-not $isCompressed) {
-                #     $BytesRead.Value += $length
-                # }
             }
         }
         # If expansion was used, return to the starting point (plus 1 byte)
@@ -117,7 +113,6 @@ class EndianBinaryReader : BinaryReader {
         }
         # Read off and discard the null termination on the end of the name
         $null = $this.ReadByte()
-        # $BytesRead.Value++
 
         if ($name[-1] -ne '.') {
             $null = $name.Append('.')
@@ -145,7 +140,9 @@ class EndianBinaryReader : BinaryReader {
     #   http://www.ietf.org/rfc/rfc1034.txt
     #   http://www.ietf.org/rfc/rfc1035.txt
     #
-    static [String] GetDnsDomainNameBytes([String]$Name) {
+    static [String] GetDnsDomainNameBytes(
+        [String] $Name
+    ) {
         # Drop any trailing . characters from the name. They are no longer necessary all names must be absolute by this point.
         $Name = $Name.TrimEnd('.')
 

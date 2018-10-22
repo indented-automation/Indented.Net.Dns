@@ -34,7 +34,11 @@ class DnsMessage {
 
     DnsMessage() { }
 
-    DnsMessage([String]$name, [RecordType]$recordType, [RecordClass]$recordClass) {
+    DnsMessage(
+        [String]      $name,
+        [RecordType]  $recordType,
+        [RecordClass] $recordClass
+    ) {
         $this.Question = [DnsQuestion]::new($name, $recordType, $recordClass)
     }
 
@@ -60,7 +64,9 @@ class DnsMessage {
 
     # Methods
 
-    Hidden [String] RecordSetToString([IEnumerable]$resourceRecords) {
+    Hidden [String] RecordSetToString(
+        [IEnumerable] $resourceRecords
+    ) {
         $string = [StringBuilder]::new()
         foreach ($resourceRecord in $resourceRecords) {
             $string.AppendLine($resourceRecord.ToString())
@@ -103,7 +109,9 @@ class DnsMessage {
         return $this.GetBytes($false)
     }
 
-    [Byte[]] ToByteArray([Boolean]$tcp) {
+    [Byte[]] ToByteArray(
+        [Boolean] $tcp
+    ) {
         $bytes = [List[Byte]]::new()
 
         $bytes.AddRange($this.Header.ToByteArray())

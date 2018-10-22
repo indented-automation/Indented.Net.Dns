@@ -20,13 +20,19 @@ class DnsQuestion {
 
     DnsQuestion() { }
 
-    DnsQuestion([String]$recordName, [RecordType]$type, [RecordClass]$class) {
+    DnsQuestion(
+        [String]      $recordName,
+        [RecordType]  $type,
+        [RecordClass] $class
+    ) {
         $this.Name = $recordName
         $this.RecordType = $type
         $this.RecordClass = $class
     }
 
-    DnsQuestion([EndianBinaryReader]$binaryReader) {
+    DnsQuestion(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Name = $binaryReader.ReadDnsDomainName()
         $this.RecordType = [RecordType]$BinaryReader.ReadUInt16($true)
 

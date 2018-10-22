@@ -1,16 +1,16 @@
 class A6 : DnsResourceRecord {
     <#
-                                       1  1  1  1  1  1
-         0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-       |      PREFIX LEN       |                       |
-       +--+--+--+--+--+--+--+--+                       |
-       /                ADDRESS SUFFIX                 /
-       /                                               /
-       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-       /                  PREFIX NAME                  /
-       /                                               /
-       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+                                        1  1  1  1  1  1
+          0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+        |      PREFIX LEN       |                       |
+        +--+--+--+--+--+--+--+--+                       |
+        /                ADDRESS SUFFIX                 /
+        /                                               /
+        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+        /                  PREFIX NAME                  /
+        /                                               /
+        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
     [Byte]      $PrefixLength
@@ -19,15 +19,16 @@ class A6 : DnsResourceRecord {
 
     A6() { }
 
-    [Void] ReadRecordData([EndianBinaryReader]$binaryReader) {
+    [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.PrefixLength = $binaryReader.ReadByte()
 
         $addressSuffixBytes = [Byte[]]::new(16)
 
         $length = [Math]::Ceiling((128 - $this.PrefixLength) / 8)
-        $recordBytes = $binaryReader.ReadBytes($length)
         [Array]::Copy(
-            $recordBytes,
+            $binaryReader.ReadBytes($length),
             0,
             $addressSuffixBytes,
             16 - $length,
