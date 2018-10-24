@@ -63,8 +63,10 @@ class DnsResourceRecord {
             $resourceRecord.RecordDataLength = $binaryReader.ReadUInt16($true)
 
             if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + $resourceRecord.RecordDataLength)) {
-                if ($resourceRecord.RecordType -is [RecordType] -and $resourceRecord.RecordType.ToString() -as [Type]) {
-                    $resourceRecord = $resourceRecord -as ($resourceRecord.RecordType.ToString() -as [Type])
+                $typeName = 'Dns{0}Record' -f $resourceRecord.RecordType
+
+                if ($resourceRecord.RecordType -is [RecordType] -and $typeName -as [Type]) {
+                    $resourceRecord = $resourceRecord -as ($typeName -as [Type])
                 }
             } else {
                 $resourceRecord.IsTruncated = $true

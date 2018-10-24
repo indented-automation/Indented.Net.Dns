@@ -222,7 +222,7 @@ function Get-BuildInfo {
             } | Add-Member -TypeName 'BuildInfo' -PassThru
 
             $buildInfo.Version = GetVersion $buildInfo.Path.SourceManifest
-            
+
             $buildInfo.Path.Package = [System.IO.DirectoryInfo](Join-Path $buildInfo.Path.ProjectRoot $buildInfo.Version)
             if ($buildInfo.Path.ProjectRoot.Name -ne $buildInfo.ModuleName) {
                 $buildInfo.Path.Package = [System.IO.DirectoryInfo][System.IO.Path]::Combine($buildInfo.Path.ProjectRoot, 'build', $buildInfo.ModuleName, $buildInfo.Version)
@@ -243,8 +243,6 @@ function Get-BuildInfo {
 }
 
 function Get-BuildItem {
-
-
     <#
     .SYNOPSIS
         Get source items.
@@ -276,39 +274,18 @@ function Get-BuildItem {
 
     Push-Location $buildInfo.Path.Source
 
-    $itemTypes = [Ordered]@{
-        enumeration    = 'enum*'
-        class          = 'class*'
-        private        = 'priv*'
-        public         = 'pub*'
-        initialisation = 'InitializeModule.ps1'
-    }
-
+    $items = 'enum', 'class', 'private', 'public'
     if ($Type -eq 'ShouldMerge') {
-        foreach ($itemType in $itemTypes.Keys) {
-            if ($itemType -ne 'class' -or ($itemType -eq 'class' -and -not $ExcludeClass)) {
-                $items = Get-ChildItem $itemTypes[$itemType] -Recurse -ErrorAction SilentlyContinue |
-                    Where-Object { -not $_.PSIsContainer -and $_.Extension -eq '.ps1' -and $_.Length -gt 0 }
-
-                $orderingFilePath = Join-Path $itemTypes[$itemType] 'order.txt'
-                if (Test-Path $orderingFilePath) {
-                    [String[]]$order = Get-Content (Resolve-Path $orderingFilePath).Path
-
-                    $items = $items | Sort-Object {
-                        $index = $order.IndexOf($_.BaseName)
-                        if ($index -eq -1) {
-                            [Int32]::MaxValue
-                        } else {
-                            $index
-                        }
-                    }, Name
-                }
-
-                $items
-            }
+        if ($ExcludeClass) {
+            $items = 'enum', 'private', 'public'
+        }
+        Get-ChildItem $items -Filter *.ps1 -File -Recurse |
+            Where-Object Length -gt 0
+        if (Test-Path InitializeModule.ps1) {
+            Get-ChildItem InitializeModule.ps1
         }
     } elseif ($Type -eq 'Static') {
-        [String[]]$exclude = $itemTypes.Values + '*.config', 'test*', 'doc', 'help', '.build*.ps1'
+        [String[]]$exclude = $items + '*.config', 'test*', 'doc', 'help', '.build*.ps1'
 
         # Should work, fails when testing.
         # Get-ChildItem -Exclude $exclude
@@ -373,7 +350,7 @@ task TestSyntax {
             [Ref]$tokens,
             [Ref]$parseErrors
         )
-        
+
         if ($parseErrors.Count -gt 0) {
             $parseErrors | Write-Error
 
@@ -435,7 +412,7 @@ task UpdateMetadata {
 
         # Version
         Update-Metadata $path -PropertyName ModuleVersion -Value $buildInfo.Version
-        
+
         # RootModule
         if (Enable-Metadata $path -PropertyName RootModule) {
             Update-Metadata $path -PropertyName RootModule -Value $buildInfo.Path.RootModule.Name
@@ -460,8 +437,8 @@ task UpdateMetadata {
         $dscResourcesToExport = $ast.FindAll( {
             param ($ast)
 
-            $ast -is [System.Management.Automation.Language.TypeDefinitionAst] -and 
-            $ast.IsClass -and 
+            $ast -is [System.Management.Automation.Language.TypeDefinitionAst] -and
+            $ast.IsClass -and
             $ast.Attributes.TypeName.FullName -contains 'DscResource'
         }, $true).Name
         if ($null -ne $dscResourcesToExport) {
@@ -512,7 +489,7 @@ task UpdateMarkdownHelp -If (Get-Module platyPS -ListAvailable) {
                 New-MarkdownHelp -Module $buildInfo.ModuleName -OutputFolder (Join-Path $buildInfo.Path.Source 'help') -Force
             }
         } catch {
-            throw            
+            throw
         }
     } | Receive-Job -Wait -ErrorAction Stop
 }
@@ -556,7 +533,7 @@ task PSScriptAnalyzer -If (Get-Module PSScriptAnalyzer -ListAvailable) {
 
 task TestModule {
     if (-not (Get-ChildItem (Resolve-Path (Join-Path $buildInfo.Path.Source 'test*')).Path -Filter *.tests.ps1 -Recurse -File)) {
-        throw 'The PS project must have tests!'    
+        throw 'The PS project must have tests!'
     }
 
     $pester = Start-Job -ArgumentList $buildInfo -ScriptBlock {

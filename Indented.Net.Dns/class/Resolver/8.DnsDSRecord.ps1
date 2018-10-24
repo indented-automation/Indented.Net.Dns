@@ -1,4 +1,4 @@
-class DLV { 
+class DnsDSRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -11,15 +11,16 @@ class DLV {
         /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-        http://www.ietf.org/rfc/rfc4431.txt
+        http://www.ietf.org/rfc/rfc3658.txt
+        http://www.ietf.org/rfc/rfc4034.txt
     #>
 
     [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [DigestType]          $DigestType
-    [Digest]              $Digest
+    [String]              $Digest
 
-    DLV() { }
+    DnsDSRecord() { }
 
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
@@ -27,7 +28,7 @@ class DLV {
         $this.KeyTag = $binaryReader.ReadInt16($true)
         $this.Algorithm = $binaryReader.ReadByte()
         $this.DigestType = $binaryReader.ReadByte()
-        
+
         $bytes = $binaryReader.ReadBytes($this.RecordDataLength - 4)
         $this.Digest = [EndianBitConverter]::ToBinary($bytes)
     }

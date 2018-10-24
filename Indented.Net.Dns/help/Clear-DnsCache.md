@@ -1,7 +1,6 @@
 ---
 external help file: Indented.Net.Dns-help.xml
-Module Name: Indented.Net.Dns
-online version:
+online version: 
 schema: 2.0.0
 ---
 
@@ -14,12 +13,12 @@ Clear the DNS Cache on the specified server.
 
 ### ComputerName (Default)
 ```
-Clear-DnsCache [[-ComputerName] <String[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-DnsCache [[-ComputerName] <String[]>] [-WhatIf] [-Confirm]
 ```
 
 ### CimSession
 ```
-Clear-DnsCache -CimSession <CimSession[]> [-WhatIf] [-Confirm] [<CommonParameters>]
+Clear-DnsCache -CimSession <CimSession[]> [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
@@ -28,7 +27,7 @@ Clear-DnsCache uses the WMI class MicrosoftDNS_Cache to clear the DNS Cache on t
 ## EXAMPLES
 
 ### Example 1
-```powershell
+```
 PS C:\> {{ Add example code here }}
 ```
 
@@ -43,7 +42,7 @@ By default cache on the current server DNS cache is cleared.
 ```yaml
 Type: String[]
 Parameter Sets: ComputerName
-Aliases:
+Aliases: 
 
 Required: False
 Position: 2
@@ -58,7 +57,7 @@ Clear the DNS Cache a DNS server using the specified CIM sessions.
 ```yaml
 Type: CimSession[]
 Parameter Sets: CimSession
-Aliases:
+Aliases: 
 
 Required: True
 Position: Named
@@ -98,10 +97,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
-
 ## INPUTS
 
 ## OUTPUTS
@@ -109,3 +104,4 @@ For more information, see about_CommonParameters (http://go.microsoft.com/fwlink
 ## NOTES
 
 ## RELATED LINKS
+

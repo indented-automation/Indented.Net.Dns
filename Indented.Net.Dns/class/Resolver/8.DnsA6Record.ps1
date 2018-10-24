@@ -1,4 +1,4 @@
-class A6 : DnsResourceRecord {
+class DnsA6Record : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -17,7 +17,7 @@ class A6 : DnsResourceRecord {
     [IPAddress] $AddressSuffix
     [String]    $PrefixName
 
-    A6() { }
+    DnsA6Record() { }
 
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader

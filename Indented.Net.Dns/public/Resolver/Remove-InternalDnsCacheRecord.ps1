@@ -12,7 +12,7 @@ function Remove-InternalDnsCacheRecord {
       Remove-InternalDnsCacheRecord -AllExpired
     #>
 
-    [CmdletBinding(DefaultParameterSetName = 'CacheRecord')]
+    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'CacheRecord')]
     param(
         # A record to add to the cache.
         [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'CacheRecord')]
@@ -26,22 +26,24 @@ function Remove-InternalDnsCacheRecord {
 
     begin {
         if ($AllExpired) {
-            $ExpiredRecords = Get-InternalDnsCacheRecord | Where-Object Status -eq 'Expired'
-            $ExpiredRecords | Remove-InternalDnsCacheRecord
+            $expiredRecords = Get-InternalDnsCacheRecord | Where-Object Status -eq 'Expired'
+            $expiredRecords | Remove-InternalDnsCacheRecord -WhatIf:$($WhatIf.ToBool())
         }
     }
 
     process {
         if (-not $AllExpired) {
-            if ($DnsCacheReverse.Contains($CacheRecord.IPAddress)) {
-                $DnsCacheReverse.Remove($CacheRecord.IPAddress)
+            if ($Script:dnsCacheReverse.Contains($CacheRecord.IPAddress)) {
+                $Script:dnsCacheReverse.Remove($CacheRecord.IPAddress)
             }
-            if ($DnsCache.Contains($CacheRecord.Name)) {
-                $DnsCache[$CacheRecord.Name] = $DnsCache[$CacheRecord.Name] |
+            if ($Script:dnsCache.Contains($CacheRecord.Name)) {
+                $Script:dnsCache[$CacheRecord.Name] = $Script:dnsCache[$CacheRecord.Name] |
                     Where-Object { $_.IPAddress -ne $CacheRecord.IPAddress -and $_.RecordType -ne $CacheRecord.RecordType }
-                    
-                if ($DnsCache[$CacheRecord.Name].Count -eq 0) {
-                    $DnsCache.Remove($CacheRecord.Name)
+
+                if ($Script:dnsCache[$CacheRecord.Name].Count -eq 0) {
+                    if ($pscmdlet.ShouldProcess('Removing {0} from cache' -f $CacheRecord.Name)) {
+                        $Script:dnsCache.Remove($CacheRecord.Name)
+                    }
                 }
             }
         }

@@ -96,7 +96,7 @@ class DnsMessage {
 
     [Void] SetEDnsBufferSize([UInt16]$EDnsBufferSize) {
         $this.Header.AdditionalCount = 1
-        $this.Additional = [OPT]@{
+        $this.Additional = [DnsOPTRecord]@{
             MaximumPayloadSize = $EDnsBufferSize
         }
     }

@@ -6,7 +6,7 @@ http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
 schema: 2.0.0
 ---
 
-# Update-InternalRootHints
+# Update-InternalRootHint
 
 ## SYNOPSIS
 Updates the root hints file from InterNIC then re-initializes the internal cache.
@@ -14,7 +14,7 @@ Updates the root hints file from InterNIC then re-initializes the internal cache
 ## SYNTAX
 
 ```
-Update-InternalRootHints [[-Source] <Uri>]
+Update-InternalRootHint [[-Source] <Uri>] [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
@@ -42,6 +42,37 @@ Aliases:
 Required: False
 Position: 1
 Default value: Http://www.internic.net/domain/named.root
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -WhatIf
+Shows what would happen if the cmdlet runs.
+The cmdlet is not run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: wi
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: cf
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

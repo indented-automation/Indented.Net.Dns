@@ -1,26 +1,23 @@
-class DNAME : DnsResourceRecord {
+class DnsARecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        /                     TARGET                    /
-        /                                               /
+        |                    ADDRESS                    |
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-
-        http://www.ietf.org/rfc/rfc2672.txt
     #>
 
-    [String] $Target
+    [IPAddress] $IPAddress
 
-    DNAME() { }
+    DnsARecord() { }
 
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
-        $this.Target = $binaryReader.ReadDnsDomainName()
+        $this.IPAddress = $BinaryReader.ReadIPv4Address()
     }
 
     [String] RecordDataToString() {
-        return $this.Target
+        return $this.IPAddress.IPAddressToString
     }
 }

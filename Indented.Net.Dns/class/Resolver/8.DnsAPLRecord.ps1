@@ -1,4 +1,4 @@
-class APL : DnsResourceRecord {
+class DnsAPLRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -16,15 +16,15 @@ class APL : DnsResourceRecord {
 
     [PSObject[]] $List
 
-    APL() { }
-    
+    DnsAPLRecord() { }
+
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         if ($this.RecordDataLength -gt 0) {
             $listLength = $this.RecordDataLength
 
-            $this.List = while ($listLength -gt 0) {            
+            $this.List = while ($listLength -gt 0) {
                 $addressFamily = [IanaAddressFamily]$binaryReader.ReadUInt16($true)
                 $negationAndLength = $binaryReader.ReadByte()
 
@@ -50,9 +50,9 @@ class APL : DnsResourceRecord {
                 )
                 # Property: Address
                 $item.Address = [IPAddress]::new($addressBytes)
-    
+
                 $item
-    
+
                 $listLength -= 3 + $addressLength
             }
         }

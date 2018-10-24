@@ -1,24 +1,26 @@
-class CNAME : DnsResourceRecord {
+class DnsDNAMERecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        /                     CNAME                     /
+        /                     TARGET                    /
         /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+
+        http://www.ietf.org/rfc/rfc2672.txt
     #>
 
-    [String] $Hostname
+    [String] $Target
 
-    CNAME() { }
+    DnsDNAMERecord() { }
 
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
-        $this.Hostname = $binaryReader.ReadDnsDomainName()
+        $this.Target = $binaryReader.ReadDnsDomainName()
     }
 
     [String] RecordDataToString() {
-        return $this.Hostname
+        return $this.Target
     }
 }

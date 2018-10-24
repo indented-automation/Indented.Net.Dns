@@ -42,14 +42,5 @@ function Get-DnsZone {
         }
 
         Get-CimInstance @params
-
-                    foreach (ManagementObject wmiZone in wmiResults)
-                    {
-                        WriteObject(new Zone(wmiZone, ServerName));
-                    }
-                }
-            }
-        }
-        #endregion
     }
 }

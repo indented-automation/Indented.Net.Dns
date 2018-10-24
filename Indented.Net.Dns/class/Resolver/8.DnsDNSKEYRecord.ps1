@@ -1,4 +1,4 @@
-class DNSKEY : DnsResourceRecord {
+class DnsDNSKEYRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -11,15 +11,15 @@ class DNSKEY : DnsResourceRecord {
         /                                               /
         /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    
+
         The flags field takes the following format, discussed in RFC 4034 2.1.1:
-    
+
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
         |                    | Z|                    | S|
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    
+
         Where Z represents the ZoneKey bit, and S the SecureEntryPoint bit.
 
         http://www.ietf.org/rfc/rfc3755.txt
@@ -33,7 +33,7 @@ class DNSKEY : DnsResourceRecord {
     [EncryptionAlgorithm] $Algorithm
     [String]              $PublicKey
 
-    DNSKEY() { }
+    DnsDNSKEYRecord() { }
 
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader

@@ -1,4 +1,4 @@
-function Update-InternalRootHints {
+function Update-InternalRootHint {
     <#
     .SYNOPSIS
         Updates the root hints file from InterNIC then re-initializes the internal cache.
@@ -10,7 +10,7 @@ function Update-InternalRootHints {
         Update-InternalRootHints
     #>
 
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
         [URI]$Source = "http://www.internic.net/domain/named.root"
     )

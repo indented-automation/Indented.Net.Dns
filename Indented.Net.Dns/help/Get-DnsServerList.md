@@ -1,6 +1,5 @@
 ---
 external help file: Indented.Net.Dns-help.xml
-Module Name: Indented.Net.Dns
 online version: http://www.ietf.org/rfc/rfc1034.txt
 http://www.ietf.org/rfc/rfc1035.txt
 http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
@@ -15,7 +14,7 @@ Gets a list of network interfaces and attempts to return a list of DNS server IP
 ## SYNTAX
 
 ```
-Get-DnsServerList [-IPv6] [<CommonParameters>]
+Get-DnsServerList [-IPv6]
 ```
 
 ## DESCRIPTION
@@ -25,12 +24,12 @@ If successful, the DNS server list is returned.
 
 ## EXAMPLES
 
-### EXAMPLE 1
+### -------------------------- EXAMPLE 1 --------------------------
 ```
 Get-DnsServerList
 ```
 
-### EXAMPLE 2
+### -------------------------- EXAMPLE 2 --------------------------
 ```
 Get-DnsServerList -IPv6
 ```
@@ -43,7 +42,7 @@ Get-DnsServerList -IPv6
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -52,15 +51,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
-
 ## INPUTS
 
 ## OUTPUTS
 
 ### System.Net.IPAddress
+
 ## NOTES
 
 ## RELATED LINKS
+

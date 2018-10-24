@@ -47,15 +47,15 @@ function Get-InternalDnsCacheRecord {
 
         if ($Name) {
             if (-not $Name.EndsWith('.')) {
-                $Name = "$Name."
+                $Name = '{0}.' -f $Name
             }
-            if ($DnsCache.Contains($Name)) {
-                $DnsCache[$Name] | Where-Object $whereStatement
+            if ($Script:dnsCache.Contains($Name)) {
+                $Script:dnsCache[$Name] | Where-Object $whereStatement
             }
         } else {
             # Each key may contain multiple values. Forcing a pass through ForEach-Object will
             # remove the multi-dimensional aspect of the return value.
-            $DnsCache.Values | ForEach-Object { $_ } | Where-Object $whereStatement
+            $Script:dnsCache.Values | ForEach-Object { $_ } | Where-Object $whereStatement
         }
     }
 }

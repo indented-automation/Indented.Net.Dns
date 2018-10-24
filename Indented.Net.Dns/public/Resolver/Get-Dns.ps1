@@ -14,39 +14,39 @@ function Get-Dns {
         Attempt to resolve hostname using the system-configured search list.
     .EXAMPLE
         Get-Dns www.domain.example
-        
+
         The system-configured search list will be appended to this query before it is executed.
     .EXAMPLE
         Get-Dns www.domain.example.
-        
+
         The name is fully-qualified (or root terminated), no additional suffixes will be appended.
     .EXAMPLE
         Get-Dns www.domain.example -NoSearchList
-        
+
         No additional suffixes will be appended.
     .EXAMPLE
         Get-Dns www.domain.example -Iterative
-        
+
         Attempt to perform an iterative lookup of www.domain.example, starting from the root hints.
     .EXAMPLE
         Get-Dns www.domain.example CNAME -NSSearch
-        
+
         Attempt to return the CNAME record for www.domain.example from all authoritative servers for the parent zone.
     .EXAMPLE
         Get-Dns -Version -Server 10.0.0.1
-        
+
         Request a version string from the server 10.0.0.1.
     .EXAMPLE
         Get-Dns domain.example -ZoneTransfer -Server 10.0.0.1
-        
+
         Request a zone transfer, using AXFR, for domain.example from the server 10.0.0.1.
     .EXAMPLE
         Get-Dns domain.example -ZoneTransfer -SerialNumber 2 -Server 10.0.0.1
-        
+
         Request a zone transfer, using IXFR and the serial number 2, for domain.example from the server 10.0.0.1.
     .EXAMPLE
         Get-Dns example. -DnsSec
-        
+
         Request ANY record for the co.uk domain, advertising DNSSEC support.
     .LINK
         http://www.ietf.org/rfc/rfc1034.txt
@@ -56,6 +56,7 @@ function Get-Dns {
 
     [CmdletBinding(DefaultParameterSetname = 'RecursiveQuery')]
     [OutputType('Indented.DnsResolver.Message')]
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
     param (
         # A resource name to query, by default Get-Dns will use '.' as the name. IP addresses (IPv4 and IPv6) are automatically converted into an appropriate format to aid PTR queries.
         [Parameter(Position = 1, ValueFromPipeline, ParameterSetName = 'RecursiveQuery')]
@@ -124,7 +125,7 @@ function Get-Dns {
         [Parameter(ParameterSetName = 'RecursiveQuery')]
         [Parameter(ParameterSetName = 'IterativeQuery')]
         [Parameter(ParameterSetName = 'NSSearch')]
-        [Switch]$NoTcpFallback,    
+        [Switch]$NoTcpFallback,
 
         # If a name is not root terminated (does not end with '.') a SearchList will be used for recursive queries. If this parameter is not defined Get-Dns will attempt to retrieve a SearchList from the hosts network configuration.
         #
@@ -143,10 +144,10 @@ function Get-Dns {
         [Parameter(ParameterSetName = 'ZoneTransfer')]
         [UInt32]$SerialNumber,
 
-        # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter). 
+        # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
         #
         # If a name is used another lookup will be required to resolve the name to an IP. Get-Dns caches responses for queries performed involving the Server parameter. The cache may be viewed and maintained using the *-InternalDnsCache CmdLets.
-        # 
+        #
         # If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
         [Parameter(ParameterSetName = 'RecursiveQuery')]
         [Parameter(ParameterSetName = 'Version')]
@@ -197,15 +198,15 @@ function Get-Dns {
             $NoEDns = $false
         }
         if ($NoEDns) {
-            $GlobalOptions.Add('NoEDns', $true) 
+            $GlobalOptions.Add('NoEDns', $true)
         } else {
-            $GlobalOptions.Add('EDnsBufferSize', $EDnsBufferSize)     
+            $GlobalOptions.Add('EDnsBufferSize', $EDnsBufferSize)
         }
         if ($DnsSec) {
             $GlobalOptions.Add('DnsSec', $true)
         }
         if ($NoTcpFallback) {
-            $GlobalOptions.Add('NoTcpFallback', $true) 
+            $GlobalOptions.Add('NoTcpFallback', $true)
         }
 
         if ($IPv6) {
@@ -377,10 +378,10 @@ function Get-Dns {
                 $NameServer = $_
                 $NameServerIP = $DnsResponse.Additional |
                     Where-Object {
-                        $_.Name -eq $NameServer.Hostname -and 
+                        $_.Name -eq $NameServer.Hostname -and
                         ($_.RecordType -eq [RecordType]::A -or $_.RecordType -eq [RecordType]::AAAA)
                     } |
-                    Select-Object -ExpandProperty IPAddress 
+                    Select-Object -ExpandProperty IPAddress
                 if ($NameServerIP) {
                     $NameServerIP.ToString()
                 } else {
@@ -472,7 +473,7 @@ function Get-Dns {
                     $DnsQuery = NewDnsMessage -Name $FullName -RecordType $RecordType -RecordClass $RecordClass
                 }
                 if (-not $NoEDns -and -not ($RecordType -in ([RecordType]::AXFR), ([RecordType]::IXFR))) {
-                    $DnsQuery.SetEDnsBufferSize($EDnsBufferSize) 
+                    $DnsQuery.SetEDnsBufferSize($EDnsBufferSize)
                 }
                 if ($DnsSec -and -not ($RecordType -in ([RecordType]::AXFR), ([RecordType]::IXFR))) {
                     $DnsQuery.SetAcceptDnsSec()
@@ -636,7 +637,7 @@ function Get-Dns {
                         }
                     } else {
                         $DnsResponse = ReadDnsMessage $DnsResponseData
-                        # If this is not TCP the response must be contained in a single packet.          
+                        # If this is not TCP the response must be contained in a single packet.
                         $MessageComplete = $true
                     }
 

@@ -24,7 +24,7 @@ class DnsPrimaryZone : DnsZone {
     Hidden [Void] UpdateProperties() {
         $this.Aging = $this.CimInstance.Aging
         $this.DynamicUpdate = $this.CimInstance.AllowUpdate
-        
+
         if ($this.CimInstance.AvailForScavengeTime -ne 0) {
             $this.AvailForScavengeTime = [DateTime]::new(1601, 1, 1).AddHours(
                 $this.CimInstance.AvailForScavengeTime
@@ -56,9 +56,9 @@ class DnsPrimaryZone : DnsZone {
         }
 
         # Work on this
-        $this.CimInstance | Invoke-CimMethod -MethodName 'ResumeZone' -Arguments @{
-            $nodeName,
-            $applyToSubtree
+        $this.CimInstance | Invoke-CimMethod -MethodName 'AgeAllRecords' -Arguments @{
+            ApplyToSubtree = $applyToSubtree
+            NodeName       = $nodeName
         }
     }
 

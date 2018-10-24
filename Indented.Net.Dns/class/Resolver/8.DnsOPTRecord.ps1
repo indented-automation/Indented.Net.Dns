@@ -1,6 +1,6 @@
 using namespace System.Text
 
-class OPT : DnsResourceRecord {
+class DnsOPTRecord : DnsResourceRecord {
     <#
         OPT records make the following changes to standard resource record fields:
 
@@ -110,13 +110,13 @@ class OPT : DnsResourceRecord {
         http://www.ietf.org/id/draft-vandergaast-edns-client-subnet-02.txt
     #>
 
-    [UInt16]         $MaximumPayloadSize
-    [UInt16]         $ExtendedRCode
-    [UInt32]         $Version
-    [EDnsDNSSECOK]   $Z
-    [PSObject[]]     $OptionData
+    [UInt16]       $MaximumPayloadSize
+    [UInt16]       $ExtendedRCode
+    [UInt32]       $Version
+    [EDnsDNSSECOK] $Z
+    [PSObject[]]   $OptionData
 
-    OPT() { }
+    DnsOPTRecord() { }
 
     [Void] ReadRecordData([EndianBinaryReader]$binaryReader) {
         $this.MaximumPayloadSize = $this.RecordClass

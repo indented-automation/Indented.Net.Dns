@@ -140,7 +140,7 @@ class EndianBinaryReader : BinaryReader {
     #   http://www.ietf.org/rfc/rfc1034.txt
     #   http://www.ietf.org/rfc/rfc1035.txt
     #
-    static [String] GetDnsDomainNameBytes(
+    static [Byte[]] GetDnsDomainNameBytes(
         [String] $Name
     ) {
         # Drop any trailing . characters from the name. They are no longer necessary all names must be absolute by this point.
@@ -150,7 +150,7 @@ class EndianBinaryReader : BinaryReader {
         if ($Name) {
             foreach ($label in $Name.Split('.')) {
                 $bytes.Add($label.Length)
-                $bytes.AddRange([Char[]]$label)
+                $bytes.AddRange([Byte[]][Char[]]$label)
             }
         }
         # Add a zero length root label

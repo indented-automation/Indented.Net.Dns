@@ -1,6 +1,5 @@
 ---
 external help file: Indented.Net.Dns-help.xml
-Module Name: Indented.Net.Dns
 online version: http://www.ietf.org/rfc/rfc1034.txt
 http://www.ietf.org/rfc/rfc1035.txt
 http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
@@ -19,31 +18,29 @@ Get a DNS resource record from a DNS server.
 Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-RecordClass <RecordClass>] [-NoRecursion] [-DnsSec]
  [-NoEDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-SearchList <String[]>] [-NoSearchList]
  [-SerialNumber <UInt32>] [-Server <String>] [-Tcp] [-Port <UInt16>] [-Timeout <Byte>] [-IPv6] [-DnsDebug]
- [<CommonParameters>]
 ```
 
 ### ZoneTransfer
 ```
 Get-Dns [[-Name] <String>] [-ZoneTransfer] [-SerialNumber <UInt32>] [-Server <String>] [-Timeout <Byte>]
- [-IPv6] [-DnsDebug] [<CommonParameters>]
+ [-IPv6] [-DnsDebug]
 ```
 
 ### NSSearch
 ```
 Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-NSSearch] [-DnsSec] [-NoEDns]
- [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug] [<CommonParameters>]
+ [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug]
 ```
 
 ### IterativeQuery
 ```
 Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-Iterative] [-RecordClass <RecordClass>] [-DnsSec]
- [-NoEDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug] [<CommonParameters>]
+ [-NoEDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug]
 ```
 
 ### Version
 ```
 Get-Dns [-Version] [-Server <String>] [-Tcp] [-Port <UInt16>] [-Timeout <Byte>] [-IPv6] [-DnsDebug]
- [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,70 +48,70 @@ Get-Dns is a debugging resolver tool similar to dig and nslookup.
 
 ## EXAMPLES
 
-### EXAMPLE 1
+### -------------------------- EXAMPLE 1 --------------------------
 ```
 Get-Dns hostname
 ```
 
 Attempt to resolve hostname using the system-configured search list.
 
-### EXAMPLE 2
+### -------------------------- EXAMPLE 2 --------------------------
 ```
 Get-Dns www.domain.example
 ```
 
 The system-configured search list will be appended to this query before it is executed.
 
-### EXAMPLE 3
+### -------------------------- EXAMPLE 3 --------------------------
 ```
 Get-Dns www.domain.example.
 ```
 
 The name is fully-qualified (or root terminated), no additional suffixes will be appended.
 
-### EXAMPLE 4
+### -------------------------- EXAMPLE 4 --------------------------
 ```
 Get-Dns www.domain.example -NoSearchList
 ```
 
 No additional suffixes will be appended.
 
-### EXAMPLE 5
+### -------------------------- EXAMPLE 5 --------------------------
 ```
 Get-Dns www.domain.example -Iterative
 ```
 
 Attempt to perform an iterative lookup of www.domain.example, starting from the root hints.
 
-### EXAMPLE 6
+### -------------------------- EXAMPLE 6 --------------------------
 ```
 Get-Dns www.domain.example CNAME -NSSearch
 ```
 
 Attempt to return the CNAME record for www.domain.example from all authoritative servers for the parent zone.
 
-### EXAMPLE 7
+### -------------------------- EXAMPLE 7 --------------------------
 ```
 Get-Dns -Version -Server 10.0.0.1
 ```
 
 Request a version string from the server 10.0.0.1.
 
-### EXAMPLE 8
+### -------------------------- EXAMPLE 8 --------------------------
 ```
 Get-Dns domain.example -ZoneTransfer -Server 10.0.0.1
 ```
 
 Request a zone transfer, using AXFR, for domain.example from the server 10.0.0.1.
 
-### EXAMPLE 9
+### -------------------------- EXAMPLE 9 --------------------------
 ```
 Get-Dns domain.example -ZoneTransfer -SerialNumber 2 -Server 10.0.0.1
 ```
 
 Request a zone transfer, using IXFR and the serial number 2, for domain.example from the server 10.0.0.1.
 
-### EXAMPLE 10
+### -------------------------- EXAMPLE 10 --------------------------
 ```
 Get-Dns example. -DnsSec
 ```
@@ -130,7 +127,7 @@ IP addresses (IPv4 and IPv6) are automatically converted into an appropriate for
 ```yaml
 Type: String
 Parameter Sets: RecursiveQuery, ZoneTransfer, NSSearch, IterativeQuery
-Aliases:
+Aliases: 
 
 Required: False
 Position: 2
@@ -178,7 +175,7 @@ Aids the testing of replication failure between authoritative servers.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: NSSearch
-Aliases:
+Aliases: 
 
 Required: True
 Position: Named
@@ -194,7 +191,7 @@ using TXT as the RecordType and CH (Chaos) as the RecordClass.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Version
-Aliases:
+Aliases: 
 
 Required: True
 Position: Named
@@ -231,7 +228,7 @@ HS (Hesoid) may be used if the name server supports it.
 ```yaml
 Type: RecordClass
 Parameter Sets: RecursiveQuery, IterativeQuery
-Aliases:
+Aliases: 
 Accepted values: IN, CH, HS, NONE, ANY
 
 Required: False
@@ -263,7 +260,7 @@ Advertise support for DNSSEC when executing a query.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -278,7 +275,7 @@ Disable EDNS support, suppresses OPT RR advertising client support in DNS questi
 ```yaml
 Type: SwitchParameter
 Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -294,7 +291,7 @@ If NoEDns is used this value is ignored.
 ```yaml
 Type: UInt16
 Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -309,7 +306,7 @@ Disable the use of TCP if a truncated response (TC flag) is seen when using UDP.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -327,7 +324,7 @@ SearchLists are explicitly dropped for Iterative, NSSearch, Zone Transfer and Ve
 ```yaml
 Type: String[]
 Parameter Sets: RecursiveQuery
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -344,7 +341,7 @@ SearchLists are explicitly dropped for Iterative, NSSearch, Zone Transfer and Ve
 ```yaml
 Type: SwitchParameter
 Parameter Sets: RecursiveQuery
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -359,7 +356,7 @@ The SerialNumber is used only if the RecordType is set to IXFR (either directly,
 ```yaml
 Type: UInt32
 Parameter Sets: RecursiveQuery, ZoneTransfer
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -396,7 +393,7 @@ Recursive, or version, queries can be forced to use TCP by setting the TCP switc
 ```yaml
 Type: SwitchParameter
 Parameter Sets: RecursiveQuery, Version
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -412,7 +409,7 @@ The port used to send queries may be changed if a server is listening on a diffe
 ```yaml
 Type: UInt16
 Parameter Sets: RecursiveQuery, Version
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -428,7 +425,7 @@ The value may be set between 1 and 30 seconds.
 ```yaml
 Type: Byte
 Parameter Sets: (All)
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -444,7 +441,7 @@ ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the serve
 ```yaml
 Type: SwitchParameter
 Parameter Sets: RecursiveQuery, ZoneTransfer, Version
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -459,7 +456,7 @@ Forces Get-Dns to output intermediate requests which would normally be hidden, s
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: 
 
 Required: False
 Position: Named
@@ -468,15 +465,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
-
 ## INPUTS
 
 ## OUTPUTS
 
 ### Indented.DnsResolver.Message
+
 ## NOTES
 
 ## RELATED LINKS

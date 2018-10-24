@@ -1,22 +1,24 @@
-class DHCID : DnsResourceRecord {
+class DnsCNAMERecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        /                  <anything>                   /
+        /                     CNAME                     /
         /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-
-        http://www.ietf.org/rfc/rfc4701.txt
     #>
 
-    [Byte[]] $BinaryData
+    [String] $Hostname
 
-    DHCID() { }
+    DnsCNAMERecord() { }
 
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
-        $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
+        $this.Hostname = $binaryReader.ReadDnsDomainName()
+    }
+
+    [String] RecordDataToString() {
+        return $this.Hostname
     }
 }
