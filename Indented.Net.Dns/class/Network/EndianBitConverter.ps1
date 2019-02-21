@@ -2,7 +2,7 @@ using namespace System.Text
 
 class EndianBitConverter {
     static [Byte[]] GetBytes(
-        [UInt16]  $value, 
+        [UInt16]  $value,
         [Boolean] $isLittleEndian
     ) {
         if ([BitConverter]::IsLittleEndian -and $isLittleEndian) {
@@ -25,7 +25,7 @@ class EndianBitConverter {
         } elseif ([BitConverter]::IsLittleEndian) {
             return [BitConverter]::GetBytes(
                 [IPAddress]::HostToNetworkOrder([Int64]$value)
-            )[3..7]
+            )[4..7]
         } else {
             return [BitConverter]::GetBytes($value)
         }
@@ -39,7 +39,7 @@ class EndianBitConverter {
             $string.Append(
                 [Convert]::ToString($byte, 2).PadLeft(8, '0')
             )
-        } 
+        }
         return $string.ToString()
     }
 }
