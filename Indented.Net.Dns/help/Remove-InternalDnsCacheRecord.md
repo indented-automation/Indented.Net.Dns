@@ -1,5 +1,6 @@
 ---
 external help file: Indented.Net.Dns-help.xml
+Module Name: Indented.Net.Dns
 online version: http://www.ietf.org/rfc/rfc1034.txt
 http://www.ietf.org/rfc/rfc1035.txt
 http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
@@ -15,12 +16,12 @@ Remove an entry from the DNS cache object.
 
 ### CacheRecord (Default)
 ```
-Remove-InternalDnsCacheRecord -CacheRecord <Object> [-WhatIf] [-Confirm]
+Remove-InternalDnsCacheRecord -CacheRecord <Object> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### AllExpired
 ```
-Remove-InternalDnsCacheRecord [-AllExpired] [-WhatIf] [-Confirm]
+Remove-InternalDnsCacheRecord [-AllExpired] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,12 +29,12 @@ Remove-InternalDnsCacheRecord allows the removal of individual records from the 
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 Get-InternalDnsCacheRecord a.root-servers.net | Remove-InternalDnsCacheRecord
 ```
 
-### -------------------------- EXAMPLE 2 --------------------------
+### EXAMPLE 2
 ```
 Remove-InternalDnsCacheRecord -AllExpired
 ```
@@ -46,7 +47,7 @@ A record to add to the cache.
 ```yaml
 Type: Object
 Parameter Sets: CacheRecord
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -62,7 +63,7 @@ If permanent is set the time is not, the value will not be purged based on the T
 ```yaml
 Type: SwitchParameter
 Parameter Sets: AllExpired
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -102,13 +103,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ### Indented.DnsResolver.RecordType
-
 ## OUTPUTS
 
 ## NOTES
 
 ## RELATED LINKS
-

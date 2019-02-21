@@ -54,12 +54,7 @@ class EndianBinaryReader : BinaryReader {
     }
 
     [IPAddress] ReadIPAddress() {
-        return [IPAddress]::new(
-            $this.ReadByte(),
-            $this.ReadByte(),
-            $this.ReadByte(),
-            $this.ReadByte()
-        )
+        return [IPAddress]::new($this.ReadBytes(4))
     }
 
     [IPAddress] ReadIPv6Address() {

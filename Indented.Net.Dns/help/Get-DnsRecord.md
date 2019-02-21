@@ -1,5 +1,6 @@
 ---
 external help file: Indented.Net.Dns-help.xml
+Module Name: Indented.Net.Dns
 online version: http://www.ietf.org/rfc/rfc1034.txt
 http://www.ietf.org/rfc/rfc1035.txt
 http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
@@ -15,25 +16,25 @@ schema: 2.0.0
 ### FromZone (Default)
 ```
 Get-DnsRecord [[-Name] <String>] [[-RecordType] <RecordType[]>] [-ZoneName <String>]
- [[-ComputerName] <String[]>] -CimSession <CimSession[]>
+ [[-ComputerName] <String[]>] -CimSession <CimSession[]> [<CommonParameters>]
 ```
 
 ### FromCache
 ```
 Get-DnsRecord [[-Name] <String>] [[-RecordType] <RecordType[]>] [-Cache] [[-ComputerName] <String[]>]
- -CimSession <CimSession[]>
+ -CimSession <CimSession[]> [<CommonParameters>]
 ```
 
 ### FromRootHints
 ```
 Get-DnsRecord [[-Name] <String>] [[-RecordType] <RecordType[]>] [-RootHints] [[-ComputerName] <String[]>]
- -CimSession <CimSession[]>
+ -CimSession <CimSession[]> [<CommonParameters>]
 ```
 
 ### UsingSQL
 ```
 Get-DnsRecord [[-Name] <String>] [[-RecordType] <RecordType[]>] [-Filter <String>] [[-ComputerName] <String[]>]
- -CimSession <CimSession[]>
+ -CimSession <CimSession[]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,7 +43,7 @@ Get-DnsRecord [[-Name] <String>] [[-RecordType] <RecordType[]>] [-Filter <String
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:\> {{ Add example code here }}
 ```
 
@@ -102,7 +103,7 @@ Accept wildcard characters: False
 ```yaml
 Type: SwitchParameter
 Parameter Sets: FromCache
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -117,7 +118,7 @@ Accept wildcard characters: False
 ```yaml
 Type: SwitchParameter
 Parameter Sets: FromRootHints
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -132,7 +133,7 @@ Accept wildcard characters: False
 ```yaml
 Type: String
 Parameter Sets: UsingSQL
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -148,7 +149,7 @@ By default cache on the current server DNS cache is cleared.
 ```yaml
 Type: String[]
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: 2
@@ -163,7 +164,7 @@ Search for records using the specified CIM sessions.
 ```yaml
 Type: CimSession[]
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -172,6 +173,10 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ## OUTPUTS
@@ -179,4 +184,3 @@ Accept wildcard characters: False
 ## NOTES
 
 ## RELATED LINKS
-
