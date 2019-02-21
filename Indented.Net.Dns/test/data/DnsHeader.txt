@@ -1,4 +1,0 @@
-@{
-    NoError = 'AAKBgAABAAYAAAAA'
-    NXDomain = 'AAOBgwABAAAAAQAA'
-}

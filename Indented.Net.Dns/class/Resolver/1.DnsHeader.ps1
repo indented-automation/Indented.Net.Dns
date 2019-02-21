@@ -53,9 +53,9 @@ class DnsHeader {
         [UInt16]  $questionCount
     ) {
         if ($recursionDesired) {
-            $this.Flags = $this.Flags -bor ([HeaderFlags]::RD -shr 8)
+            $this.Flags = [HeaderFlags]::RD
         }
-        $this.QDCount = $questionCount
+        $this.QuestionCount = $questionCount
     }
 
     [Byte[]] ToByteArray() {
@@ -70,10 +70,10 @@ class DnsHeader {
             $this.RCode
         $bytes[2], $bytes[3] = [EndianBitConverter]::GetBytes($value, $false)
 
-        $bytes[4], $bytes[5] = [EndianBitConverter]::GetBytes($this.QDCount, $false)
-        $bytes[6], $bytes[7] = [EndianBitConverter]::GetBytes($this.ANCount, $false)
-        $bytes[8], $bytes[9] = [EndianBitConverter]::GetBytes($this.NSCOUNT, $false)
-        $bytes[10], $bytes[11] = [EndianBitConverter]::GetBytes($this.ARCOUNT, $false)
+        $bytes[4], $bytes[5] = [EndianBitConverter]::GetBytes($this.QuestionCount, $false)
+        $bytes[6], $bytes[7] = [EndianBitConverter]::GetBytes($this.AnswerCount, $false)
+        $bytes[8], $bytes[9] = [EndianBitConverter]::GetBytes($this.AuthorityCount, $false)
+        $bytes[10], $bytes[11] = [EndianBitConverter]::GetBytes($this.AdditionalCount, $false)
 
         return $bytes
     }
