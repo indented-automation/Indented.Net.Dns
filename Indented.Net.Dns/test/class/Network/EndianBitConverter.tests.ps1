@@ -11,19 +11,19 @@ InModuleScope Indented.Net.Dns {
     Describe EndianBitConverter {
         Context GetBytes {
             It 'When the value is big-endian 16-bit integer' {
-                [EndianBitConverter]::GetBytes([UInt16]258, $false) | Should -Be @(1, 2)
+                [EndianBitConverter]::GetBytes([UInt16]258, $true) | Should -Be @(1, 2)
             }
 
             It 'When the value is little-endian 16-bit integer' {
-                [EndianBitConverter]::GetBytes([UInt16]513, $true) | Should -Be @(1, 2)
+                [EndianBitConverter]::GetBytes([UInt16]513, $false) | Should -Be @(1, 2)
             }
 
             It 'When the value is big-endian 32-bit integer' {
-                [EndianBitConverter]::GetBytes([UInt32]16909060, $false) | Should -Be @(1, 2, 3, 4)
+                [EndianBitConverter]::GetBytes([UInt32]16909060, $true) | Should -Be @(1, 2, 3, 4)
             }
 
             It 'When the value is little-endian 32-bit integer' {
-                [EndianBitConverter]::GetBytes([UInt32]67305985, $true) | Should -Be @(1, 2, 3, 4)
+                [EndianBitConverter]::GetBytes([UInt32]67305985, $false) | Should -Be @(1, 2, 3, 4)
             }
         }
 

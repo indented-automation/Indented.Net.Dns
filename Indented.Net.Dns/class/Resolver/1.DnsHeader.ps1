@@ -61,19 +61,19 @@ class DnsHeader {
     [Byte[]] ToByteArray() {
         $bytes = [Byte[]]::new(12)
 
-        $bytes[0], $bytes[1] = [EndianBitConverter]::GetBytes($this.ID, $false)
+        $bytes[0], $bytes[1] = [EndianBitConverter]::GetBytes($this.ID, $true)
 
         # QR, Flags, OpCode and RCode
         [UInt16]$value = $this.QR -bor
             ([UInt16]$this.OpCode -shl 11) -bor
             $this.Flags -bor
             $this.RCode
-        $bytes[2], $bytes[3] = [EndianBitConverter]::GetBytes($value, $false)
+        $bytes[2], $bytes[3] = [EndianBitConverter]::GetBytes($value, $true)
 
-        $bytes[4], $bytes[5] = [EndianBitConverter]::GetBytes($this.QuestionCount, $false)
-        $bytes[6], $bytes[7] = [EndianBitConverter]::GetBytes($this.AnswerCount, $false)
-        $bytes[8], $bytes[9] = [EndianBitConverter]::GetBytes($this.AuthorityCount, $false)
-        $bytes[10], $bytes[11] = [EndianBitConverter]::GetBytes($this.AdditionalCount, $false)
+        $bytes[4], $bytes[5] = [EndianBitConverter]::GetBytes($this.QuestionCount, $true)
+        $bytes[6], $bytes[7] = [EndianBitConverter]::GetBytes($this.AnswerCount, $true)
+        $bytes[8], $bytes[9] = [EndianBitConverter]::GetBytes($this.AuthorityCount, $true)
+        $bytes[10], $bytes[11] = [EndianBitConverter]::GetBytes($this.AdditionalCount, $true)
 
         return $bytes
     }

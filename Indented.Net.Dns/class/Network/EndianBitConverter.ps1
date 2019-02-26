@@ -3,11 +3,9 @@ using namespace System.Text
 class EndianBitConverter {
     static [Byte[]] GetBytes(
         [UInt16]  $value,
-        [Boolean] $isLittleEndian
+        [Boolean] $isBigEndian
     ) {
-        if ([BitConverter]::IsLittleEndian -and $isLittleEndian) {
-            return [BitConverter]::GetBytes($value)
-        } elseif ([BitConverter]::IsLittleEndian) {
+        if ([BitConverter]::IsLittleEndian -eq $isBigEndian) {
             return [BitConverter]::GetBytes(
                 [IPAddress]::HostToNetworkOrder([Int32]$value)
             )[2, 3]
@@ -18,13 +16,11 @@ class EndianBitConverter {
 
     static [Byte[]] GetBytes(
         [UInt32]  $value,
-        [Boolean] $isLittleEndian
+        [Boolean] $isBigEndian
     ) {
-        if ([BitConverter]::IsLittleEndian -and $isLittleEndian) {
-            return [BitConverter]::GetBytes($value)
-        } elseif ([BitConverter]::IsLittleEndian) {
+        if ([BitConverter]::IsLittleEndian -eq $isBigEndian) {
             return [BitConverter]::GetBytes(
-                [IPAddress]::HostToNetworkOrder([Int64]$value)
+                [IPAddress]::HostToNetworkOrder([Int32]$value)
             )[4..7]
         } else {
             return [BitConverter]::GetBytes($value)

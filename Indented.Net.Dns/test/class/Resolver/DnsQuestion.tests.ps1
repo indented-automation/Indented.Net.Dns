@@ -24,9 +24,13 @@ InModuleScope Indented.Net.Dns {
         }
 
         Context ResponseParser {
-            It 'Parses a question containing a <RecordType>' -TestCases @(
-                @{ RecordType = 'TXT'; Message = 'CGluZGVudGVkAmNvAnVrAAAQAAE=' }
-            ) {
+            BeforeAll {
+                $testCases = @(
+                    @{ RecordType = 'TXT'; Message = 'CGluZGVudGVkAmNvAnVrAAAQAAE=' }
+                )
+            }
+
+            It 'Parses a question containing a <RecordType> record' -TestCases $testCases {
                 param (
                     $RecordType,
                     $RecordClass = 'IN',
@@ -39,6 +43,19 @@ InModuleScope Indented.Net.Dns {
                 $question.Name | Should -Not -BeNullOrEmpty
                 $question.RecordType | Should -Be $RecordType
                 $question.RecordClass | Should -Be $RecordClass
+            }
+
+            It 'ToByteArray returns the input value for a <RecordType> record' -TestCases $testCases {
+                param (
+                    $RecordType,
+                    $RecordClass = 'IN',
+                    $Message
+                )
+
+                $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Convert]::FromBase64String($Message)
+                $question = [DnsQuestion]::new($binaryReader)
+
+                [Convert]::ToBase64String($question.ToByteArray()) | Should -Be $Message
             }
         }
     }
