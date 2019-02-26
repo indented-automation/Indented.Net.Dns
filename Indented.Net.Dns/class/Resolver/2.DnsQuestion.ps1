@@ -54,9 +54,10 @@ class DnsQuestion {
     }
 
     [String] ToString() {
-        return '{0}            {1} {2}' -f
-            $this.Name.PadRight(29, ' '),
-            $this.RecordClass.ToString().PadRight(5, ' '),
+        return '{0}            {1} {2}' -f @(
+            $this.Name.PadRight(29, ' ')
+            $this.RecordClass.ToString().PadRight(5, ' ')
             $this.RecordType.ToString().PadRight(5, ' ')
+        )
     }
 }

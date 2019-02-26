@@ -79,14 +79,15 @@ class DnsHeader {
     }
 
     [String] ToString() {
-        return 'ID: {0} OpCode: {1} RCode: {2} Flags: {3} Query: {4} Answer: {5} Authority: {6} Additional: {7}' -f
-            $this.ID,
-            $this.OpCode.ToString().ToUpper(),
-            $this.RCode.ToString().ToUpper(),
-            $this.Flags,
-            $this.QuestionCount,
-            $this.AnswerCount,
-            $this.AuthorityCount,
+        return 'ID: {0} OpCode: {1} RCode: {2} Flags: {3} Query: {4} Answer: {5} Authority: {6} Additional: {7}' -f @(
+            $this.ID
+            $this.OpCode.ToString().ToUpper()
+            $this.RCode.ToString().ToUpper()
+            $this.Flags
+            $this.QuestionCount
+            $this.AnswerCount
+            $this.AuthorityCount
             $this.AdditionalCount
+        )
     }
 }

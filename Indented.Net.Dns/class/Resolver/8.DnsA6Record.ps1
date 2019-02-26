@@ -27,6 +27,7 @@ class DnsA6Record : DnsResourceRecord {
         $addressSuffixBytes = [Byte[]]::new(16)
 
         $length = [Math]::Ceiling((128 - $this.PrefixLength) / 8)
+
         [Array]::Copy(
             $binaryReader.ReadBytes($length),
             0,
@@ -40,8 +41,15 @@ class DnsA6Record : DnsResourceRecord {
     }
 
     [String] RecordDataToString() {
-        return '{0} {1} {2}' -f $this.PrefixLength,
-                                $this.AddressSuffix.IPAddressToString,
-                                $this.PrefixName
+        $ipAddress = '{0} ' -f $this.AddressSuffix.IPAddressToString
+        if ($ipAddress -eq ':: ') {
+            $ipAddress = ''
+        }
+
+        return '{0} {1}{2}' -f @(
+            $this.PrefixLength
+            $ipAddress
+            $this.PrefixName
+        )
     }
 }

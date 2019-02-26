@@ -93,10 +93,12 @@ class DnsResourceRecord {
 
     # Overrides ToString
     [String] ToString() {
-        return '{0} {1} {2} {3} {4}' -f $this.Name.PadRight(29, ' '),
-                                        $this.TTL.ToString().PadRight(10, ' '),
-                                        $this.RecordClass.ToString().PadRight(5, ' '),
-                                        $this.RecordType.ToString().PadRight(5, ' '),
-                                        $this.RecordDataToString()
+        return '{0} {1} {2} {3} {4}' -f @(
+            $this.Name.PadRight(29, ' ')
+            $this.TTL.ToString().PadRight(10, ' ')
+            $this.RecordClass.ToString().PadRight(5, ' ')
+            $this.RecordType.ToString().PadRight(5, ' ')
+            $this.RecordDataToString()
+        )
     }
 }
