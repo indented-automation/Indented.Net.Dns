@@ -17,8 +17,6 @@ class DnsA6Record : DnsResourceRecord {
     [IPAddress] $AddressSuffix
     [String]    $PrefixName
 
-    DnsA6Record() { }
-
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {

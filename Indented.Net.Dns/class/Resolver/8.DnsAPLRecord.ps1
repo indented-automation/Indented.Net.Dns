@@ -16,8 +16,6 @@ class DnsAPLRecord : DnsResourceRecord {
 
     [PSObject[]] $List
 
-    DnsAPLRecord() { }
-
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
@@ -60,10 +58,12 @@ class DnsAPLRecord : DnsResourceRecord {
 
     [String] RecordDataToString() {
         $values = foreach ($item in $this.List) {
-            '{0}{1}:{2}/{3}' -f ('', '!')[$item.Negation],
-                                [UInt16]$item.AddressFamily,
-                                $item.Address,
-                                $item.Prefix
+            '{0}{1}:{2}/{3}' -f @(
+                ('', '!')[$item.Negation]
+                [UInt16]$item.AddressFamily
+                $item.Address
+                $item.Prefix
+            )
         }
         if ($values.Count -gt 1) {
             return "( $values )"

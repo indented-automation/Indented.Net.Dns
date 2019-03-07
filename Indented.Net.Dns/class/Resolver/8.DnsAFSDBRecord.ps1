@@ -12,24 +12,24 @@ class DnsAFSDBRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [Object] $SubType
+    [AFSDBSubType] $SubType
+    [UInt16] $SubTypeValue
     [String] $Hostname
-
-    DnsAFSDBRecord() { }
 
     [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
-        $subTypeValue = $binaryReader.ReadUInt16($true)
-        if ([Enum]::IsDefined([AFSDBSubType], $subTypeValue)) {
-            $this.SubType = [AFSDBSubType]$subTypeValue
+        $this.SubTypeValue = $binaryReader.ReadUInt16($true)
+        if ([Enum]::IsDefined([AFSDBSubType], [Int32]$this.SubTypeValue)) {
+            $this.SubType = [AFSDBSubType][Int32]$this.SubTypeValue
         }
-        $this.SubType = $subTypeValue
         $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 
     [String] RecordDataToString() {
-        return '{0} {1}' -f $this.SubType,
-                            $this.Hostname
+        return '{0} {1}' -f @(
+            $this.SubTypeValue,
+            $this.Hostname
+        )
     }
 }
