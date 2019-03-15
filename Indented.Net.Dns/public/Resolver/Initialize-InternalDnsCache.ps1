@@ -1,5 +1,3 @@
-using namespace Indented.Net.Dns
-
 function Initialize-InternalDnsCache {
     <#
     .SYNOPSIS

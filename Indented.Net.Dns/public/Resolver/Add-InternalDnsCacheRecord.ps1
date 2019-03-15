@@ -24,9 +24,8 @@ function Add-InternalDnsCacheRecord {
         $CacheRecord,
 
         # A resource record to add to the cache.
-        [Parameter(Mandatory, ParameterSetName = 'ResourceRecord')]
-        [PSTypeName('DnsResourceRecord')]
-        $ResourceRecord,
+        [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'ResourceRecord')]
+        [DnsResourceRecord]$ResourceRecord,
 
         # The cache object type.
         [ValidateSet('Address', 'Hint')]

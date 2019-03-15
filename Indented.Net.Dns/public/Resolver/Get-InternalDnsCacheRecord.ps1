@@ -1,5 +1,3 @@
-using namespace Indented.Net.Dns
-
 function Get-InternalDnsCacheRecord {
     <#
     .SYNOPSIS

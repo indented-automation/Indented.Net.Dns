@@ -1,4 +1,3 @@
-using namespace Indented.Net.Dns
 using namespace System.Management.Automation
 using namespace System.Net.Sockets
 
@@ -55,7 +54,7 @@ function Get-Dns {
     #>
 
     [CmdletBinding(DefaultParameterSetname = 'RecursiveQuery')]
-    [OutputType('Indented.Net.Dns.Message')]
+    [OutputType('DnsMessage')]
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
     param (
         # A resource name to query, by default Get-Dns will use '.' as the name. IP addresses (IPv4 and IPv6) are automatically converted into an appropriate format to aid PTR queries.
@@ -180,16 +179,10 @@ function Get-Dns {
     )
 
     begin {
-        # Cache maintenance
-
         Remove-InternalDnsCacheRecord -AllExpired
     }
 
     process {
-        # Reset global control flags
-
-        # $Script:DnsTCEndFound = $false
-
         # Global query options
 
         $GlobalOptions = @{}
@@ -215,49 +208,15 @@ function Get-Dns {
             $serverRecordType = [RecordType]::A
         }
 
-        # Recursive call to find the IP address associated with a server name (if a name is supplied instead of an IP)
-        $ipAddress = [IPAddress]::Any
-        if ([IPAddress]::TryParse($Server, [Ref]$ipAddress)) {
-            # Forcefully switch to IPv6 mode if an IPv6 server address is supplied.
-            if ($ipAddress.AddressFamily -eq [AddressFamily]::InterNetworkv6) {
-                Write-Verbose "Get-Dns: Server: IPv6 Server value used. Switching to IPv6 transport."
+        try {
+            $serverIPAddress = Resolve-DnsServer -Server $Server -IPv6:$IPv6
+            if ($serverIPAdddress.AddressFamily -eq [AddressFamily]::InterNetworkv6) {
+                Write-Verbose "Resolve-DnsServer: IPv6 server value used. Using IPv6 transport."
                 $IPv6 = $true
             }
-        } else {
-            # Unable to parse the server as an IP address. Attempt to resolve it.
-
-            # Attempt a cache lookup - Note: This will not catch servers names which resolve because suffixes have been added.
-            $CachedServer = Get-InternalDnsCacheRecord $Server $ServerRecordType
-            if ($CachedServer) {
-                Write-Verbose "Get-Dns: Cache: Using Server ($Server) from cache."
-                $IPAddress = $CachedServer | Select-Object -First 1 | Select-Object -ExpandProperty IPAddress
-            } else {
-                # If the cache lookup fails, execute a full lookup
-                Write-Verbose "Get-Dns: Server: Attempting to lookup $Server $ServerRecordType"
-                $DnsResponse = Get-Dns $Server -RecordType $ServerRecordType
-
-                if ($DnsResponse.Answer) {
-                    # Addresses will be returned using round-robin ordering. Honour that and use the first address.
-                    $IPAddress = $DnsResponse.Answer | Select-Object -First 1 | Select-Object -ExpandProperty IPAddress
-
-                    # Add the response to the cache.
-                    Write-Verbose "Get-Dns: Cache: Adding Server ($Server) to cache."
-                    $DnsResponse.Answer | ForEach-Object {
-                        Add-InternalDnsCacheRecord -ResourceRecord $_
-                    }
-                }
-            }
-            if ($IPAddress) {
-                $Server = $IPAddress
-            } else {
-                # Failed to resolve name. Return an error.
-                $errorRecord = [ErrorRecord]::new(
-                    [ArgumentException]::new('Unable to find an IP address for the specified name server ({0})' -f $Server),
-                    'ArgumentException',
-                    [Management.Automation.ErrorCategory]::InvalidArgument,
-                    $Server)
-                $pscmdlet.ThrowTerminatingError($errorRecord)
-            }
+            $Server = $serverIPAddress
+        } catch {
+            $pscmdlet.ThrowTerminatingError($_)
         }
 
         # Suffix search list
@@ -481,10 +440,10 @@ function Get-Dns {
                         $RecordClass
                     )
                 }
-                if ($EDns -and -not ($RecordType -in ([RecordType]::AXFR), ([RecordType]::IXFR))) {
+                if ($EDns -and $RecordType -notin ([RecordType]::AXFR), ([RecordType]::IXFR)) {
                     $DnsQuery.SetEDnsBufferSize($EDnsBufferSize)
                 }
-                if ($DnsSec -and -not ($RecordType -in ([RecordType]::AXFR), ([RecordType]::IXFR))) {
+                if ($DnsSec -and $RecordType -notin ([RecordType]::AXFR), ([RecordType]::IXFR)) {
                     $DnsQuery.SetAcceptDnsSec()
                 }
 
@@ -495,11 +454,8 @@ function Get-Dns {
 
                 $Start = Get-Date
 
-                # Construct a socket and send the request.
-                if ($Tcp -and $IPv6) {
-
-                    # Create an IPv6 TCP socket, connect and send the message using IPv6
-                    $Socket = New-Socket -SendTimeout $Timeout -ReceiveTimeout $Timeout -IPv6
+                if ($Tcp) {
+                    $Socket = New-Socket -SendTimeout $Timeout -ReceiveTimeout $Timeout -IPv6:$IPv6
                     try {
                         Connect-Socket $Socket -RemoteIPAddress $Server -RemotePort $Port
                     } catch [SocketException] {
@@ -512,43 +468,17 @@ function Get-Dns {
                         $pscmdlet.ThrowTerminatingError($errorRecord)
                     }
                     Send-Byte $Socket -Data $DnsQuery.ToByteArray($true, $true)
-
-                } elseif ($Tcp) {
-
-                    # Create a TCP socket, connect and send the message.
-                    $Socket = New-Socket -SendTimeout $Timeout -ReceiveTimeout $Timeout
-                    try {
-                        Connect-Socket $Socket -RemoteIPAddress $Server -RemotePort $Port
-                    } catch [SocketException] {
-                        $errorRecord = [ErrorRecord]::new(
-                            [SocketException]::new($_.Exception.InnerException.NativeErrorCode),
-                            'TCPConnectionFailed',
-                            [ErrorCategory]::ConnectionError,
-                            $Socket
-                        )
-                        $pscmdlet.ThrowTerminatingError($errorRecord)
-                    }
-                    Send-Byte $Socket -Data $DnsQuery.ToByteArray($true, $true)
-
-                } elseif ($IPv6) {
-
-                    # Create a UDP socket and send the message using IPv6.
-                    $Socket = New-Socket -ProtocolType Udp -SendTimeout $Timeout -ReceiveTimeout $Timeout -IPv6
-                    Send-Byte $Socket -RemoteIPAddress $Server -RemotePort $Port -Data $DnsQuery.ToByteArray()
-
                 } else {
-
-                    # Create a UDP socket and send the message.
-                    $Socket = New-Socket -ProtocolType Udp -SendTimeout $Timeout -ReceiveTimeout $Timeout
+                    $Socket = New-Socket -ProtocolType Udp -SendTimeout $Timeout -ReceiveTimeout $Timeout -IPv6:$IPv6
                     Send-Byte $Socket -RemoteIPAddress $Server -RemotePort $Port -Data $DnsQuery.ToByteArray()
-
                 }
 
                 $MessageComplete = $false
                 # A buffer used to reassemble responses using TCP
                 $MessageBuffer = [Byte[]]@()
                 # An SOA record counter used as exit criteria for AXFR responses and a place-holder for a serial number of IXFR
-                $SOAResouceRecordCount = 0; $ActiveSerialNumber = $null
+                $SOAResouceRecordCount = 0
+                $ActiveSerialNumber = $null
 
                 # Support for multi-packet responses.
                 do {
@@ -658,19 +588,18 @@ function Get-Dns {
                         # Update the SearchList loop exit criteria
                         $SearchStatus = $DnsResponse.Header.RCode
 
+                        if ($Server -ne $serverIPAddress) {
+                            $DnsResponse.Server = '{0} ({1})' -f $Server, $DnsResponse.Server
+                        }
+
                         # Return the response
                         if ($SearchStatus -ne [RCode]::NXDomain -or $DnsDebug) {
-                            if ($DnsCacheReverse.Contains($DnsResponse.Server)) {
-                                $DnsResponse.Server = "$($DnsResponse.Server) ($($DnsCacheReverse[$DnsResponse.Server]))"
-                            }
-
                             if ($DnsResponse.Header.Flags -band [HeaderFlags]::TC) {
                                 if ($NoTcpFallback) {
                                     $DnsResponse
                                 } else {
-                                    # Make $DnsResponse null
+                                    Write-Debug 'Response is truncated. Resending using TCP'
                                     $DnsResponse = $null
-                                    # Resend using TCP
                                     Get-Dns @psboundparameters -Tcp
                                 }
                             } else {
