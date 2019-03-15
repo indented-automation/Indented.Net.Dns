@@ -13,13 +13,21 @@ class DnsA6Record : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [Byte]      $PrefixLength
-    [IPAddress] $AddressSuffix
-    [String]    $PrefixName
+    [RecordType] $RecordType = [RecordType]::A6
+    [Byte]       $PrefixLength
+    [IPAddress]  $AddressSuffix
+    [String]     $PrefixName
 
-    [Void] ReadRecordData(
+    DnsA6Record() : base() { }
+    DnsA6Record(
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
-    ) {
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.PrefixLength = $binaryReader.ReadByte()
 
         $addressSuffixBytes = [Byte[]]::new(16)
@@ -38,7 +46,7 @@ class DnsA6Record : DnsResourceRecord {
         $this.PrefixName = $binaryReader.ReadDnsDomainName()
     }
 
-    [String] RecordDataToString() {
+    Hidden [String] RecordDataToString() {
         $ipAddress = '{0} ' -f $this.AddressSuffix.IPAddressToString
         if ($ipAddress -eq ':: ') {
             $ipAddress = ''

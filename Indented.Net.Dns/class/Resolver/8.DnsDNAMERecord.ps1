@@ -10,17 +10,23 @@ class DnsDNAMERecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2672.txt
     #>
 
-    [String] $Target
+    [RecordType] $RecordType = [RecordType]::DNAME
+    [String]     $Target
 
-    DnsDNAMERecord() { }
-
-    [Void] ReadRecordData(
+    DnsDNAMERecord() : base() { }
+    DnsDNAMERecord(
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
-    ) {
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Target = $binaryReader.ReadDnsDomainName()
     }
 
-    [String] RecordDataToString() {
+    Hidden [String] RecordDataToString() {
         return $this.Target
     }
 }

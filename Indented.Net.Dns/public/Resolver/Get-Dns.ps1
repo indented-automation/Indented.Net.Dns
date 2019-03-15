@@ -55,7 +55,7 @@ function Get-Dns {
     #>
 
     [CmdletBinding(DefaultParameterSetname = 'RecursiveQuery')]
-    [OutputType('Indented.DnsResolver.Message')]
+    [OutputType('Indented.Net.Dns.Message')]
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
     param (
         # A resource name to query, by default Get-Dns will use '.' as the name. IP addresses (IPv4 and IPv6) are automatically converted into an appropriate format to aid PTR queries.
@@ -188,7 +188,7 @@ function Get-Dns {
     process {
         # Reset global control flags
 
-        $Script:DnsTCEndFound = $false
+        # $Script:DnsTCEndFound = $false
 
         # Global query options
 
@@ -216,7 +216,7 @@ function Get-Dns {
         }
 
         # Recursive call to find the IP address associated with a server name (if a name is supplied instead of an IP)
-        $ipAddress = New-Object IPAddress 0
+        $ipAddress = [IPAddress]::Any
         if ([IPAddress]::TryParse($Server, [Ref]$ipAddress)) {
             # Forcefully switch to IPv6 mode if an IPv6 server address is supplied.
             if ($ipAddress.AddressFamily -eq [AddressFamily]::InterNetworkv6) {
@@ -251,12 +251,12 @@ function Get-Dns {
                 $Server = $IPAddress
             } else {
                 # Failed to resolve name. Return an error.
-                $ErrorRecord = New-Object Management.Automation.ErrorRecord(
-                    (New-Object ArgumentException "Unable to find an IP address for the specified name server ($Server)."),
-                    "ArgumentException",
+                $errorRecord = [ErrorRecord]::new(
+                    [ArgumentException]::new('Unable to find an IP address for the specified name server ({0})' -f $Server),
+                    'ArgumentException',
                     [Management.Automation.ErrorCategory]::InvalidArgument,
                     $Server)
-                $pscmdlet.ThrowTerminatingError($ErrorRecord)
+                $pscmdlet.ThrowTerminatingError($errorRecord)
             }
         }
 
@@ -293,7 +293,7 @@ function Get-Dns {
         }
         # For consistent operation now the search list has been set.
         if (-not $Name.EndsWith('.')) {
-            $Name = "$Name."
+            $Name = '{0}.' -f $Name
         }
 
         #
@@ -391,8 +391,8 @@ function Get-Dns {
 
             # Query each authoritative server
             Write-Verbose "Get-Dns: NSSearch: Testing responses from each authoritative servers"
-            $AuthoritativeServerList | ForEach-Object {
-                Get-Dns $Name -RecordType $RecordType -RecordClass $RecordClass -Server $_ -NoSearchList @GlobalOptions
+            foreach ($authoritativeServer in $AuthoritativeServerList) {
+                Get-Dns $Name -RecordType $RecordType -RecordClass $RecordClass -Server $authoritativeServer -NoSearchList @GlobalOptions
             }
         }
 
@@ -402,9 +402,9 @@ function Get-Dns {
 
         if ($RecordType -eq [RecordType]::IXFR -and -not $SerialNumber) {
             # SerialNumber is required, throw an error and abandon this.
-            $errorRecord = New-Object Management.Automation.ErrorRecord(
-                (New-Object ArgumentException "A value for SerialNumber must be supplied to execute an IXFR."),
-                "SerialNumberIsMandatoryForIXFR",
+            $errorRecord = [ErrorRecord]::new(
+                [ArgumentException]::new('A value for SerialNumber must be supplied to execute an IXFR.'),
+                'SerialNumberIsMandatoryForIXFR',
                 [ErrorCategory]::InvalidArgument,
                 $RecordType
             )
@@ -468,9 +468,18 @@ function Get-Dns {
 
                 # Construct a message
                 if ($RecordType -eq [RecordType]::IXFR -and $SerialNumber) {
-                    $DnsQuery = NewDnsMessage -Name $FullName -RecordType $RecordType -RecordClass $RecordClass -SerialNumber $SerialNumber
+                    $DnsQuery = [DnsMessage]::new(
+                        $FullName,
+                        $RecordType,
+                        $RecordClass,
+                        $SerialNumber
+                    )
                 } else {
-                    $DnsQuery = NewDnsMessage -Name $FullName -RecordType $RecordType -RecordClass $RecordClass
+                    $DnsQuery = [DnsMessage]::new(
+                        $FullName,
+                        $RecordType,
+                        $RecordClass
+                    )
                 }
                 if (-not $NoEDns -and -not ($RecordType -in ([RecordType]::AXFR), ([RecordType]::IXFR))) {
                     $DnsQuery.SetEDnsBufferSize($EDnsBufferSize)
@@ -502,7 +511,7 @@ function Get-Dns {
                         )
                         $pscmdlet.ThrowTerminatingError($errorRecord)
                     }
-                    Send-Byte $Socket -Data ($DnsQuery.ToByte([ProtocolType]::Tcp))
+                    Send-Byte $Socket -Data $DnsQuery.ToByteArray($true, $true)
 
                 } elseif ($Tcp) {
 
@@ -519,19 +528,19 @@ function Get-Dns {
                         )
                         $pscmdlet.ThrowTerminatingError($errorRecord)
                     }
-                    Send-Byte $Socket -Data ($DnsQuery.ToByte([ProtocolType]::Tcp))
+                    Send-Byte $Socket -Data $DnsQuery.ToByteArray($true, $true)
 
                 } elseif ($IPv6) {
 
                     # Create a UDP socket and send the message using IPv6.
                     $Socket = New-Socket -ProtocolType Udp -SendTimeout $Timeout -ReceiveTimeout $Timeout -IPv6
-                    Send-Byte $Socket -RemoteIPAddress $Server -RemotePort $Port -Data ($DnsQuery.ToByte())
+                    Send-Byte $Socket -RemoteIPAddress $Server -RemotePort $Port -Data $DnsQuery.ToByteArray()
 
                 } else {
 
                     # Create a UDP socket and send the message.
                     $Socket = New-Socket -ProtocolType Udp -SendTimeout $Timeout -ReceiveTimeout $Timeout
-                    Send-Byte $Socket -RemoteIPAddress $Server -RemotePort $Port -Data ($DnsQuery.ToByte())
+                    Send-Byte $Socket -RemoteIPAddress $Server -RemotePort $Port -Data $DnsQuery.ToByteArray()
 
                 }
 
@@ -546,8 +555,8 @@ function Get-Dns {
                     try {
                         $DnsResponseData = Receive-Byte $Socket -BufferSize 4096
                     } catch [SocketException] {
-                        $errorRecord = New-Object ErrorRecord(
-                            (New-Object SocketException ($_.Exception.InnerException.NativeErrorCode)),
+                        $errorRecord = [ErrorRecord]::new(
+                            [SocketException]::new($_.Exception.InnerException.NativeErrorCode),
                             'Timeout',
                             [ErrorCategory]::ConnectionError,
                             $Socket
@@ -564,18 +573,18 @@ function Get-Dns {
                             # If the message buffer holds more data than the recorded message length a response can be read off.
                             while ($MessageBuffer.Count -ge ($MessageLength + 2)) {
                                 # Copy bytes from message buffer into the partial copy
-                                $MessageBytes = New-Object Byte[] $MessageLength
+                                $MessageBytes = [Byte[]]::new($MessageLength)
                                 [Array]::Copy($MessageBuffer, 2, $MessageBytes, 0, $MessageLength)
                                 $DnsResponseData.Data = $MessageBytes
 
                                 # Remove the bytes which have been read from the buffer and update the number of available bytes.
-                                $TempMessageBuffer = New-Object Byte[] ($MessageBuffer.Count - 2 - $MessageLength)
+                                $TempMessageBuffer = [Byte[]]::new($MessageBuffer.Count - 2 - $MessageLength)
                                 [Array]::Copy($MessageBuffer, (2 + $MessageLength), $TempMessageBuffer, 0, $TempMessageBuffer.Count)
                                 $MessageBuffer = $TempMessageBuffer
                                 $TempMessageBuffer = $null
 
                                 # Process the response message
-                                $DnsResponse = ReadDnsMessage $DnsResponseData
+                                $DnsResponse = [DnsMessage]::new($DnsResponseData.Data)
 
                                 # Anything other than NoError in a Header denotes message completion.
                                 if ($DnsResponse.Header.RCode -ne [RCode]::NoError) {
@@ -636,14 +645,15 @@ function Get-Dns {
                             }
                         }
                     } else {
-                        $DnsResponse = ReadDnsMessage $DnsResponseData
+                        $DnsResponse = [DnsMessage]::new($DnsResponseData.Data)
                         # If this is not TCP the response must be contained in a single packet.
                         $MessageComplete = $true
                     }
 
                     # If a complete response is present (no TCP loop).
                     if ($DnsResponse) {
-                        $DnsResponse.TimeTaken = New-TimeSpan $Start (Get-Date)
+                        $DnsResponse.TimeTaken = (New-TimeSpan $Start (Get-Date)).TotalMilliseconds
+                        $DnsResponse.Server = $DnsResponseData.RemoteEndpoint
 
                         # Update the SearchList loop exit criteria
                         $SearchStatus = $DnsResponse.Header.RCode
@@ -671,9 +681,9 @@ function Get-Dns {
 
                     if ($SearchStatus -eq [RCode]::NXDomain -and $i -eq ($SearchList.Count - 1)) {
                         if ($RecordType -in [RecordType]::AXFR, [RecordType]::IXFR) {
-                            Write-Warning "Get-Dns: Transfer refused. Server ($Server) is not authoritative for $Name."
+                            Write-Warning ('Get-Dns: Transfer refused. Server ({0}) is not authoritative for {1}.' -f $Server, $Name)
                         } else {
-                            Write-Warning "Get-Dns: Name ($Name) does not exist."
+                            Write-Warning ('Get-Dns: Name ({0}) does not exist.' -f $Name)
                         }
                     }
                 } until ($MessageComplete)
@@ -687,7 +697,6 @@ function Get-Dns {
 
                 # Track the position in the suffixes search list
                 $i++
-
             } while ($SearchStatus -eq [RCode]::NXDomain -and $i -lt $SearchList.Count)
         }
     }

@@ -14,11 +14,19 @@ class DnsAPLRecord : DnsResourceRecord {
         http://tools.ietf.org/html/rfc3123
     #>
 
+    [RecordType] $RecordType = [RecordType]::APL
     [PSObject[]] $List
 
-    [Void] ReadRecordData(
+    DnsAPLRecord() : base() { }
+    DnsAPLRecord(
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
-    ) {
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         if ($this.RecordDataLength -gt 0) {
             $listLength = $this.RecordDataLength
 
@@ -28,7 +36,7 @@ class DnsAPLRecord : DnsResourceRecord {
 
                 $item = [PSCustomObject]@{
                     AddressFamily = $addressFamily
-                    Prefix        = $BinaryReader.ReadByte()
+                    Prefix        = $binaryReader.ReadByte()
                     Negation      = [Boolean]($negationAndLength -band 0x0800)
                     AddressLength = $negationAndLength -band 0x007F
                     Address       = $null
@@ -56,7 +64,7 @@ class DnsAPLRecord : DnsResourceRecord {
         }
     }
 
-    [String] RecordDataToString() {
+    Hidden [String] RecordDataToString() {
         $values = foreach ($item in $this.List) {
             '{0}{1}:{2}/{3}' -f @(
                 ('', '!')[$item.Negation]

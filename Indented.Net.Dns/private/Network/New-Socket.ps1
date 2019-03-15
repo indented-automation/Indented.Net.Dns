@@ -3,31 +3,29 @@ using namespace System.Net
 using namespace System.Net.Sockets
 
 function New-Socket {
-    # .SYNOPSIS
-    #   Creates a new network socket to use to send and receive packets over a network.
-    # .DESCRIPTION
-    #   New-Socket creates an instance of System.Net.Sockets.Socket for use with Send-Bytes and Receive-Bytes.
-    # .EXAMPLE
-    #   New-Socket -LocalPort 25
-    #
-    #   Configure a socket to listen using TCP/25 (as a network server) on all locally configured IP addresses.
-    # .EXAMPLE
-    #   New-Socket -ProtocolType Udp
-    #
-    #   Configure a socket for sending UDP datagrams (as a network client).
-    # .EXAMPLE
-    #   New-Socket -LocalPort 23 -LocalIPAddress 10.0.0.1
-    #
-    #   Configure a socket to listen using TCP/23 (as a network server) on the IP address 10.0.0.1 (the IP address must exist and be bound to an interface).
-    # .NOTES
-    #   Change log:
-    #     17/03/2017 - Chris Dent - Modernisation pass.
-    #     25/11/2010 - Chris Dent - Created.
+    <#
+    .SYNOPSIS
+        Creates a new network socket to use to send and receive packets over a network.
+    .DESCRIPTION
+        New-Socket creates an instance of System.Net.Sockets.Socket for use with Send-Bytes and Receive-Bytes.
+    .EXAMPLE
+        New-Socket -LocalPort 25
+
+        Configure a socket to listen using TCP/25 (as a network server) on all locally configured IP addresses.
+    .EXAMPLE
+        New-Socket -ProtocolType Udp
+
+        Configure a socket for sending UDP datagrams (as a network client).
+    .EXAMPLE
+        New-Socket -LocalPort 23 -LocalIPAddress 10.0.0.1
+
+        Configure a socket to listen using TCP/23 (as a network server) on the IP address 10.0.0.1 (the IP address must exist and be bound to an interface).
+    #>
 
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
     [CmdletBinding(DefaultParameterSetName = 'ClientSocket')]
     [OutputType([System.Net.Sockets.Socket])]
-    param(
+    param (
         # ProtocolType must be either TCP or UDP. This parameter also sets the SocketType to Stream for TCP and Datagram for UDP.
         [ValidateSet('Tcp', 'Udp')]
         [ProtocolType]$ProtocolType = 'Tcp',
@@ -37,7 +35,7 @@ function New-Socket {
         [IPAddress]$LocalIPAddress = [IPAddress]::Any,
 
         # If configuring a server port (to listen for requests) the local port number must be defined.
-        [Parameter(Mandatory = $true, ParameterSetName = 'ServerSocket')]
+        [Parameter(Mandatory, ParameterSetName = 'ServerSocket')]
         [UInt16]$LocalPort,
 
         # Allows a UDP socket to send and receive datagrams from the directed or undirected broadcast IP address.
@@ -58,13 +56,13 @@ function New-Socket {
         [ValidateRange(1, 30)]
         [Int32]$SendTimeOut = 5,
 
-        # The number of 
+        # The number of
         [Int32]$ListenBacklog = 0
     )
 
     $socketType = switch ($ProtocolType) {
         ([ProtocolType]::Tcp) { [SocketType]::Stream }
-        ([ProtocolType]::Udp) { [SocketType]::Dgram } 
+        ([ProtocolType]::Udp) { [SocketType]::Dgram }
     }
 
     $addressFamily = [AddressFamily]::InterNetwork
@@ -77,7 +75,7 @@ function New-Socket {
         }
     }
 
-    $socket = New-Object Socket(
+    $socket = [Socket]::new(
         $addressFamily,
         $SocketType,
         $ProtocolType
@@ -87,8 +85,8 @@ function New-Socket {
         if ($ProtocolType -eq [ProtocolType]::Udp) {
             $socket.EnableBroadcast = $true
         } else {
-            $errorRecord = New-Object ErrorRecord(
-                (New-Object ArgumentException('EnableBroadcast cannot be set for TCP sockets.')),
+            $errorRecord = [ErrorRecord]::new(
+                [ArgumentException]::new('EnableBroadcast cannot be set for TCP sockets.'),
                 'CannotSetEnableBroadcastForTcp',
                 [ErrorCategory]::InvalidArgument,
                 $ProtocolType
@@ -99,7 +97,7 @@ function New-Socket {
 
     # Bind a local end-point to listen for inbound requests.
     if ($pscmdlet.ParameterSetName -eq 'ServerSocket') {
-        [EndPoint]$localEndPoint = New-Object IPEndPoint($LocalIPAddress, $LocalPort)
+        $localEndPoint = [EndPoint][IPEndPoint]::new($LocalIPAddress, $LocalPort)
         $socket.Bind($LocalEndPoint)
 
         if ($ProtocolType -eq 'Tcp') {

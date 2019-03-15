@@ -1,3 +1,4 @@
+using namespace System.Collections.Generic
 using namespace System.Text
 
 class DnsOPTRecord : DnsResourceRecord {
@@ -110,20 +111,31 @@ class DnsOPTRecord : DnsResourceRecord {
         http://www.ietf.org/id/draft-vandergaast-edns-client-subnet-02.txt
     #>
 
+    [RecordType]   $RecordType = [RecordType]::OPT
     [UInt16]       $MaximumPayloadSize
     [UInt16]       $ExtendedRCode
     [UInt32]       $Version
     [EDnsDNSSECOK] $Z
     [PSObject[]]   $OptionData
 
-    DnsOPTRecord() { }
+    DnsOPTRecord() : base() { }
+    DnsOPTRecord(
+        [DnsResourceRecord]$dnsResourceRecord,
+        [EndianBinaryReader] $binaryReader
+    ) {
+        $this.MaximumPayloadSize = $binaryReader.ReadUInt16($true)
+        $this.ExtendedRCode = $binaryReader.ReadByte()
+        $this.Version = $binaryReader.ReadByte()
 
-    [Void] ReadRecordData([EndianBinaryReader]$binaryReader) {
-        $this.MaximumPayloadSize = $this.RecordClass
-        $this.ExtendedRCode = [RCode][UInt16]($this.TTL -shr 24)
-        $this.Version = $this.TTL -band 0x00FF0000
-        $this.DNSSECOK = [EDnsDNSSECOK]($this.TTL -band 0x00008000)
+        $this.Z = $binaryReader.ReadUInt16($true)
+        $this.RecordDataLength = $binaryReader.ReadUInt16($true)
 
+        if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + $this.RecordDataLength)) {
+            $this.ReadRecordData($binaryReader)
+        }
+    }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $optionsLength = $this.RecordDataLength
 
         $this.OptionData = while ($optionsLength -gt 0) {
@@ -138,7 +150,7 @@ class DnsOPTRecord : DnsResourceRecord {
                         OptionLength = $optionLength
                         Version      = $binaryReader.ReadUInt16($true)
                         OpCode       = [LLQOpCode]$binaryReader.ReadUInt16($true)
-                        ErrorCode    = [LLQErrorCode]$BinaryReader.ReadUInt16($true)
+                        ErrorCode    = [LLQErrorCode]$binaryReader.ReadUInt16($true)
                         ID           = $binaryReader.ReadUInt64($true)
                         LeaseLife    = $binaryReader.ReadUInt32($true)
                     }
@@ -173,7 +185,7 @@ class DnsOPTRecord : DnsResourceRecord {
                     }
 
                     $addressLength = [Math]::Ceiling($option.SourceNetMask / 8)
-                    $addressBytes = $BinaryReader.ReadBytes($addressLength)
+                    $addressBytes = $binaryReader.ReadBytes($addressLength)
 
                     $length = switch ($option.AddressFamily) {
                         'IPv4' { 4 }
@@ -209,5 +221,28 @@ class DnsOPTRecord : DnsResourceRecord {
                 }
             }
         }
+    }
+
+    Hidden [IEnumerable[Byte]] RecordDataToByteArray() {
+        return [Byte[]]::new(0)
+    }
+
+    [Byte[]] ToByteArray(
+        [Boolean] $useCompressedNames
+    ) {
+        $bytes = [List[Byte]]::new()
+
+        $bytes.Add(0)
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordType, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes($this.MaximumPayloadSize, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes($this.ExtendedRCode, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.Z, $true))
+
+        $recordDataBytes = $this.RecordDataToByteArray()
+
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$recordDataBytes.Count, $true))
+        $bytes.AddRange($recordDataBytes)
+
+        return $bytes.ToArray()
     }
 }

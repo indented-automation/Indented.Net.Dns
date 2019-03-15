@@ -52,6 +52,8 @@ class DnsHeader {
         [Boolean] $recursionDesired,
         [UInt16]  $questionCount
     ) {
+        $this.ID = Get-Random -Minimum 0 -Maximum ([UInt16]::MaxValue + 1)
+
         if ($recursionDesired) {
             $this.Flags = [HeaderFlags]::RD
         }

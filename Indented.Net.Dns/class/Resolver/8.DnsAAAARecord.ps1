@@ -14,13 +14,23 @@ class DnsAAAARecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [IPAddress] $IPAddress
+    [RecordType] $RecordType = [RecordType]::AAAA
+    [IPAddress]  $IPAddress
 
-    [Void] ReadRecordData([EndianBinaryReader]$binaryReader) {
+    DnsAAAARecord() : base() { }
+    DnsAAAARecord(
+        [DnsResourceRecord]  $dnsResourceRecord,
+        [EndianBinaryReader] $binaryReader
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.IPAddress = $binaryReader.ReadIPv6Address()
     }
 
-    [String] RecordDataToString() {
+    Hidden [String] RecordDataToString() {
         return $this.IPAddress.IPAddressToString
     }
 }

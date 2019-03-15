@@ -27,7 +27,7 @@ function Remove-InternalDnsCacheRecord {
     begin {
         if ($AllExpired) {
             $expiredRecords = Get-InternalDnsCacheRecord | Where-Object Status -eq 'Expired'
-            $expiredRecords | Remove-InternalDnsCacheRecord -WhatIf:$($WhatIf.ToBool())
+            $expiredRecords | Remove-InternalDnsCacheRecord
         }
     }
 

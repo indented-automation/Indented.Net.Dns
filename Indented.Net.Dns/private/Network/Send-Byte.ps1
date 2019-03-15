@@ -3,45 +3,42 @@ using namespace System.Net
 using namespace System.Net.Sockets
 
 function Send-Byte {
-    # .SYNOPSIS
-    #   Sends bytes using a TCP or UDP socket.
-    # .DESCRIPTION
-    #   Send-Byte is used to send outbound TCP or UDP packets as a server responding to a cilent, or as a client sending to a server.
-    # .INPUTS
-    #   System.Net.Sockets.Socket
-    # .EXAMPLE
-    #   C:\PS>$Socket = New-Socket
-    #   C:\PS>Connect-Socket $Socket -RemoteIPAddress 10.0.0.1 -RemotePort 25
-    #   C:\PS>Send-Byte $Socket -Data 0
-    # .EXAMPLE
-    #   C:\PS>$Socket = New-Socket -ProtocolType Udp -EnableBroadcast
-    #   C:\PS>Send-Byte $Socket -Data 0
-    # .NOTES
-    #   Change log:
-    #     25/11/2010 - Chris Dent - Created.
+    <#
+    .SYNOPSIS
+        Sends bytes using a TCP or UDP socket.
+    .DESCRIPTION
+        Send-Byte is used to send outbound TCP or UDP packets as a server responding to a cilent, or as a client sending to a server.
+    .EXAMPLE
+        PS>$Socket = New-Socket
+        PS>Connect-Socket $Socket -RemoteIPAddress 10.0.0.1 -RemotePort 25
+        PS>Send-Byte $Socket -Data 0
+    .EXAMPLE
+        PS>$Socket = New-Socket -ProtocolType Udp -EnableBroadcast
+        PS>Send-Byte $Socket -Data 0
+    #>
 
     [CmdletBinding(DefaultParameterSetName = 'DirectedTcpSend')]
     [OutputType([Void])]
-    param(
+    param (
         # A socket created using New-Socket. If the ProtocolType is TCP the socket must be connected first.
-        [Parameter(Mandatory = $true, Position = 1, ValueFromPipeline = $true)]
+        [Parameter(Mandatory, Position = 1, ValueFromPipeline)]
         [Socket]$Socket,
 
         # If the protocol type is UDP a remote IP address must be specified. Directed or undirected broadcast addresses may be used if EnableBroadcast has been set on the socket.
-        [Parameter(Mandatory = $true, ParameterSetName = 'DirectedUdpSend')]
+        [Parameter(Mandatory, ParameterSetName = 'DirectedUdpSend')]
         [IPAddress]$RemoteIPAddress,
 
         # Sets the RemoteIPAddress to the undirected broadcast address.
-        [Parameter(Mandatory = $true, ParameterSetName = 'BroadcastUdpSend')]
+        [Parameter(Mandatory, ParameterSetName = 'BroadcastUdpSend')]
         [Switch]$Broadcast,
 
         # If the protocol type is UDP, a remote port must be specified.
-        [Parameter(Mandatory = $true, ParameterSetname = 'DirectedUdpSend')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'BroadcastUdpSend')]
+        [Parameter(Mandatory, ParameterSetname = 'DirectedUdpSend')]
+        [Parameter(Mandatory, ParameterSetName = 'BroadcastUdpSend')]
         [UInt16]$RemotePort,
-    
+
         # The data to send (as a byte array).
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [Byte[]]$Data
     )
 
@@ -49,8 +46,8 @@ function Send-Byte {
     if ($pscmdlet.ParameterSetName -eq 'BroadcastUdpSend') {
         # IPv6 error checking
         if ($Socket.AddressFamily -eq [AddressFamily]::InterNetworkv6) {
-            $errorRecord = New-Object ErrorRecord(
-                (New-Object ArgumentException 'EnableBroadcast cannot be set for IPv6 sockets.'),
+            $errorRecord = [ErrorRecord]::new(
+                [ArgumentException]::new('EnableBroadcast cannot be set for IPv6 sockets.'),
                 'InvalidIPv6SocketState',
                 [ErrorCategory]::InvalidArgument,
                 $Socket
@@ -59,9 +56,9 @@ function Send-Byte {
 
         # TCP socket error checking
         if (-not $Socket.ProtocolType) {
-            $errorRecord = New-Object ErrorRecord(
-                (New-Object ArgumentException 'EnableBroadcast cannot be set for TCP sockets.'),
-                "InvalidTCPSocketState",
+            $errorRecord = [ErrorRecord]::new(
+                [ArgumentException]::new('EnableBroadcast cannot be set for TCP sockets.'),
+                'InvalidTCPSocketState',
                 [ErrorCategory]::InvalidArgument,
                 $Socket
             )
@@ -69,9 +66,9 @@ function Send-Byte {
 
         # Broadcast flag checking
         if (-not $Socket.EnableBroadcast) {
-            $errorRecord = New-Object ErrorRecord(
-                (New-Object InvalidOperationException 'EnableBroadcast is not set on the socket.'),
-                "BroadcastNotEnabled",
+            $errorRecord = [ErrorRecord]::new(
+                [InvalidOperationException]::new('EnableBroadcast is not set on the socket.'),
+                'BroadcastNotEnabled',
                 [ErrorCategory]::InvalidOperation,
                 $Socket
             )
@@ -88,7 +85,7 @@ function Send-Byte {
             $null = $Socket.Send($Data)
         }
         ([ProtocolType]::Udp) {
-            $remoteEndPoint = [EndPoint](New-Object IPEndPoint($RemoteIPAddress, $RemotePort))
+            $remoteEndPoint = [EndPoint][IPEndPoint]::new($RemoteIPAddress, $RemotePort)
 
             $null = $Socket.SendTo($Data, $RemoteEndPoint)
         }

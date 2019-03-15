@@ -70,4 +70,5 @@ enum RecordType {
     DLV        = 32769    # DNSSEC Lookaside Validation                 [RFC4431]
     WINS       = 65281    # WINS records (WINS Lookup record)           [MS DNS]
     WINSR      = 65282    # WINSR records (WINS Reverse Lookup record)  [MS DNS]
+    UNKNOWN    = 65535    # Non-standard, implemented for this module.
 }

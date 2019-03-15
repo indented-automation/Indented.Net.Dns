@@ -29,6 +29,7 @@ class DnsMessage {
     [DnsResourceRecord[]] $Additional
     [Int]                 $Size
     [Int]                 $TimeTaken
+    [String]              $Server
 
     # Constructors
 
@@ -39,7 +40,21 @@ class DnsMessage {
         [RecordType]  $recordType,
         [RecordClass] $recordClass
     ) {
+        $this.Header = [DnsHeader]::new($true, 1)
         $this.Question = [DnsQuestion]::new($name, $recordType, $recordClass)
+    }
+
+    DnsMessage(
+        [String]      $name,
+        [RecordType]  $recordType,
+        [RecordClass] $recordClass,
+        [UInt32]      $Serial
+    ) {
+        $this.Header = [DnsHeader]::new($true, 1)
+        $this.Question = [DnsQuestion]::new($name, $recordType, $recordClass)
+
+        $this.Header.AuthorityCount = 1
+        $this.Authority = [DnsSOARecord]@{ Serial = $Serial }
     }
 
     DnsMessage([Byte[]]$message) {
@@ -98,6 +113,7 @@ class DnsMessage {
         $this.Header.AdditionalCount = 1
         $this.Additional = [DnsOPTRecord]@{
             MaximumPayloadSize = $EDnsBufferSize
+            Z                  = [EDnsDNSSECOK]::DO
         }
     }
 
@@ -105,21 +121,28 @@ class DnsMessage {
         $this.Header.Flags = $this.Header.Flags -bor [HeaderFlags]::AD
     }
 
-    [Byte[]] GetBytes() {
-        return $this.GetBytes($false)
+    [Byte[]] ToByteArray() {
+        return $this.ToByteArray($false, $true)
     }
 
     [Byte[]] ToByteArray(
-        [Boolean] $tcp
+        [Boolean] $useCompressedNames
+    ) {
+        return $this.ToByteArray($false, $useCompressedNames)
+    }
+
+    [Byte[]] ToByteArray(
+        [Boolean] $tcp,
+        [Boolean] $useCompressedNames
     ) {
         $bytes = [List[Byte]]::new()
 
         $bytes.AddRange($this.Header.ToByteArray())
-        $bytes.AddRange($this.Question.ToByteArray())
+        $bytes.AddRange([Byte[]]$this.Question.ToByteArray())
 
         if ($this.Header.AuthorityCount -gt 0) {
             foreach ($resourceRecord in $this.Authority) {
-                $bytes.AddRange($resourceRecord.ToByteArray())
+                $bytes.AddRange($resourceRecord.ToByteArray($useCompressedNames))
             }
         }
         if ($this.Header.AdditionalCount -gt 0) {

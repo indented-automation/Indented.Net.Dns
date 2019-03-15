@@ -26,6 +26,7 @@ class DnsDNSKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4034.txt
     #>
 
+    [RecordType]          $RecordType = [RecordType]::DNSKEY
     [UInt16]              $Flags
     [Boolean]             $ZoneKey
     [Boolean]             $SecureEntryPoint
@@ -33,11 +34,16 @@ class DnsDNSKEYRecord : DnsResourceRecord {
     [EncryptionAlgorithm] $Algorithm
     [String]              $PublicKey
 
-    DnsDNSKEYRecord() { }
-
-    [Void] ReadRecordData(
+    DnsDNSKEYRecord() : base() { }
+    DnsDNSKEYRecord(
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
-    ) {
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Flags = $binaryReader.ReadUInt16($true)
         $this.ZoneKey = $this.Flags -band 0x0100
         $this.SecureEntryPoint = $this.Flags -band 0x0001
@@ -50,9 +56,11 @@ class DnsDNSKEYRecord : DnsResourceRecord {
     }
 
     [String] RecordDataToString() {
-        return '{0} {1} {2} ( {3} )' -f $this.Flags,
-                                        [Byte]$this.Protocol,
-                                        [Byte]$this.Algorithm,
-                                        $this.PublicKey
+        return '{0} {1} {2} ( {3} )' -f @(
+            $this.Flags
+            [Byte]$this.Protocol
+            [Byte]$this.Algorithm
+            $this.PublicKey
+        )
     }
 }

@@ -16,16 +16,22 @@ class DnsCERTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4398.txt
     #>
 
+    [RecordType]          $RecordType = [RecordType]::CERT
     [CertificateType]     $CertificateType
     [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [String]              $Certificate
 
-    DnsCERTRecord() { }
-
-    [Void] ReadRecordData(
+    DnsCERTRecord() : base() { }
+    DnsCERTRecord(
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
-    ) {
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.CertificateType = $binaryReader.ReadUInt16($true)
         $this.KeyTag = $binaryReader.ReadUInt16($true)
         $this.Algorithm = $binaryReader.ReadByte()
@@ -36,9 +42,11 @@ class DnsCERTRecord : DnsResourceRecord {
     }
 
     [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f $this.CertificateType.ToString(),
-                                    [UInt16]$this.KeyTag,
-                                    [UInt16]$this.Algorithm,
-                                    $this.Certificate
+        return '{0} {1} {2} {3}' -f @(
+            $this.CertificateType.ToString()
+            [UInt16]$this.KeyTag
+            [UInt16]$this.Algorithm
+            $this.Certificate
+        )
     }
 }

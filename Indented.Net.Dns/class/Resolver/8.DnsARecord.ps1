@@ -7,17 +7,23 @@ class DnsARecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [IPAddress] $IPAddress
+    [RecordType] $RecordType = [RecordType]::A
+    [IPAddress]  $IPAddress
 
-    DnsARecord() { }
-
-    [Void] ReadRecordData(
+    DnsARecord() : base() { }
+    DnsARecord(
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
-    ) {
-        $this.IPAddress = $BinaryReader.ReadIPv4Address()
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+        $this.IPAddress = $binaryReader.ReadIPAddress()
     }
 
-    [String] RecordDataToString() {
+    Hidden [String] RecordDataToString() {
         return $this.IPAddress.IPAddressToString
     }
 }

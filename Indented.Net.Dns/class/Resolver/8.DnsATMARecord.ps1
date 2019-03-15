@@ -12,14 +12,21 @@ class DnsATMARecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
+    [RecordType] $RecordType = [RecordType]::ATMA
     [ATMAFormat] $Format
     [String]     $ATMAAddress
 
-    ATMA() { }
-
-    [Void] ReadRecordData(
+    DnsATMARecord() : base() { }
+    DnsATMARecord(
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
-    ) {
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Format = [ATMAFormat]$binaryReader.ReadByte()
 
         $length = $this.RecordDataLength - 1
@@ -52,7 +59,7 @@ class DnsATMARecord : DnsResourceRecord {
         $this.ATMAAddress = $address.ToString()
     }
 
-    [String] RecordDataToString() {
+    Hidden [String] RecordDataToString() {
         return $this.ATMAAddress
     }
 }

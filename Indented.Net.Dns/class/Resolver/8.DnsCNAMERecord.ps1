@@ -8,13 +8,19 @@ class DnsCNAMERecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String] $Hostname
+    [RecordType] $RecordType = [RecordType]::CNAME
+    [String]     $Hostname
 
-    DnsCNAMERecord() { }
-
-    [Void] ReadRecordData(
+    DnsCNAMERecord() : base() { }
+    DnsCNAMERecord(
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
-    ) {
+    ) : base(
+        $dnsResourceRecord,
+        $binaryReader
+    ) { }
+
+    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 
