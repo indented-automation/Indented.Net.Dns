@@ -32,7 +32,8 @@ function Initialize-InternalDnsCache {
                     TTL        = [UInt32]$matches.TTL
                     RecordType = [RecordType]$matches.RecordType
                     IPAddress  = [IPAddress]$matches.IPAddress
-                } | Add-Member -TypeName 'Indented.Net.Dns.CacheRecord' -PassThru
+                    PSTypeName = 'DnsCacheRecord'
+                }
             } |
             Add-InternalDnsCacheRecord -Permanent -ResourceType Hint
     }

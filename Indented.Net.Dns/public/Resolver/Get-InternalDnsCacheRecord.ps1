@@ -16,7 +16,7 @@ function Get-InternalDnsCacheRecord {
     #>
 
     [CmdletBinding()]
-    [OutputType('Indented.Net.Dns.CacheRecord')]
+    [OutputType('DnsCacheRecord')]
     param (
         [Parameter(Position = 1, ValueFromPipelineByPropertyName)]
         [String]$Name,

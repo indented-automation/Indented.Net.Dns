@@ -16,16 +16,16 @@ function Add-InternalDnsCacheRecord {
     #>
 
     [CmdletBinding(DefaultParameterSetName = 'CacheRecord')]
-    [OutputType('Indented.Net.Dns.CacheRecord')]
+    [OutputType('DnsCacheRecord')]
     param (
         # A record to add to the cache.
         [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'CacheRecord')]
-        [PSTypeName('Indented.Net.Dns.CacheRecord')]
+        [PSTypeName('DnsCacheRecord')]
         $CacheRecord,
 
         # A resource record to add to the cache.
         [Parameter(Mandatory, ParameterSetName = 'ResourceRecord')]
-        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
+        [PSTypeName('DnsResourceRecord')]
         $ResourceRecord,
 
         # The cache object type.
@@ -45,7 +45,7 @@ function Add-InternalDnsCacheRecord {
     process {
         if ($ResourceRecord) {
             $CacheRecord = $ResourceRecord | Select-Object Name, TTL, RecordType, IPAddress |
-                Add-Member -TypeName 'Indented.Net.Dns.CacheRecord' -PassThru
+                Add-Member -TypeName 'DnsCacheRecord' -PassThru
         }
 
         $CacheRecord |

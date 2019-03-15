@@ -16,7 +16,7 @@ function Remove-InternalDnsCacheRecord {
     param(
         # A record to add to the cache.
         [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'CacheRecord')]
-        [PSTypeName('Indented.Net.Dns.CacheRecord')]
+        [PSTypeName('DnsCacheRecord')]
         $CacheRecord,
 
         # A time property is used to age entries out of the cache. If permanent is set the time is not, the value will not be purged based on the TTL.

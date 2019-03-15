@@ -67,7 +67,7 @@ class DnsSOARecord : DnsResourceRecord {
             '    {7} ; expire ({8})'
             '    {9} ; minimum ttl ({10})'
             ')'
-        )
+        ) -join "`n"
         return $string -f @(
             $this.NameServer,
             $this.ResponsiblePerson,

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
   <ViewDefinitions>
-  
+
     <!-- Resolver -->
-  
+
     <View>
-      <Name>Indented.Net.Dns.Message</Name>
+      <Name>DnsMessage</Name>
       <ViewSelectedBy>
-        <TypeName>Indented.Net.Dns.Message</TypeName>
+        <TypeName>DnsMessage</TypeName>
       </ViewSelectedBy>
       <ListControl>
         <ListEntries>
@@ -18,19 +18,19 @@
               </ListItem>
               <ListItem>
                 <Label>Question</Label>
-                <PropertyName>QuestionToString</PropertyName>
+                <ScriptBlock>$_.QuestionToString()</ScriptBlock>
               </ListItem>
               <ListItem>
                 <Label>Answer</Label>
-                <PropertyName>AnswerToString</PropertyName>
+                <ScriptBlock>$_.AnswerToString()</ScriptBlock>
               </ListItem>
               <ListItem>
                 <Label>Authority</Label>
-                <PropertyName>AuthorityToString</PropertyName>
+                <ScriptBlock>$_.AuthorityToString()</ScriptBlock>
               </ListItem>
               <ListItem>
                 <Label>Additional</Label>
-                <PropertyName>AdditionalToString</PropertyName>
+                <ScriptBlock>$_.AdditionalToString()</ScriptBlock>
               </ListItem>
               <ListItem>
                 <PropertyName>Server</PropertyName>
@@ -48,9 +48,9 @@
     </View>
 
     <View>
-      <Name>Indented.Net.Dns.CacheRecord</Name>
+      <Name>DnsCacheRecord</Name>
       <ViewSelectedBy>
-        <TypeName>Indented.Net.Dns.CacheRecord</TypeName>
+        <TypeName>CacheRecord</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>

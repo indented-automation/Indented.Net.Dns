@@ -31,8 +31,6 @@ class DnsMessage {
     [Int]                 $TimeTaken
     [String]              $Server
 
-    # Constructors
-
     DnsMessage() { }
 
     DnsMessage(
@@ -80,17 +78,26 @@ class DnsMessage {
     # Methods
 
     Hidden [String] RecordSetToString(
-        [IEnumerable] $resourceRecords
+        [DnsResourceRecord[]] $resourceRecords
     ) {
-        $string = [StringBuilder]::new()
-        foreach ($resourceRecord in $resourceRecords) {
-            $string.AppendLine($resourceRecord.ToString())
+        if ($resourceRecords.Count -gt 0) {
+            $string = [StringBuilder]::new()
+            foreach ($resourceRecord in $resourceRecords) {
+                if ($resourceRecord.RecordType -ne [RecordType]::OPT) {
+                    $string.AppendLine($resourceRecord.ToString())
+                }
+            }
+            return $string.ToString().TrimEnd()
         }
-        return $string
+        return ''
     }
 
     [String] QuestionToString() {
-        return $this.RecordSetToString($this.Question)
+        $string = [StringBuilder]::new()
+        foreach ($question in $this.Question) {
+            $string.AppendLine($question.ToString())
+        }
+        return $string.ToString().TrimEnd()
     }
 
     [String] AnswerToString() {
