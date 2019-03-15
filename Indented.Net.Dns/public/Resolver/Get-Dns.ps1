@@ -109,13 +109,13 @@ function Get-Dns {
         [Parameter(ParameterSetName = 'NSSearch')]
         [Switch]$DnsSec,
 
-        # Disable EDNS support, suppresses OPT RR advertising client support in DNS question.
+        # Enable EDNS support, suppresses OPT RR advertising client support in DNS question.
         [Parameter(ParameterSetName = 'RecursiveQuery')]
         [Parameter(ParameterSetName = 'IterativeQuery')]
         [Parameter(ParameterSetName = 'NSSearch')]
-        [Switch]$NoEDns,
+        [Switch]$EDns,
 
-        # By default the EDns buffer size is set to 4096 bytes. If NoEDns is used this value is ignored.
+        # By default the EDns buffer size is set to 4096 bytes.
         [Parameter(ParameterSetName = 'RecursiveQuery')]
         [Parameter(ParameterSetName = 'IterativeQuery')]
         [Parameter(ParameterSetName = 'NSSearch')]
@@ -193,12 +193,12 @@ function Get-Dns {
         # Global query options
 
         $GlobalOptions = @{}
-        if ($NoEDns -and $DnsSec) {
+        if (-not $EDns -and $DnsSec) {
             Write-Warning "Get-Dns: EDNS support is mandatory for DNSSEC. Enabling EDNS for this request."
-            $NoEDns = $false
+            $EDns = $true
         }
-        if ($NoEDns) {
-            $GlobalOptions.Add('NoEDns', $true)
+        if ($EDns) {
+            $GlobalOptions.Add('EDns', $true)
         } else {
             $GlobalOptions.Add('EDnsBufferSize', $EDnsBufferSize)
         }
@@ -481,7 +481,7 @@ function Get-Dns {
                         $RecordClass
                     )
                 }
-                if (-not $NoEDns -and -not ($RecordType -in ([RecordType]::AXFR), ([RecordType]::IXFR))) {
+                if ($EDns -and -not ($RecordType -in ([RecordType]::AXFR), ([RecordType]::IXFR))) {
                     $DnsQuery.SetEDnsBufferSize($EDnsBufferSize)
                 }
                 if ($DnsSec -and -not ($RecordType -in ([RecordType]::AXFR), ([RecordType]::IXFR))) {
