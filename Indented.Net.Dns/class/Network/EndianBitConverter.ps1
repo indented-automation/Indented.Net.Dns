@@ -20,7 +20,7 @@ class EndianBitConverter {
     ) {
         if ([BitConverter]::IsLittleEndian -eq $isBigEndian) {
             return [BitConverter]::GetBytes(
-                [IPAddress]::HostToNetworkOrder([Int32]$value)
+                [IPAddress]::HostToNetworkOrder([Int64]$value)
             )[4..7]
         } else {
             return [BitConverter]::GetBytes($value)

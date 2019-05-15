@@ -38,7 +38,7 @@ Get-DnsRecord [[-Name] <String>] [[-RecordType] <RecordType[]>] [-Filter <String
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+{{ Fill in the Description }}
 
 ## EXAMPLES
 
@@ -52,7 +52,7 @@ PS C:\> {{ Add example code here }}
 ## PARAMETERS
 
 ### -Name
-{{Fill Name Description}}
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
@@ -67,13 +67,13 @@ Accept wildcard characters: False
 ```
 
 ### -RecordType
-{{Fill RecordType Description}}
+{{ Fill RecordType Description }}
 
 ```yaml
 Type: RecordType[]
 Parameter Sets: (All)
 Aliases: Type
-Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, HIP, NINFO, RKEY, SPF, UINFO, UID, GID, UNSPEC, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, TA, DLV, WINS, WINSR
+Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, HIP, NINFO, RKEY, SPF, UINFO, UID, GID, UNSPEC, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, TA, DLV, WINS, WINSR, UNKNOWN
 
 Required: False
 Position: 2
@@ -83,7 +83,7 @@ Accept wildcard characters: False
 ```
 
 ### -ZoneName
-{{Fill ZoneName Description}}
+{{ Fill ZoneName Description }}
 
 ```yaml
 Type: String
@@ -98,7 +98,7 @@ Accept wildcard characters: False
 ```
 
 ### -Cache
-{{Fill Cache Description}}
+{{ Fill Cache Description }}
 
 ```yaml
 Type: SwitchParameter
@@ -113,7 +113,7 @@ Accept wildcard characters: False
 ```
 
 ### -RootHints
-{{Fill RootHints Description}}
+{{ Fill RootHints Description }}
 
 ```yaml
 Type: SwitchParameter
@@ -128,7 +128,7 @@ Accept wildcard characters: False
 ```
 
 ### -Filter
-{{Fill Filter Description}}
+{{ Fill Filter Description }}
 
 ```yaml
 Type: String
@@ -174,8 +174,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

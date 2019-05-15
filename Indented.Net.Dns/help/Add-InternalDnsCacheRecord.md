@@ -19,7 +19,8 @@ Add-InternalDnsCacheRecord -CacheRecord <Object> [-ResourceType <String>] [-Perm
 
 ### ResourceRecord
 ```
-Add-InternalDnsCacheRecord -ResourceRecord <Object> [-ResourceType <String>] [-Permanent] [<CommonParameters>]
+Add-InternalDnsCacheRecord -ResourceRecord <DnsResourceRecord> [-ResourceType <String>] [-Permanent]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -58,14 +59,14 @@ Accept wildcard characters: False
 A resource record to add to the cache.
 
 ```yaml
-Type: Object
+Type: DnsResourceRecord
 Parameter Sets: ResourceRecord
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -101,15 +102,14 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### Indented.Net.Dns.CacheRecord
 ## OUTPUTS
 
-### Indented.Net.Dns.CacheRecord
+### DnsCacheRecord
 ## NOTES
 
 ## RELATED LINKS

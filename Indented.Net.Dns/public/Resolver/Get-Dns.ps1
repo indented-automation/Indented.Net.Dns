@@ -238,7 +238,7 @@ function Get-Dns {
         } else {
             if (-not $SearchList) {
                 # If a search list has not been passed using the SearchList parameter attempt to discover one.
-                $SearchList = Get-CimInstance -ClassName Win32_NetworkAdapterConfiguration |
+                $SearchList = Get-CimInstance -ClassName Win32_NetworkAdapterConfiguration -Property DNSDomainSuffixSearchOrder |
                     Where-Object DNSDomainSuffixSearchOrder |
                     Select-Object -ExpandProperty DNSDomainSuffixSearchOrder |
                     ForEach-Object { "$_." }
@@ -287,7 +287,7 @@ function Get-Dns {
                     $NoError = $false
                 } else {
                     if ($DnsResponse.Header.ANCount -gt 0) {
-                    $NoAnswer = $false
+                        $NoAnswer = $false
                     } elseif ($DnsResponse.Header.NSCount -gt 0) {
                         $Authority = $DnsResponse.Authority | Select-Object -First 1
 
@@ -423,9 +423,15 @@ function Get-Dns {
                     $FullName = $Name
                 }
 
-                Write-Verbose "Get-Dns: Query: $FullName $RecordClass $RecordType :: Server: $Server Protocol: $(if ($Tcp) { 'TCP' } else { 'UDP' }) AddressFamily: $(if ($IPv6) { 'IPv6' } else { 'IPv4' })"
+                Write-Debug ("Get-Dns: Query: {0} {1} {2} :: Server: {3} Protocol: {4} AddressFamily: {5}" -f @(
+                    $FullName
+                    $RecordClass
+                    $RecordType
+                    $Server
+                    ('UDP', 'TCP')[$Tcp.ToBool()]
+                    ('IPv4', 'IPv6')[$IPv6.ToBool()]
+                ))
 
-                # Construct a message
                 if ($RecordType -eq [RecordType]::IXFR -and $SerialNumber) {
                     $DnsQuery = [DnsMessage]::new(
                         $FullName,
@@ -448,7 +454,6 @@ function Get-Dns {
                 }
 
                 if ($NoRecursion) {
-                    # Recursion is set by default, toggle the flag.
                     $DnsQuery.Header.Flags = [HeaderFlags]([UInt16]$DnsQuery.Header.Flags -bxor [UInt16][HeaderFlags]::RD)
                 }
 
@@ -618,10 +623,8 @@ function Get-Dns {
                 } until ($MessageComplete)
 
                 if ($Tcp) {
-                    # Disconnect a TCP socket.
                     Disconnect-Socket $Socket
                 }
-                # Close down the socket and free resources.
                 Remove-Socket $Socket
 
                 # Track the position in the suffixes search list

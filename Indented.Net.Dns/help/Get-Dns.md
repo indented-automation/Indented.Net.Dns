@@ -17,7 +17,7 @@ Get a DNS resource record from a DNS server.
 ### RecursiveQuery (Default)
 ```
 Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-RecordClass <RecordClass>] [-NoRecursion] [-DnsSec]
- [-NoEDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-SearchList <String[]>] [-NoSearchList]
+ [-EDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-SearchList <String[]>] [-NoSearchList]
  [-SerialNumber <UInt32>] [-Server <String>] [-Tcp] [-Port <UInt16>] [-Timeout <Byte>] [-IPv6] [-DnsDebug]
  [<CommonParameters>]
 ```
@@ -30,14 +30,14 @@ Get-Dns [[-Name] <String>] [-ZoneTransfer] [-SerialNumber <UInt32>] [-Server <St
 
 ### NSSearch
 ```
-Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-NSSearch] [-DnsSec] [-NoEDns]
+Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-NSSearch] [-DnsSec] [-EDns]
  [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug] [<CommonParameters>]
 ```
 
 ### IterativeQuery
 ```
 Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-Iterative] [-RecordClass <RecordClass>] [-DnsSec]
- [-NoEDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug] [<CommonParameters>]
+ [-EDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug] [<CommonParameters>]
 ```
 
 ### Version
@@ -146,7 +146,7 @@ Any resource record type, by default a query for ANY will be sent.
 Type: RecordType
 Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
 Aliases: Type
-Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, HIP, NINFO, RKEY, SPF, UINFO, UID, GID, UNSPEC, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, TA, DLV, WINS, WINSR
+Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, HIP, NINFO, RKEY, SPF, UINFO, UID, GID, UNSPEC, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, TA, DLV, WINS, WINSR, UNKNOWN
 
 Required: False
 Position: 3
@@ -272,8 +272,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -NoEDns
-Disable EDNS support, suppresses OPT RR advertising client support in DNS question.
+### -EDns
+Enable EDNS support, suppresses OPT RR advertising client support in DNS question.
 
 ```yaml
 Type: SwitchParameter
@@ -289,7 +289,6 @@ Accept wildcard characters: False
 
 ### -EDnsBufferSize
 By default the EDns buffer size is set to 4096 bytes.
-If NoEDns is used this value is ignored.
 
 ```yaml
 Type: UInt16
@@ -469,14 +468,13 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ## OUTPUTS
 
-### Indented.DnsResolver.Message
+### DnsMessage
 ## NOTES
 
 ## RELATED LINKS

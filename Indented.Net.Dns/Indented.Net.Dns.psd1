@@ -12,7 +12,7 @@
 RootModule = 'Indented.Net.Dns.psm1'
 
 # Version number of this module.
-ModuleVersion = '6.0'
+ModuleVersion = '6.0.0'
 
 # ID used to uniquely identify this module
 GUID = '3571e61d-687b-4bda-bcad-4152cff91bda'

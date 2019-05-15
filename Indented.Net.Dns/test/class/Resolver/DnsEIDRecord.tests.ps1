@@ -15,11 +15,11 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe DnsAAAARecord {
+    Describe DnsEIDRecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'AAAAAAAAAAAAAAAAAAAAAQ=='; RecordData = '::1' }
-            @{ Message = 'KgAUUEAJCAEAAAAAAAAgBA=='; RecordData = '2a00:1450:4009:801::2004' }
-            @{ Message = '/////////////////////w=='; RecordData = 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff' }
+            @{ Message = 'MTI4OUFC';     RecordData = '1289AB' }
+            @{ Message = 'QUFCQkND';     RecordData = 'AABBCC' }
+            @{ Message = 'MTIgODkgQUI='; RecordData = '12 89 AB' }
         ) {
             param (
                 $Message,
@@ -27,7 +27,8 @@ InModuleScope Indented.Net.Dns {
             )
 
             $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Convert]::FromBase64String($Message)
-            $resourceRecord = [DnsAAAARecord]::new()
+            $resourceRecord = [DnsEIDRecord]::new()
+            $resourceRecord.RecordDataLength = $RecordData.Length
             $resourceRecord.ReadRecordData($binaryReader)
 
             $resourceRecord.RecordDataToString() | Should -Be $RecordData

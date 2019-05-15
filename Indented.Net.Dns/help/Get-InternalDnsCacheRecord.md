@@ -37,7 +37,7 @@ Get-InternalDnsCacheRecord a.root-servers.net A
 ## PARAMETERS
 
 ### -Name
-{{Fill Name Description}}
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
@@ -52,13 +52,13 @@ Accept wildcard characters: False
 ```
 
 ### -RecordType
-{{Fill RecordType Description}}
+{{ Fill RecordType Description }}
 
 ```yaml
 Type: RecordType
 Parameter Sets: (All)
 Aliases:
-Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, HIP, NINFO, RKEY, SPF, UINFO, UID, GID, UNSPEC, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, TA, DLV, WINS, WINSR
+Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, HIP, NINFO, RKEY, SPF, UINFO, UID, GID, UNSPEC, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, TA, DLV, WINS, WINSR, UNKNOWN
 
 Required: False
 Position: 3
@@ -68,7 +68,7 @@ Accept wildcard characters: False
 ```
 
 ### -IPAddress
-{{Fill IPAddress Description}}
+{{ Fill IPAddress Description }}
 
 ```yaml
 Type: IPAddress
@@ -83,7 +83,7 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceType
-{{Fill ResourceType Description}}
+{{ Fill ResourceType Description }}
 
 ```yaml
 Type: String
@@ -98,8 +98,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
@@ -107,7 +106,7 @@ For more information, see about_CommonParameters (http://go.microsoft.com/fwlink
 ### Indented.Net.Dns.ResourceRecord
 ## OUTPUTS
 
-### Indented.Net.Dns.CacheRecord
+### DnsCacheRecord
 ## NOTES
 
 ## RELATED LINKS
