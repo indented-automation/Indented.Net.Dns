@@ -128,6 +128,16 @@ InModuleScope Indented.Net.Dns {
             }
         }
 
+        Context ReadDnsCharacterString {
+            BeforeEach {
+                $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Byte[]](5, 97, 98, 99, 100, 101)
+            }
+
+            It 'Reads a lenght-prefixed string' {
+                $binaryReader.ReadDnsCharacterString() | Should -Be 'abcde'
+            }
+        }
+
         Context ReadDnsDomainName {
             It 'Reads a single label' {
                 $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Byte[]](3, 97, 98, 99, 0)
@@ -152,7 +162,7 @@ InModuleScope Indented.Net.Dns {
             }
         }
 
-        Describe GetDnsDomainNameBytes {
+        Context GetDnsDomainNameBytes {
             It 'Returns a single byte array' {
                 [EndianBinaryReader]::GetDnsDomainNameBytes('a').GetType() | Should -Be ([Byte[]])
             }

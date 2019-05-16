@@ -62,7 +62,7 @@ class EndianBinaryReader : BinaryReader {
     }
 
     # http://www.ietf.org/rfc/rfc1035.txt
-    [String] ReadDnsString() {
+    [String] ReadDnsCharacterString() {
         $length = $this.ReadByte()
         return [String]::new($this.ReadChars($length))
     }
@@ -106,6 +106,7 @@ class EndianBinaryReader : BinaryReader {
         if ($compressionStart -gt 0) {
             $null = $this.BaseStream.Seek($compressionStart, 'Begin')
         }
+
         # Read off and discard the null termination on the end of the name
         $null = $this.ReadByte()
 

@@ -1,20 +1,20 @@
-class DnsEIDRecord : DnsResourceRecord {
+class DnsMDRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        /                      EID                      /
+        /                    MADNAME                    /
+        /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-
-        http://cpansearch.perl.org/src/MIKER/Net-DNS-Codes-0.11/extra_docs/draft-ietf-nimrod-dns-02.txt
+        http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::EID
-    [String]     $EID
+    [RecordType] $RecordType = [RecordType]::MD
+    [String]     $Hostname
 
-    DnsEIDRecord() : base() { }
-    DnsEIDRecord(
+    DnsMDRecord() : base() { }
+    DnsMDRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) : base(
@@ -23,10 +23,10 @@ class DnsEIDRecord : DnsResourceRecord {
     ) { }
 
     Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.EID = $binaryReader.ReadDnsCharacterString()
+        $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 
-    Hidden [String] RecordDataToString() {
-        return $this.EID
+    [String] RecordDataToString() {
+        return $this.Hostname
     }
 }

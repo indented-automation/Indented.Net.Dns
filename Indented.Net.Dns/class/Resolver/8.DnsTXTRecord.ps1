@@ -22,38 +22,10 @@ class DnsTXTRecord : DnsResourceRecord {
     ) { }
 
     Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.Text = [String]::new([Char[]]$binaryReader.ReadBytes($this.RecordDataLength))
+        $this.Text = $binaryReader.ReadDnsCharacterString()
     }
 
     Hidden [String] RecordDataToString() {
         return $this.Text
-    }
-}
-
-
-
-function ReadDnsTXTRecord {
-    # .SYNOPSIS
-    #   TXT record parser.
-    # .DESCRIPTION
-
-    # .NOTES
-    #   Change log:
-    #     09/03/2017 - Chris Dent - Modernisation pass.
-
-    [OutputType([Void])]
-    param(
-        [EndianBinaryReader]$BinaryReader,
-
-        [PSTypeName('Indented.Net.Dns.ResourceRecord')]
-        $ResourceRecord
-    )
-
-    # Property: Text
-    $ResourceRecord | Add-Member Text (ReadDnsCharacterString $BinaryReader)
-
-    # Property: RecordData
-    $ResourceRecord | Add-Member RecordData -MemberType ScriptProperty -Force -Value {
-        $this.Text
     }
 }
