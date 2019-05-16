@@ -1,4 +1,4 @@
-class DnsTXTRecord : DnsResourceRecord {
+class DnsX25Record : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -10,10 +10,10 @@ class DnsTXTRecord : DnsResourceRecord {
     #>
 
     [RecordType] $RecordType = [RecordType]::TXT
-    [String]     $Text
+    [String]     $PSDNAddress
 
-    DnsTXTRecord() : base() { }
-    DnsTXTRecord(
+    DnsX25Record() : base() { }
+    DnsX25Record(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) : base(
@@ -22,10 +22,10 @@ class DnsTXTRecord : DnsResourceRecord {
     ) { }
 
     Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.Text = $binaryReader.ReadDnsCharacterString()
+        $this.PSDNAddress = $binaryReader.ReadDnsCharacterString()
     }
 
     Hidden [String] RecordDataToString() {
-        return '"{0}"' -f $this.Text
+        return '"{0}"' -f $this.PSDNAddress
     }
 }

@@ -15,18 +15,19 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe DnsTXTRecord {
+    Describe DnsUnknownRecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'C0hlbGxvIHdvcmxk';                                     RecordData = '"Hello world"' }
-            @{ Message = 'JnY9c3BmMSBpbmNsdWRlOnNwZi5kb21haW4uZXhhbXBsZSB+YWxs'; RecordData = '"v=spf1 include:spf.domain.example ~all"' }
+            @{ Message = 'YW55dGhpbmc='; RecordData = 'YW55dGhpbmc=' }
         ) {
             param (
                 $Message,
                 $RecordData
             )
 
-            $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Convert]::FromBase64String($Message)
-            $resourceRecord = [DnsTXTRecord]::new()
+            $recordDataBytes = [Convert]::FromBase64String($Message)
+            $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
+            $resourceRecord = [DnsUnknownRecord]::new()
+            $resourceRecord.RecordDataLength = $recordDataBytes.Count
             $resourceRecord.ReadRecordData($binaryReader)
 
             $resourceRecord.RecordDataToString() | Should -Be $RecordData

@@ -1,19 +1,18 @@
-class DnsTXTRecord : DnsResourceRecord {
+class DnsUnknownRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        /                   TXT-DATA                    /
+        /                  <anything>                   /
+        /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-
-        http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::TXT
-    [String]     $Text
+    [RecordType] $RecordType = [RecordType]::UNKNOWN
+    [Byte[]]     $BinaryData
 
-    DnsTXTRecord() : base() { }
-    DnsTXTRecord(
+    DnsUnknownRecord() : base() { }
+    DnsUnknownRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) : base(
@@ -22,10 +21,10 @@ class DnsTXTRecord : DnsResourceRecord {
     ) { }
 
     Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.Text = $binaryReader.ReadDnsCharacterString()
+        $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
     Hidden [String] RecordDataToString() {
-        return '"{0}"' -f $this.Text
+        return [Convert]::ToBase64String($this.BinaryData)
     }
 }
