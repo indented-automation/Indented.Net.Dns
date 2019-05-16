@@ -25,4 +25,8 @@ class DnsDHCIDRecord : DnsResourceRecord {
     Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
     }
+
+    Hidden [String] RecordDataToString() {
+        return [Convert]::ToBase64String($this.BinaryData)
+    }
 }

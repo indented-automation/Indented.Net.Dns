@@ -35,10 +35,34 @@ InModuleScope Indented.Net.Dns {
         }
 
         Context ToBinary {
-            It 'Converts a byte array to binary' {
-                [EndianBitConverter]::ToBinary(1) | Should -Be '00000001'
-                [EndianBitConverter]::ToBinary(255) | Should -Be '11111111'
-                [EndianBitConverter]::ToBinary((1, 255)) | Should -Be '0000000111111111'
+            It 'Converts the byte array <Bytes> to the string <String>' -TestCases @(
+                @{ Bytes = 1;      String = '00000001' }
+                @{ Bytes = 255;    String = '11111111' }
+                @{ Bytes = 1, 255; String = '0000000111111111' }
+            ) {
+                param (
+                    [Byte[]]$Bytes,
+
+                    [String]$String
+                )
+
+                [EndianBitConverter]::ToBinary($Bytes) | Should -Be $String
+            }
+        }
+
+        Context ToHexadecimal {
+            It 'Converts the byte array <Bytes> to the string <String>' -TestCases @(
+                @{ Bytes = 1;      String = '01' }
+                @{ Bytes = 255;    String = 'FF' }
+                @{ Bytes = 1, 255; String = '01FF' }
+            ) {
+                param (
+                    [Byte[]]$Bytes,
+
+                    [String]$String
+                )
+
+                [EndianBitConverter]::ToHexadecimal($Bytes) | Should -Be $String
             }
         }
     }

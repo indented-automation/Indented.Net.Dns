@@ -79,7 +79,7 @@ class DnsSOARecord : DnsResourceRecord {
             $this.Expire.ToString().PadRight(10, ' '),
             (ConvertTo-TimeSpanString -Seconds $this.Expire),
             $this.MinimumTTL.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.Refresh)
+            (ConvertTo-TimeSpanString -Seconds $this.MinimumTTL)
         )
     }
 

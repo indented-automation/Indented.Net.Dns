@@ -1,4 +1,4 @@
-class DnsDLVRecord {
+class DnsDLVRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -30,17 +30,17 @@ class DnsDLVRecord {
     ) { }
 
     Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.KeyTag = $binaryReader.ReadInt16($true)
+        $this.KeyTag = $binaryReader.ReadUInt16($true)
         $this.Algorithm = $binaryReader.ReadByte()
         $this.DigestType = $binaryReader.ReadByte()
 
         $bytes = $binaryReader.ReadBytes($this.RecordDataLength - 4)
-        $this.Digest = [EndianBitConverter]::ToBinary($bytes)
+        $this.Digest = [EndianBitConverter]::ToHexadecimal($bytes)
     }
 
     Hidden [String] RecordDataToString() {
         return '{0} {1} {2} {3}' -f @(
-            $this.KeyTag.ToString()
+            $this.KeyTag
             [Byte]$this.Algorithm
             [Byte]$this.DigestType
             $this.Digest

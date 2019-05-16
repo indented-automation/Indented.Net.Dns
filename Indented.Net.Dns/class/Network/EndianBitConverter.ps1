@@ -38,4 +38,14 @@ class EndianBitConverter {
         }
         return $string.ToString()
     }
+
+    static [String] ToHexadecimal(
+        [Byte[]] $bytes
+    ) {
+        $string = [StringBuilder]::new()
+        foreach ($byte in $bytes) {
+            $string.AppendFormat('{0:X2}' -f $byte)
+        }
+        return $string.ToString()
+    }
 }
