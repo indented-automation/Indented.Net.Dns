@@ -4,28 +4,46 @@ class AngularDistance {
     [Decimal] $Seconds
     [String]  $Direction
 
-    hidden static [Int32] $Equator = [Math]::Pow(2, 31)
-    hidden static [Int32] $PrimeMeridian = [Math]::Pow(2, 31)
+    hidden static [Int64] $Equator = 2147483648
+    hidden static [Int64] $PrimeMeridian = 2147483648
 
-    AngularDistance([UInt32]$value, [DistanceType]$DistanceType) {
-        $this.Direction = switch ($DistanceType) {
+    AngularDistance([UInt32]$value, [DistanceType]$distanceType) {
+        $this.Direction = switch ($distanceType) {
             'Latitude' {
-                ('N', 'S')[$value -gt [AngularDistance]::Equator]
+                ('S', 'N')[$value -gt [AngularDistance]::Equator]
             }
             'Longitude' {
                 ('W', 'E')[$value -gt [AngularDistance]::PrimeMeridian]
             }
         }
 
+        $value = [Math]::Abs($value - 2147483648)
+
         $remainder = $value % (1000 * 60 * 60)
-        $this.Degrees = ($value - $Remainder) / (1000 * 60 * 60)
+        $this.Degrees = ($value - $remainder) / (1000 * 60 * 60)
         $value = $remainder
 
         $remainder = $value % (1000 * 60)
-        $this.Minutes = ($value - $Remainder) / (1000 * 60)
+        $this.Minutes = ($value - $remainder) / (1000 * 60)
         $value = $remainder
 
         $this.Seconds = $value / 1000
+    }
+
+    [UInt32] ToUInt32() {
+        $value = (
+            ($this.Seconds * 1000) +
+            ($this.Minutes * 1000 * 60) +
+            ($this.Degrees * 1000 * 60 * 60)
+        )
+
+        if ($this.Direction -in 'N', 'E') {
+            $value = 2147483648 + $value
+        } else {
+            $value = 2147483648 - $value
+        }
+
+        return $value
     }
 
     [String] ToString() {

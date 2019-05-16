@@ -52,11 +52,11 @@ class DnsLOCRecord : DnsResourceRecord {
 
         $this.Latitude = [AngularDistance]::new($binaryReader.ReadUInt32($true), 'Latitude')
         $this.Longitude = [AngularDistance]::new($binaryReader.ReadUInt32($true), 'Longitude')
-        $this.Altitude = $binaryReader.ReadUInt32($true) / 100
+        $this.Altitude = (-10000000 + $binaryReader.ReadUInt32($true)) / 100
     }
 
     Hidden [String] RecordDataToString() {
-        return '{0} {1} {2:N2}m {3}m {4}m {5}m' -f @(
+        return '{0} {1} {2:N2}m {3:N2}m {4:N2}m {5:N2}m' -f @(
             $this.Latitude
             $this.Longitude
             $this.Altitude
