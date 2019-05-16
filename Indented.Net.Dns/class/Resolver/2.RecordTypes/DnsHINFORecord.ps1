@@ -1,6 +1,3 @@
-using namespace Indented.IO
-
-
 class DnsHINFORecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1

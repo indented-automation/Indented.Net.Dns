@@ -29,7 +29,7 @@ class DnsResourceRecord {
     [RecordType]  $RecordType       = [RecordType]::Empty
     [UInt16]      $RecordDataLength
 
-    Hidden [Boolean] $IsTruncated
+    hidden [Boolean] $IsTruncated
 
     DnsResourceRecord() { }
 
@@ -82,17 +82,17 @@ class DnsResourceRecord {
     }
 
     # Child classes should override this method
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
     # Child classes should override this method
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return ''
     }
 
     # Child classes shoudl override this method if appropriate
-    Hidden [Byte[]] RecordDataToByteArray(
+    hidden [Byte[]] RecordDataToByteArray(
         [Boolean] $useCompressedNames
     ) {
         return [Byte[]]::new($this.RecordDataLength)

@@ -43,7 +43,7 @@ class DnsQuestion {
         }
     }
 
-    Hidden [Byte[]] ToByteArray() {
+    hidden [Byte[]] ToByteArray() {
         $bytes = [List[Byte]]::new()
 
         $bytes.AddRange([EndianBinaryReader]::GetDnsDomainNameBytes($this.Name))
