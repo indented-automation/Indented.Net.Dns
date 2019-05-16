@@ -32,34 +32,33 @@ class DnsAPLRecord : DnsResourceRecord {
 
             $this.List = while ($listLength -gt 0) {
                 $addressFamily = [IanaAddressFamily]$binaryReader.ReadUInt16($true)
+                $prefix = $binaryReader.ReadByte()
                 $negationAndLength = $binaryReader.ReadByte()
 
                 $item = [PSCustomObject]@{
                     AddressFamily = $addressFamily
-                    Prefix        = $binaryReader.ReadByte()
-                    Negation      = [Boolean]($negationAndLength -band 0x0800)
-                    AddressLength = $negationAndLength -band 0x007F
+                    Prefix        = $prefix
+                    Negation      = [Boolean]($negationAndLength -band 0x80)
+                    AddressLength = $negationAndLength -band 0x7F
                     Address       = $null
                 }
-
-                $addressLength = [Math]::Ceiling($item.AddressLength / 8)
                 $addressBytes = switch ($item.AddressFamily) {
                     'IPv4' { [Byte[]]::new(4) }
                     'IPv6' { [Byte[]]::new(16) }
                 }
+
                 [Array]::Copy(
-                    $binaryReader.ReadBytes($addressLength),
+                    $binaryReader.ReadBytes($item.AddressLength),
                     0,
                     $addressBytes,
-                    $addressBytes.Length - $addressLength,
-                    $addressLength
+                    0,
+                    $item.AddressLength
                 )
-                # Property: Address
                 $item.Address = [IPAddress]::new($addressBytes)
 
                 $item
 
-                $listLength -= 3 + $addressLength
+                $listLength -= 4 + $item.AddressLength
             }
         }
     }
@@ -73,10 +72,6 @@ class DnsAPLRecord : DnsResourceRecord {
                 $item.Prefix
             )
         }
-        if ($values.Count -gt 1) {
-            return "( $values )"
-        } else {
-            return $values
-        }
+        return $values -join ' '
     }
 }
