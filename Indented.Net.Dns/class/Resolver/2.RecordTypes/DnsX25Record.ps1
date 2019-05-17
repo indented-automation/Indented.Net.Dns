@@ -9,7 +9,7 @@ class DnsX25Record : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::TXT
+    [RecordType] $RecordType = [RecordType]::X25
     [String]     $PSDNAddress
 
     DnsX25Record() : base() { }

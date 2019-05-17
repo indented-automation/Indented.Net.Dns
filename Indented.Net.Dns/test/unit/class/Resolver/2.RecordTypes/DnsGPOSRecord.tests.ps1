@@ -15,20 +15,18 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe DnsAPLRecord {
+    Describe DnsGPOSRecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'AAEYAQo=';             RecordData = '1:10.0.0.0/24' }
-            @{ Message = 'AAEghAoAAAEAARgBCg=='; RecordData = '!1:10.0.0.1/32 1:10.0.0.0/24' }
+            @{ Message = 'AAAA';                             RecordData = '"" "" ""' }
+            @{ Message = 'CC0yMi42ODgyCDExNi44NjUyBTI1MC4w'; RecordData = '"-22.6882" "116.8652" "250.0"' }
         ) {
             param (
                 $Message,
                 $RecordData
             )
 
-            $recordDataBytes = [Convert]::FromBase64String($Message)
-            $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
-            $resourceRecord = [DnsAPLRecord]::new()
-            $resourceRecord.RecordDataLength = $recordDataBytes.Count
+            $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Convert]::FromBase64String($Message)
+            $resourceRecord = [DnsGPOSRecord]::new()
             $resourceRecord.ReadRecordData($binaryReader)
 
             $resourceRecord.RecordDataToString() | Should -Be $RecordData

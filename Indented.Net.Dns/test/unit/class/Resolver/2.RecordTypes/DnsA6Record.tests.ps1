@@ -33,5 +33,11 @@ InModuleScope Indented.Net.Dns {
 
             $resourceRecord.RecordDataToString() | Should -Be $RecordData
         }
+
+        It 'Self test' {
+            $describeName = & (Get-Module Pester) { $pester.CurrentTestGroup.Name }
+
+
+        }
     }
 }

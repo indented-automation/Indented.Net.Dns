@@ -15,7 +15,7 @@ class DnsPXRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2163.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::MX
+    [RecordType] $RecordType = [RecordType]::PX
     [UInt16]     $Preference
     [String]     $MAP822
     [String]     $MAPX400

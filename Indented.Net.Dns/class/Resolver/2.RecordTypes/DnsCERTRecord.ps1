@@ -36,16 +36,15 @@ class DnsCERTRecord : DnsResourceRecord {
         $this.KeyTag = $binaryReader.ReadUInt16($true)
         $this.Algorithm = $binaryReader.ReadByte()
 
-        # Property: Certificate
         $bytes = $binaryReader.ReadBytes($this.RecordDataLength - 5)
         $this.Certificate = [Convert]::ToBase64String($bytes)
     }
 
     [String] RecordDataToString() {
         return '{0} {1} {2} {3}' -f @(
-            $this.CertificateType.ToString()
+            $this.CertificateType
             [UInt16]$this.KeyTag
-            [UInt16]$this.Algorithm
+            $this.Algorithm
             $this.Certificate
         )
     }

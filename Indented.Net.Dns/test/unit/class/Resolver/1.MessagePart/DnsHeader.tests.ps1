@@ -41,8 +41,8 @@ InModuleScope Indented.Net.Dns {
 
                 $header.QuestionCount | Should -Be 1
                 $header.Flags -band [HeaderFlags]::RD | Should -Be ([HeaderFlags]::RD)
-                $header.ToByteArray() | Should -Be @(0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0)
-                $header.ToString() | Should -Be 'ID: 0 OpCode: QUERY RCode: NOERROR Flags: RD Query: 1 Answer: 0 Authority: 0 Additional: 0'
+                $header.ToByteArray() | Select-Object -Skip 2 | Should -Be @(1, 0, 0, 1, 0, 0, 0, 0, 0, 0)
+                $header.ToString() | Should -MatchExactly 'ID: \d+ OpCode: QUERY RCode: NOERROR Flags: RD Query: 1 Answer: 0 Authority: 0 Additional: 0'
             }
 
             It 'When recursion is not desired' {
@@ -50,8 +50,8 @@ InModuleScope Indented.Net.Dns {
 
                 $header.QuestionCount | Should -Be 1
                 $header.Flags -band [HeaderFlags]::RD | Should -Be 0
-                $header.ToByteArray() | Should -Be @(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0)
-                $header.ToString() | Should -Be 'ID: 0 OpCode: QUERY RCode: NOERROR Flags: NONE Query: 1 Answer: 0 Authority: 0 Additional: 0'
+                $header.ToByteArray() | Select-Object -Skip 2 | Should -Be @(0, 0, 0, 1, 0, 0, 0, 0, 0, 0)
+                $header.ToString() | Should -MatchExactly 'ID: \d+ OpCode: QUERY RCode: NOERROR Flags: NONE Query: 1 Answer: 0 Authority: 0 Additional: 0'
             }
         }
     }
