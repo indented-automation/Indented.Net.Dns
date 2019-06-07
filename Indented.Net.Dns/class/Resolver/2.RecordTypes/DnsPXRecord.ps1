@@ -29,13 +29,13 @@ class DnsPXRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Preference = $binaryReader.ReadUInt16($true)
         $this.MAP822 = $binaryReader.ReadDnsDomainName()
         $this.MAPX400 = $binaryReader.ReadDnsDomainName()
     }
 
-    [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return '{0} {1} {2}' -f @(
             $this.Preference.ToString().PadRight(5, ' ')
             $this.MAP822

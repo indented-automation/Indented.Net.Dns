@@ -22,11 +22,11 @@ class DnsPTRRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 
-    [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return $this.Hostname
     }
 }

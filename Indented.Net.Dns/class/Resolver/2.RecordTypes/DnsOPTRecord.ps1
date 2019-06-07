@@ -135,7 +135,7 @@ class DnsOPTRecord : DnsResourceRecord {
         }
     }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $optionsLength = $this.RecordDataLength
 
         $this.OptionData = while ($optionsLength -gt 0) {
@@ -223,7 +223,7 @@ class DnsOPTRecord : DnsResourceRecord {
         }
     }
 
-    Hidden [IEnumerable[Byte]] RecordDataToByteArray() {
+    hidden [IEnumerable[Byte]] RecordDataToByteArray() {
         return [Byte[]]::new(0)
     }
 

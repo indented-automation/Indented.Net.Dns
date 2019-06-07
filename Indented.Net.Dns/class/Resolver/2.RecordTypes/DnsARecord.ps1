@@ -19,11 +19,11 @@ class DnsARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.IPAddress = $binaryReader.ReadIPAddress()
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return $this.IPAddress.IPAddressToString
     }
 }

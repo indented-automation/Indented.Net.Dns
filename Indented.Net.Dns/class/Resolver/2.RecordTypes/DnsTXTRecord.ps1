@@ -21,11 +21,11 @@ class DnsTXTRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Text = $binaryReader.ReadDnsCharacterString()
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return '"{0}"' -f $this.Text
     }
 }

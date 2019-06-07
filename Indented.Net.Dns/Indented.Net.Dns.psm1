@@ -1,11 +1,188 @@
-# Development mode importer
+$enumeration = @(
+    'AD\DcPromoFlag'
+    'AD\Rank'
+    'AD\ZonePropertyID'
+    'Cim\AutoConfigZones'
+    'Cim\BootMethod'
+    'Cim\CimRecordClass'
+    'Cim\DnsSecMode'
+    'Cim\EventLogLevel'
+    'Cim\LogLevel'
+    'Cim\NameCheckFlag'
+    'Cim\Notify'
+    'Cim\RegistryHive'
+    'Cim\RpcProtocol'
+    'Cim\ServerDynamicUpdate'
+    'Cim\ZoneDynamicUpdate'
+    'Cim\ZoneTransfer'
+    'Cim\ZoneType'
+    'Resolver\AFSDBSubType'
+    'Resolver\ATMAFormat'
+    'Resolver\CertificateType'
+    'Resolver\DigestType'
+    'Resolver\DistanceType'
+    'Resolver\EDnsDNSSECOK'
+    'Resolver\EDnsOptionCode'
+    'Resolver\EncryptionAlgorithm'
+    'Resolver\HeaderFlags'
+    'Resolver\IanaAddressFamily'
+    'Resolver\IPSECAlgorithm'
+    'Resolver\IPSECGatewayType'
+    'Resolver\KEYAC'
+    'Resolver\KEYNameType'
+    'Resolver\KEYProtocol'
+    'Resolver\LLQErrorCode'
+    'Resolver\LLQOpCode'
+    'Resolver\MessageCompression'
+    'Resolver\MSDNSOption'
+    'Resolver\NSEC3Flags'
+    'Resolver\NSEC3HashAlgorithm'
+    'Resolver\OpCode'
+    'Resolver\QR'
+    'Resolver\RCode'
+    'Resolver\RecordClass'
+    'Resolver\RecordType'
+    'Resolver\SSHAlgorithm'
+    'Resolver\SSHFPType'
+    'Resolver\TKEYMode'
+    'Resolver\WINSMappingFlag'
+)
 
-$paths = 'enum', 'class', 'private', 'public' | ForEach-Object {
-    Join-Path $psscriptroot $_
+foreach ($file in $enumeration) {
+    . ("{0}\enum\{1}.ps1" -f $psscriptroot, $file)
 }
-Get-ChildItem $paths -Recurse -Filter *.ps1 | ForEach-Object {
-    . $_.FullName
-}
-. $psscriptroot\InitializeModule.ps1
 
+$class = @(
+    'Cim\1.DnsZone'
+    'Cim\DnsConditionalForwarder'
+    'Cim\DnsPrimaryZone'
+    'Cim\DnsSecondaryZone'
+    'Cim\DnsStubZone'
+    'Dsc\DnsPrimaryZone'
+    'Network\EndianBinaryReader'
+    'Network\EndianBitConverter'
+    'Resolver\0.Miscelleneous\AngularDistance'
+    'Resolver\1.MessageParts\DnsHeader'
+    'Resolver\1.MessageParts\DnsQuestion'
+    'Resolver\1.MessageParts\DnsResourceRecord'
+    'Resolver\2.RecordTypes\DnsA6Record'
+    'Resolver\2.RecordTypes\DnsAAAARecord'
+    'Resolver\2.RecordTypes\DnsAFSDBRecord'
+    'Resolver\2.RecordTypes\DnsAPLRecord'
+    'Resolver\2.RecordTypes\DnsARecord'
+    'Resolver\2.RecordTypes\DnsATMARecord'
+    'Resolver\2.RecordTypes\DnsCERTRecord'
+    'Resolver\2.RecordTypes\DnsCNAMERecord'
+    'Resolver\2.RecordTypes\DnsDHCIDRecord'
+    'Resolver\2.RecordTypes\DnsDLVRecord'
+    'Resolver\2.RecordTypes\DnsDNAMERecord'
+    'Resolver\2.RecordTypes\DnsDNSKEYRecord'
+    'Resolver\2.RecordTypes\DnsDSRecord'
+    'Resolver\2.RecordTypes\DnsEIDRecord'
+    'Resolver\2.RecordTypes\DnsGPOSRecord'
+    'Resolver\2.RecordTypes\DnsHINFORecord'
+    'Resolver\2.RecordTypes\DnsHIPRecord'
+    'Resolver\2.RecordTypes\DnsIPSECKEYRecord'
+    'Resolver\2.RecordTypes\DnsISDNRecord'
+    'Resolver\2.RecordTypes\DnsKEYRecord'
+    'Resolver\2.RecordTypes\DnsLOCRecord'
+    'Resolver\2.RecordTypes\DnsMBRecord'
+    'Resolver\2.RecordTypes\DnsMDRecord'
+    'Resolver\2.RecordTypes\DnsMFRecord'
+    'Resolver\2.RecordTypes\DnsMGRecord'
+    'Resolver\2.RecordTypes\DnsMINFORecord'
+    'Resolver\2.RecordTypes\DnsMRRecord'
+    'Resolver\2.RecordTypes\DnsMXRecord'
+    'Resolver\2.RecordTypes\DnsNAPTRRecord'
+    'Resolver\2.RecordTypes\DnsNIMLOCRecord'
+    'Resolver\2.RecordTypes\DnsNINFORecord'
+    'Resolver\2.RecordTypes\DnsNSRecord'
+    'Resolver\2.RecordTypes\DnsNULLRecord'
+    'Resolver\2.RecordTypes\DnsNXTRecord'
+    'Resolver\2.RecordTypes\DnsOPTRecord'
+    'Resolver\2.RecordTypes\DnsPTRRecord'
+    'Resolver\2.RecordTypes\DnsPXRecord'
+    'Resolver\2.RecordTypes\DnsSINKRecord'
+    'Resolver\2.RecordTypes\DnsSOARecord'
+    'Resolver\2.RecordTypes\DnsSPFRecord'
+    'Resolver\2.RecordTypes\DnsSRVRecord'
+    'Resolver\2.RecordTypes\DnsTXTRecord'
+    'Resolver\2.RecordTypes\DnsUNKNOWNRecord'
+    'Resolver\2.RecordTypes\DnsWKSRecord'
+    'Resolver\2.RecordTypes\DnsX25Record'
+    'Resolver\3.Message\DnsMessage'
+    'ValidateDnsName'
+)
+
+foreach ($file in $class) {
+    . ("{0}\class\{1}.ps1" -f $psscriptroot, $file)
+}
+
+$private = @(
+    'Network\Connect-Socket'
+    'Network\Disconnect-Socket'
+    'Network\New-Socket'
+    'Network\Receive-Byte'
+    'Network\Remove-Socket'
+    'Network\Send-Byte'
+    'RecordTypesReaders\ReadDnsKXRecord'
+    'RecordTypesReaders\ReadDnsNSAPRecord'
+    'RecordTypesReaders\ReadDnsNSAPTRRecord'
+    'RecordTypesReaders\ReadDnsNSEC3PARAMRecord'
+    'RecordTypesReaders\ReadDnsNSEC3Record'
+    'RecordTypesReaders\ReadDnsNSECRecord'
+    'RecordTypesReaders\ReadDnsRKEYRecord'
+    'RecordTypesReaders\ReadDnsRPRecord'
+    'RecordTypesReaders\ReadDnsRRSIGRecord'
+    'RecordTypesReaders\ReadDnsRTRecord'
+    'RecordTypesReaders\ReadDnsSIGRecord'
+    'RecordTypesReaders\ReadDnsSSHFPPRecord'
+    'RecordTypesReaders\ReadDnsTARecord'
+    'RecordTypesReaders\ReadDnsTKEYRecord'
+    'RecordTypesReaders\ReadDnsTSIGRecord'
+    'RecordTypesReaders\ReadDnsWINSRecord'
+    'RecordTypesReaders\ReadDnsWINSRRecord'
+    'Resolver\Resolve-DnsServer'
+    'Utility\ConvertTo-TimspanString'
+)
+
+foreach ($file in $private) {
+    . ("{0}\private\{1}.ps1" -f $psscriptroot, $file)
+}
+
+$public = @(
+    'Cim\Clear-DnsCache'
+    'Cim\Get-DnsRecord'
+    'Cim\Get-DnsZone'
+    'Cim\New-DnsPrimaryZone'
+    'Resolver\Add-InternalDnsCacheRecord'
+    'Resolver\Get-Dns'
+    'Resolver\Get-DnsServerList'
+    'Resolver\Get-InternalDnsCacheRecord'
+    'Resolver\Initialize-InternalDnsCache'
+    'Resolver\Remove-InternalDnsCacheRecord'
+    'Resolver\Update-InternalRootHint'
+)
+
+foreach ($file in $public) {
+    . ("{0}\public\{1}.ps1" -f $psscriptroot, $file)
+}
+
+$functionsToExport = @(
+    'Clear-DnsCache'
+    'Get-DnsRecord'
+    'Get-DnsZone'
+    'New-DnsPrimaryZone'
+    'Add-InternalDnsCacheRecord'
+    'Get-Dns'
+    'Get-DnsServerList'
+    'Get-InternalDnsCacheRecord'
+    'Initialize-InternalDnsCache'
+    'Remove-InternalDnsCacheRecord'
+    'Update-InternalRootHint'
+)
+Export-ModuleMember -Function $functionsToExport
+
+. ("{0}\InitializeModule.ps1" -f $psscriptroot)
 InitializeModule
+

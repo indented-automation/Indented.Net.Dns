@@ -21,11 +21,11 @@ class DnsSPFRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.SPF = $binaryReader.ReadDnsCharacterString()
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return '"{0}"' -f $this.SPF
     }
 }

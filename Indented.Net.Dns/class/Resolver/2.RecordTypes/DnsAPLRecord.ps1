@@ -26,7 +26,7 @@ class DnsAPLRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         if ($this.RecordDataLength -gt 0) {
             $listLength = $this.RecordDataLength
 
@@ -63,7 +63,7 @@ class DnsAPLRecord : DnsResourceRecord {
         }
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         $values = foreach ($item in $this.List) {
             '{0}{1}:{2}/{3}' -f @(
                 ('', '!')[$item.Negation]

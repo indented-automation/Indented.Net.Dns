@@ -26,7 +26,7 @@ class DnsATMARecord : DnsResourceRecord {
     ) { }
 
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Format = [ATMAFormat]$binaryReader.ReadByte()
 
         $length = $this.RecordDataLength - 1
@@ -59,7 +59,7 @@ class DnsATMARecord : DnsResourceRecord {
         $this.ATMAAddress = $address.ToString()
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return $this.ATMAAddress
     }
 }

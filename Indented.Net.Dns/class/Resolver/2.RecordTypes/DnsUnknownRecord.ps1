@@ -20,11 +20,11 @@ class DnsUNKNOWNRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return [Convert]::ToBase64String($this.BinaryData)
     }
 }

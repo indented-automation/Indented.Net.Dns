@@ -38,7 +38,7 @@ class DnsLOCRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.Version = $binaryReader.ReadByte()
 
         $byte = $binaryReader.ReadByte()
@@ -55,7 +55,7 @@ class DnsLOCRecord : DnsResourceRecord {
         $this.Altitude = (-10000000 + $binaryReader.ReadUInt32($true)) / 100
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return '{0} {1} {2:N2}m {3:N2}m {4:N2}m {5:N2}m' -f @(
             $this.Latitude
             $this.Longitude

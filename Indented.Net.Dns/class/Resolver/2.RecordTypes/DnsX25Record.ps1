@@ -21,11 +21,11 @@ class DnsX25Record : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.PSDNAddress = $binaryReader.ReadDnsCharacterString()
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         return '"{0}"' -f $this.PSDNAddress
     }
 }

@@ -48,7 +48,7 @@ class DnsSOARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    Hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.NameServer = $binaryReader.ReadDnsDomainName()
         $this.ResponsiblePerson = $binaryReader.ReadDnsDomainName()
         $this.Serial = $binaryReader.ReadUInt32($true)
@@ -58,7 +58,7 @@ class DnsSOARecord : DnsResourceRecord {
         $this.MinimumTTL = $binaryReader.ReadUInt32($true)
     }
 
-    Hidden [String] RecordDataToString() {
+    hidden [String] RecordDataToString() {
         $string = @(
             '{0} {1} ('
             '    {2} ; serial'
@@ -83,7 +83,7 @@ class DnsSOARecord : DnsResourceRecord {
         )
     }
 
-    Hidden [IEnumerable[Byte]] RecordDataToByteArray(
+    hidden [IEnumerable[Byte]] RecordDataToByteArray(
         [Boolean] $useCompressedNames
     ) {
         $bytes = [List[Byte]]::new()

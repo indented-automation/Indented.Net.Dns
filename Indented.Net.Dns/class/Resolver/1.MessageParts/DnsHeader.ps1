@@ -85,7 +85,7 @@ class DnsHeader {
             $this.ID
             $this.OpCode.ToString().ToUpper()
             $this.RCode.ToString().ToUpper()
-            $this.Flags
+            $this.Flags.ToString().ToUpper()
             $this.QuestionCount
             $this.AnswerCount
             $this.AuthorityCount

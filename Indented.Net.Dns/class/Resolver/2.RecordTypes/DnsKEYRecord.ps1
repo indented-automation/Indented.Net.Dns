@@ -1,4 +1,4 @@
-class DnsDNSKEYRecord : DnsResourceRecord {
+class DnsKEYRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -12,30 +12,26 @@ class DnsDNSKEYRecord : DnsResourceRecord {
         /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-        The flags field takes the following format, discussed in RFC 4034 2.1.1:
+        The flags field takes the following format, discussed in RFC 2535 3.1.2:
 
-                                        1  1  1  1  1  1
-          0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        |                    | Z|                    | S|
-        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-
-        Where Z represents the ZoneKey bit, and S the SecureEntryPoint bit.
-
-        http://www.ietf.org/rfc/rfc3755.txt
-        http://www.ietf.org/rfc/rfc4034.txt
+          0   1   2   3   4   5   6   7   8   9   0   1   2   3   4   5
+        +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+        |  A/C  | Z | XT| Z | Z | NAMTYP| Z | Z | Z | Z |      SIG      |
+        +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
     #>
 
-    [RecordType]          $RecordType = [RecordType]::DNSKEY
+    [RecordType]          $RecordType = [RecordType]::KEY
     [UInt16]              $Flags
-    [Boolean]             $ZoneKey
-    [Boolean]             $SecureEntryPoint
+    [KEYAC]               $AuthenticationConfidentiality
+    [UInt16]              $FlagsExtension
+    [KEYNameType]         $NameType
+    [Boolean]             $SignatoryField
     [KEYProtocol]         $Protocol
     [EncryptionAlgorithm] $Algorithm
     [String]              $PublicKey
 
-    DnsDNSKEYRecord() : base() { }
-    DnsDNSKEYRecord(
+    DnsKEYRecord() : base() { }
+    DnsKEYRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) : base(
@@ -44,15 +40,24 @@ class DnsDNSKEYRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+        $position = $binaryReader.BaseStream.Position
+
         $this.Flags = $binaryReader.ReadUInt16($true)
-        $this.ZoneKey = $this.Flags -band 0x0100
-        $this.SecureEntryPoint = $this.Flags -band 0x0001
+        $this.AuthenticationConfidentiality = [Byte]($this.Flags -shr 14)
+
+        if (($this.Flags -band 0x1000) -eq 0x1000) {
+            $this.FlagsExtension = $binaryReader.ReadUInt16($true)
+        }
+
+        $this.NameType = [Byte](($this.Flags -band 0x0300) -shr 9)
+        $this.SignatoryField = [Boolean]($this.Flags -band 0x000F)
         $this.Protocol = $binaryReader.ReadByte()
         $this.Algorithm = $binaryReader.ReadByte()
 
-        $bytes = $binaryReader.ReadBytes($this.RecordDataLength - 4)
-        $this.PublicKey = [Convert]::ToBase64String($bytes)
-
+        $length = $this.RecordDataLength - $binaryReader.BaseStream.Position + $position
+        if ($this.AuthenticationConfidentiality -ne 'NoKey' -and $length -gt 0) {
+            $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($length))
+        }
     }
 
     hidden [String] RecordDataToString() {
