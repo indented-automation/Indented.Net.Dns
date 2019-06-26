@@ -22,9 +22,9 @@ class DnsLOCRecord : DnsResourceRecord {
 
     [RecordType]      $RecordType = [RecordType]::LOC
     [Byte]            $Version
-    [Int64]           $Size
-    [Int64]           $HorizontalPrecision
-    [Int64]           $VerticalPrecision
+    [Decimal]         $Size
+    [Decimal]         $HorizontalPrecision
+    [Decimal]         $VerticalPrecision
     [AngularDistance] $Latitude
     [AngularDistance] $Longitude
     [Decimal]         $Altitude
@@ -42,13 +42,22 @@ class DnsLOCRecord : DnsResourceRecord {
         $this.Version = $binaryReader.ReadByte()
 
         $byte = $binaryReader.ReadByte()
-        $this.Size = (($byte -band 0xF0 -shr 4) * [Math]::Pow(10, ($byte -band 0x0F))) / 100
+        $this.Size = 0 + ('{0}e{1}' -f @(
+            ($byte -band 0xF0) -shr 4
+            $byte -band 0x0F
+        )) / 100
 
         $byte = $binaryReader.ReadByte()
-        $this.HorizontalPrecision = (($byte -band 0xF0 -shr 4) * [Math]::Pow(10, ($byte -band 0x0F))) / 100
+        $this.HorizontalPrecision = 0 + ('{0}e{1}' -f @(
+            ($byte -band 0xF0) -shr 4
+            $byte -band 0x0F
+        )) / 100
 
         $byte = $binaryReader.ReadByte()
-        $this.VerticalPrecision = (($byte -band 0xF0 -shr 4) * [Math]::Pow(10, ($byte -band 0x0F))) / 100
+        $this.VerticalPrecision = 0 + ('{0}e{1}' -f @(
+            ($byte -band 0xF0) -shr 4
+            $byte -band 0x0F
+        )) / 100
 
         $this.Latitude = [AngularDistance]::new($binaryReader.ReadUInt32($true), 'Latitude')
         $this.Longitude = [AngularDistance]::new($binaryReader.ReadUInt32($true), 'Longitude')
