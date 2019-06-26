@@ -35,6 +35,14 @@ class DnsMessage {
 
     DnsMessage(
         [String]      $name,
+        [RecordType]  $recordType
+    ) {
+        $this.Header = [DnsHeader]::new($true, 1)
+        $this.Question = [DnsQuestion]::new($name, $recordType, 'IN')
+    }
+
+    DnsMessage(
+        [String]      $name,
         [RecordType]  $recordType,
         [RecordClass] $recordClass
     ) {

@@ -10,24 +10,24 @@ class DnsClient {
     hidden [Socket] $socket
 
     DnsClient() {
-        $this.Socket = [Socket]::new('Dgram', 'Udp')
-        $this.Socket.ReceiveTimeout = 5
-        $this.Socket.SendTimeout = 5
+        $this.Initialize($false, 5, 5)
     }
 
     DnsClient(
         [Boolean] $UseTcp
     ) {
-        if ($useTcp) {
-            $this.Socket = [Socket]::new('Stream', 'Tcp')
-        } else {
-            $this.Socket = [Socket]::new('Dgram', 'Udp')
-        }
-        $this.Socket.ReceiveTimeout = 5
-        $this.Socket.SendTimeout = 5
+        $this.Initialize($useTcp, 5, 5)
     }
 
     DnsClient(
+        [Boolean] $useTcp,
+        [Int32]   $receiveTimeout,
+        [Int32]   $sendTimeout
+    ) {
+        $this.Initialize($useTcp, $receiveTimeout, $sendTimeout)
+    }
+
+    [Void] Initialize(
         [Boolean] $useTcp,
         [Int32]   $receiveTimeout,
         [Int32]   $sendTimeout
