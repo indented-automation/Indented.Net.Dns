@@ -1,23 +1,22 @@
-class DnsMXRecord : DnsResourceRecord {
+class DnsRPRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        |                  PREFERENCE                   |
+        /                    RMAILBX                    /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-        /                   EXCHANGE                    /
-        /                                               /
+        /                    TXTDNAME                   /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-        http://www.ietf.org/rfc/rfc1035.txt
+        http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::MX
-    [UInt16]     $Preference
-    [String]     $Exchange
+    [RecordType] $RecordType = [RecordType]::RP
+    [String]     $ResponsibleMailbox
+    [String]     $DomainName
 
-    DnsMXRecord() : base() { }
-    DnsMXRecord(
+    DnsRPRecord() : base() { }
+    DnsRPRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) : base(
@@ -26,14 +25,14 @@ class DnsMXRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.Preference = $binaryReader.ReadUInt16($true)
-        $this.Exchange = $binaryReader.ReadDnsDomainName()
+        $this.ResponsibleMailbox = $binaryReader.ReadDnsDomainName()
+        $this.DomainName = $binaryReader.ReadDnsDomainName()
     }
 
     hidden [String] RecordDataToString() {
         return '{0} {1}' -f @(
-            $this.Preference.ToString().PadRight(5, ' '),
-            $this.Exchange
+            $this.ResponsibleMailbox
+            $this.DomainName
         )
     }
 }

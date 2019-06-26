@@ -124,6 +124,15 @@ class EndianBinaryReader : BinaryReader {
         return $name.ToString()
     }
 
+    [String] ReadDnsDomainName([Ref]$Length) {
+        $start = $this.BaseStream.Position
+        $value = $this.ReadDnsDomainName()
+        $end = $this.BaseStream.Position
+        $Length.Value = $end - $start
+
+        return $value
+    }
+
     #   RFC 1034:
     #
     #   "Internally, programs that manipulate domain names should represent them

@@ -30,11 +30,11 @@ class DnsNINFORecord : DnsResourceRecord {
         $recordDataLength = $this.RecordDataLength
         if ($recordDataLength -gt 0) {
             do {
-                $stringLength = 0
+                $length = 0
 
-                $this.ZSData.Add($binaryReader.ReadDnsCharacterString([Ref]$stringLength))
+                $this.ZSData.Add($binaryReader.ReadDnsCharacterString([Ref]$length))
 
-                $recordDataLength -= $stringLength + 1
+                $recordDataLength -= $length + 1
             } until ($recordDataLength -le 0)
         }
     }

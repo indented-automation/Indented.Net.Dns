@@ -11,16 +11,16 @@ function Resolve-DnsServer {
         [Switch]$IPv6
     )
 
-    if ($IPv6) {
-        $serverRecordType = [RecordType]::AAAA
-    } else {
-        $serverRecordType = [RecordType]::A
-    }
-
     $ipAddress = [IPAddress]::Any
     if ([IPAddress]::TryParse($Server, [Ref]$ipAddress)) {
         return $ipAddress
     } else {
+        if ($IPv6) {
+            $serverRecordType = [RecordType]::AAAA
+        } else {
+            $serverRecordType = [RecordType]::A
+        }
+
         if ($cachedServer = Get-InternalDnsCacheRecord -Name $Server -RecordType $ServerRecordType) {
             Write-Debug ('Resolve-DnsServer: Cache: Using Server ({0}) from cache.' -f $Server)
 

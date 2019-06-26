@@ -1,8 +1,6 @@
 using namespace System.Collections.Generic
-using namespace System.Net.Sockets
-using namespace System.Text
 
-class DnsNXTRecord : DnsResourceRecord {
+class DnsNSECRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -13,18 +11,14 @@ class DnsNXTRecord : DnsResourceRecord {
         /                   <BIT MAP>                   /
         /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-
-        http://www.ietf.org/rfc/rfc2535.txt
-        http://www.ietf.org/rfc/rfc3755.txt
     #>
 
-    [RecordType]   $RecordType = [RecordType]::NXT
-    [String]       $DomainName
-    [String]       $BitMap
-    [RecordType[]] $RRTypes
+    [RecordType]       $RecordType = [RecordType]::NSEC
+    [String]           $DomainName
+    [List[RecordType]] $RRType
 
-    DnsNXTRecord() : base() { }
-    DnsNXTRecord(
+    DnsNSECRecord() : base() { }
+    DnsNSECRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) : base(
@@ -37,17 +31,10 @@ class DnsNXTRecord : DnsResourceRecord {
         $this.DomainName = $binaryReader.ReadDnsDomainName([Ref]$length)
 
         $bitMapLength = $this.RecordDataLength - $length
-
-        $stringBuilder = [StringBuilder]::new()
-        $bitmapBytes = $binaryReader.ReadBytes($bitMapLength)
-        foreach ($byte in $bitmapBytes) {
-            $null = $stringBuilder.Append([Convert]::ToString($byte, 2))
-        }
-        $this.BitMap = $stringBuilder.ToString()
-
-        $this.RRTypes = foreach ($rrType in [RecordType].GetEnumValues()) {
-            if ($this.BitMap[[Int]$rrType] -eq 1) {
-                $rrType
+        $bitMap = [Char[]][EndianBitConverter]::ToBinary($binaryReader.ReadBytes($bitMapLength))
+        for ($i = 0; $i -lt $bitMap.Count; $i++) {
+            if ($bitMap[$i] -eq 1) {
+                $this.RRType.Add([RecordType]$i)
             }
         }
     }
@@ -55,7 +42,7 @@ class DnsNXTRecord : DnsResourceRecord {
     hidden [String] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.DomainName,
-            ($this.RRTypes -join ' ')
+            ($this.RRType -join ' ')
         )
     }
 }
