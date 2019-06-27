@@ -1,5 +1,8 @@
 function Trace-Dns {
-#
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
+        [CmdletBinding()]
+        param ( )
+
         # Iterative searches
         #
 

@@ -20,7 +20,7 @@ class DnsNAPTRRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2915.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::NAPT
+    [RecordType] $RecordType = [RecordType]::NAPTR
     [UInt16]     $Order
     [UInt16]     $Preference
     [String]     $Flags

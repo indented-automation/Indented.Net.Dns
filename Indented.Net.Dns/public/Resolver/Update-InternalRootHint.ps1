@@ -16,6 +16,8 @@ function Update-InternalRootHint {
     )
 
     $path = Join-Path $myinvocation.MyCommand.Module.ModuleBase 'var\named.root'
-    Invoke-WebRequest -Uri $Source -OutFile $path
-    Initialize-InternalDnsCache
+    if ($pscmdlet.ShouldProcess('Updating {0}' -f $path)) {
+        Invoke-WebRequest -Uri $Source -OutFile $path
+        Initialize-InternalDnsCache
+    }
 }

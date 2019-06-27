@@ -3,8 +3,8 @@ param (
     [Boolean]$UseExisting
 )
 
+$moduleBase = $psscriptroot.Substring(0, $psscriptroot.IndexOf("\test"))
 if (-not $UseExisting) {
-    $moduleBase = $psscriptroot.Substring(0, $psscriptroot.IndexOf("\test"))
     $stubBase = Resolve-Path (Join-Path $moduleBase "test*\stub\*")
     if ($null -ne $stubBase) {
         $stubBase | Import-Module -Force
@@ -146,7 +146,7 @@ Describe 'Record parser test suite self test' {
     InModuleScope Indented.Net.Dns {
         Context 'RecordType' {
             BeforeAll {
-                $moduleBase = Get-Module Indented.Net.Dns | Select-Object -ExpandProperty ModuleBase
+                $moduleBase = $psscriptroot.Substring(0, $psscriptroot.IndexOf("\test"))
                 $testCases = Get-ChildItem $moduleBase\class\Resolver\*RecordTypes\Dns*Record.ps1 | ForEach-Object {
                     @{ ClassName = $_.BaseName; RecordType = $_.BaseName -replace '^Dns|Record$' }
                 }

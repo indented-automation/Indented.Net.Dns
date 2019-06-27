@@ -1,28 +1,28 @@
 Describe Get-Dns -Tag Integration {
     BeforeAll {
-        if (-not (Test-Path (Join-Path $psscriptroot 'bin\named.exe'))) {
+        Push-Location $psscriptroot
+
+        if (-not (Test-Path 'bin\named.exe')) {
             $params = @{
                 Uri     = 'https://downloads.isc.org/isc/bind9/9.14.3/BIND9.14.3.x64.zip'
-                OutFile = Join-Path $psscriptroot 'bin\BIND9.zip'
+                OutFile = 'bin\BIND9.zip'
             }
             Invoke-WebRequest @params
             $params = @{
                 Path            = $params.OutFile
-                DestinationPath = Join-Path $psscriptroot 'bin'
+                DestinationPath = 'bin'
             }
             Expand-Archive @params
         }
 
         $params = @{
-            FilePath     = Join-Path $psscriptroot 'bin\named.exe'
+            FilePath     = 'bin\named.exe'
             ArgumentList = @(
                 '-c'
                 '"{0}"' -f (Join-Path $psscriptroot 'data\named.conf')
                 '-f'
             )
             PassThru     = $true
-            RedirectStandardError = Join-Path $psscriptroot 'bin\error.log'
-            RedirectStandardOutput = Join-Path $psscriptroot 'bin\out.log'
         }
         $process = Start-Process @params
 
@@ -34,6 +34,8 @@ Describe Get-Dns -Tag Integration {
 
     AfterAll {
         $process | Stop-Process
+
+        Pop-Location
     }
 
     It 'Generates RecordData matching dig' -TestCases @(
@@ -49,10 +51,11 @@ Describe Get-Dns -Tag Integration {
         $Name = '{0}.test.indented.co.uk' -f $Name
 
         $getDnsResponse = Get-Dns -Name $Name -RecordType $RecordType @defaultParams
-        $digResponse = & dig @(
+        $digResponse = & 'bin\dig.exe' @(
             '+short'
             $RecordType
             $Name
+            '-p', $defaultParams.Port
             '@{0}' -f $defaultParams.ComputerName
         )
 

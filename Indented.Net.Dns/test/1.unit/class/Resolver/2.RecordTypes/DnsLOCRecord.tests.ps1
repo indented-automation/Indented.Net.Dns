@@ -17,7 +17,7 @@ if (-not $UseExisting) {
 InModuleScope Indented.Net.Dns {
     Describe DnsLOCRecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'AAAAAIsNwyh/+o3XAJiWgA=='; RecordData = '51 30 51.304 N 0 5 56.905 W 0.00m 0.00m 0.00m 0.00m' }
+            @{ Message = 'AAAAAIsNwyh/+o3XAJiWgA=='; RecordData = '51 30 51.304 N 0 5 56.905 W 0.00m 0m 0m 0m' }
         ) {
             param (
                 $Message,
