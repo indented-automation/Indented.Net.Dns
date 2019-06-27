@@ -1,4 +1,7 @@
-class DnsRRSIGRecord : DnsResourceRecord {
+using namespace Indented.IO
+using namespace Indented.Net.Dns
+
+class DnsSIGRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -27,24 +30,23 @@ class DnsRRSIGRecord : DnsResourceRecord {
         /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-        .LINK
-        http://www.ietf.org/rfc/rfc3755.txt
-        http://www.ietf.org/rfc/rfc4034.txt
+        http://www.ietf.org/rfc/rfc2535.txt
+        http://www.ietf.org/rfc/rfc2931.txt
     #>
 
-    [RecordType]          $RecordType = [RecordType]::RRSIG
+    [RecordType]          $RecordType = [RecordType]::SIG
     [RecordType]          $TypeCovered
     [EncryptionAlgorithm] $Algorithm
     [Byte]                $Labels
-    [UInt32]              $OriginalTTL
+    [UIng32]              $OriginalTTL
     [DateTime]            $SignatureExpiration
     [DateTime]            $SignatureInception
     [UInt16]              $KeyTag
     [String]              $SignersName
     [String]              $Signature
 
-    DnsRRSIGRecord() : base() { }
-    DnsRRSIGRecord(
+    DnsSIGRecord() : base() { }
+    DnsSIGRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) : base(
@@ -53,18 +55,17 @@ class DnsRRSIGRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $typeCoveredValue = $binaryReader.ReadUInt16($true)
-        if ([Enum]::IsDefined([RecordType], $typeCoveredValue)) {
-            $this.TypeCovered = $typeCoveredValue
+        [Int32]$type = $binaryReader.ReadUInt16($true)
+        if ([Enum]::IsDefined([RecordType], $type)) {
+            $this.TypeCovered = [RecordType]$type
         } else {
-            $this.TypeCovered = [RecordType]::UNKNOWN
+            $this.TypeCovered = [RecordType]::Unknown
         }
-
         $this.Algorithm = $binaryReader.ReadByte()
         $this.Labels = $binaryReader.ReadByte()
         $this.OriginalTTL = $binaryReader.ReadUInt32($true)
-        $this.SignatureExpiration = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt32($true))
-        $this.SignatureInception = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt32($true))
+        $this.SignatureExpiration = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
+        $this.SignatureInception = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
         $this.KeyTag = $binaryReader.ReadUInt16($true)
 
         $length = 0
@@ -81,7 +82,7 @@ class DnsRRSIGRecord : DnsResourceRecord {
             '    {6} ; Signer'
             '    {7} ; Signature'
             ')'
-        ) -join "`n" -f @(
+         ) -join "`n" -f @(
             $this.TypeCovered
             [Byte]$this.Algorithm
             [Byte]$this.Labels
@@ -90,6 +91,6 @@ class DnsRRSIGRecord : DnsResourceRecord {
             $this.KeyTag
             $this.SignersName
             $this.Signature
-        )
+         )
     }
 }
