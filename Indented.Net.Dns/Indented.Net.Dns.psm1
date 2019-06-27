@@ -77,8 +77,8 @@ $class = @(
     'Resolver\2.RecordTypes\DnsNAPTRRecord'
     'Resolver\2.RecordTypes\DnsNIMLOCRecord'
     'Resolver\2.RecordTypes\DnsNINFORecord'
+    'Resolver\2.RecordTypes\DnsNSAPPTRRecord'
     'Resolver\2.RecordTypes\DnsNSAPRecord'
-    'Resolver\2.RecordTypes\DnsNSAPTRRecord'
     'Resolver\2.RecordTypes\DnsNSEC3PARAMRecord'
     'Resolver\2.RecordTypes\DnsNSEC3Record'
     'Resolver\2.RecordTypes\DnsNSECRecord'
@@ -92,12 +92,19 @@ $class = @(
     'Resolver\2.RecordTypes\DnsRPRecord'
     'Resolver\2.RecordTypes\DnsRRSIGRecord'
     'Resolver\2.RecordTypes\DnsRTRecord'
+    'Resolver\2.RecordTypes\DnsSIGRecord'
     'Resolver\2.RecordTypes\DnsSINKRecord'
     'Resolver\2.RecordTypes\DnsSOARecord'
     'Resolver\2.RecordTypes\DnsSPFRecord'
     'Resolver\2.RecordTypes\DnsSRVRecord'
+    'Resolver\2.RecordTypes\DnsSSHFPPRecord'
+    'Resolver\2.RecordTypes\DnsTARecord'
+    'Resolver\2.RecordTypes\DnsTKEYRecord'
+    'Resolver\2.RecordTypes\DnsTSIGRecord'
     'Resolver\2.RecordTypes\DnsTXTRecord'
     'Resolver\2.RecordTypes\DnsUNKNOWNRecord'
+    'Resolver\2.RecordTypes\DnsWINSRecord'
+    'Resolver\2.RecordTypes\DnsWINSRRecord'
     'Resolver\2.RecordTypes\DnsWKSRecord'
     'Resolver\2.RecordTypes\DnsX25Record'
     'Resolver\3.Message\DnsMessage'
@@ -110,13 +117,6 @@ foreach ($file in $class) {
 }
 
 $private = @(
-    'RecordTypesReaders\ReadDnsSIGRecord'
-    'RecordTypesReaders\ReadDnsSSHFPPRecord'
-    'RecordTypesReaders\ReadDnsTARecord'
-    'RecordTypesReaders\ReadDnsTKEYRecord'
-    'RecordTypesReaders\ReadDnsTSIGRecord'
-    'RecordTypesReaders\ReadDnsWINSRecord'
-    'RecordTypesReaders\ReadDnsWINSRRecord'
     'Resolver\GetDnsSuffixSearchList'
     'Resolver\ResolveDnsServer'
     'Utility\ConvertTo-TimeSpanString'
@@ -161,3 +161,4 @@ Export-ModuleMember -Function $functionsToExport
 
 . ("{0}\InitializeModule.ps1" -f $psscriptroot)
 InitializeModule
+

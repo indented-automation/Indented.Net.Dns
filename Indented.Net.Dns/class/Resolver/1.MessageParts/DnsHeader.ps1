@@ -1,5 +1,3 @@
-using namespace System.Collections.Generic
-
 class DnsHeader {
     <#
                                        1  1  1  1  1  1

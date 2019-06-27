@@ -34,8 +34,8 @@ cname03			CNAME	.
 ; see SOA record at top of file
 
 ; type 7
-mb01			MG	madname
-mb02			MG	.
+mb01			MB	madname
+mb02			MB	.
 
 ; type 8
 mg01			MG	mgmname
@@ -96,7 +96,6 @@ afsdb02			AFSDB	65535 .
 
 ; type 19
 x2501			X25	123456789
-;x2502			X25	"123456789"
 
 ; type 20
 isdn01			ISDN	"isdn-address"
@@ -174,7 +173,6 @@ atma04			ATMA	f.e.d.c.b.a.0.9.8.7.6.5.4.3.2.1
 ; type 35
 naptr01			NAPTR   0 0 "" "" "" .
 naptr02			NAPTR   65535 65535 blurgh blorf blllbb foo.
-naptr02			NAPTR   65535 65535 "blurgh" "blorf" "blllbb" foo.
 
 ; type 36
 kx01			KX	10 kdc
@@ -187,9 +185,9 @@ cert01			CERT	65534 65535 254 (
 				VfSCSqQYn6//11U6Nld80jEeC8aTrO+KKmCaY= )
 ; type 38
 a601			A6	0 ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
-a601			A6	64 ::ffff:ffff:ffff:ffff foo.
-a601			A6	127 ::1 foo.
-a601			A6	128 .
+a602			A6	64 ::ffff:ffff:ffff:ffff foo.
+a603			A6	127 ::1 foo.
+a604			A6	128 .
 
 ; type 39
 dname01			DNAME	dname-target.

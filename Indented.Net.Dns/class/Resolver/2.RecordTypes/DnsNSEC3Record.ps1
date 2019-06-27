@@ -1,5 +1,3 @@
-using namespace System.Collections.Generic
-
 class DnsNSEC3Record : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
@@ -41,7 +39,7 @@ class DnsNSEC3Record : DnsResourceRecord {
     [UInt16]             $Iterations
     [String]             $Salt
     [String]             $Hash
-    [List[RecordType]]   $RRType
+    [RecordType[]]       $RRType
 
     DnsNSEC3Record() : base() { }
     DnsNSEC3Record(
@@ -67,10 +65,11 @@ class DnsNSEC3Record : DnsResourceRecord {
         $this.Hash = [Convert]::ToBase64String($binaryReader.ReadBytes($hashLength))
 
         $bitMapLength = $this.RecordDataLength - 6 - $saltLength - $hashLength
-        $bitMap = [Char[]][EndianBitConverter]::ToBinary($binaryReader.ReadBytes($bitMapLength))
-        for ($i = 0; $i -lt $bitMap.Count; $i++) {
+        $bitMap = [EndianBitConverter]::ToBinary($binaryReader.ReadBytes($bitMapLength))
+
+        $this.RRType = for ($i = 0; $i -lt $bitMap.Count; $i++) {
             if ($bitMap[$i] -eq 1) {
-                $this.RRType.Add([RecordType]$i)
+                [RecordType]$i
             }
         }
     }

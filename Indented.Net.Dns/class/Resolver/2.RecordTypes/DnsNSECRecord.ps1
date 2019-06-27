@@ -31,10 +31,11 @@ class DnsNSECRecord : DnsResourceRecord {
         $this.DomainName = $binaryReader.ReadDnsDomainName([Ref]$length)
 
         $bitMapLength = $this.RecordDataLength - $length
-        $bitMap = [Char[]][EndianBitConverter]::ToBinary($binaryReader.ReadBytes($bitMapLength))
-        for ($i = 0; $i -lt $bitMap.Count; $i++) {
+        $bitMap = [EndianBitConverter]::ToBinary($binaryReader.ReadBytes($bitMapLength))
+
+        $this.RRType = for ($i = 0; $i -lt $bitMap.Length; $i++) {
             if ($bitMap[$i] -eq 1) {
-                $this.RRType.Add([RecordType]$i)
+                [RecordType]$i
             }
         }
     }

@@ -1,5 +1,3 @@
-using namespace System.Collections.Generic
-
 class DnsHIPRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
@@ -22,13 +20,13 @@ class DnsHIPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc5205.txt
     #>
 
-    [RecordType]     $RecordType        = [RecordType]::HIP
+    [RecordType]     $RecordType = [RecordType]::HIP
     [Byte]           $HITLength
     [IPSECAlgorithm] $PublicKeyAlgorithm
     [UInt16]         $PublicKeyLength
     [String]         $HIT
     [String]         $PublicKey
-    [List[String]]   $RendezvousServers = [List[String]]::new()
+    [String[]]       $RendezvousServers
 
 
     DnsHIPRecord() : base() { }
@@ -49,13 +47,13 @@ class DnsHIPRecord : DnsResourceRecord {
 
         $length = $this.RecordDataLength - 4 - $this.HITLength - $this.PublicKeyLength
         if ($length -gt 0) {
-            do {
-                $position = $binaryReader.BaseStream.Position
+            $this.RendezvousServers = do {
+                $entryLength = 0
 
-                $this.RendezvousServers.Add($binaryReader.ReadDnsDomainName([Ref]))
+                $binaryReader.ReadDnsDomainName([Ref]$entryLength)
 
-                $length = $length - $binaryReader.BaseStream.Position + $position
-            } until ($length -eq 0)
+                $length -= $entryLength
+            } until ($length -le 0)
         }
     }
 

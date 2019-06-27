@@ -14,8 +14,8 @@ class DnsNINFORecord : DnsResourceRecord {
         http://tools.ietf.org/html/draft-reid-dnsext-zs-01
     #>
 
-    [RecordType]   $RecordType = [RecordType]::NINFO
-    [List[String]] $ZSData     = [List[String]]::new()
+    [RecordType] $RecordType = [RecordType]::NINFO
+    [String[]]   $ZSData
 
     DnsNINFORecord() : base() { }
     DnsNINFORecord(
@@ -29,12 +29,12 @@ class DnsNINFORecord : DnsResourceRecord {
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $recordDataLength = $this.RecordDataLength
         if ($recordDataLength -gt 0) {
-            do {
+            $this.ZSData = do {
                 $length = 0
 
-                $this.ZSData.Add($binaryReader.ReadDnsCharacterString([Ref]$length))
+                $binaryReader.ReadDnsCharacterString([Ref]$length)
 
-                $recordDataLength -= $length + 1
+                $recordDataLength -= $length
             } until ($recordDataLength -le 0)
         }
     }

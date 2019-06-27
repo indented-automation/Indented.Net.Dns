@@ -47,8 +47,8 @@ class DnsA6Record : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        $ipAddress = '{0} ' -f $this.AddressSuffix.IPAddressToString
-        if ($ipAddress -eq ':: ') {
+        $ipAddress = '{0}' -f $this.AddressSuffix.IPAddressToString
+        if ($ipAddress -eq '::') {
             $ipAddress = ''
         }
 

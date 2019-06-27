@@ -53,8 +53,8 @@ class DnsRRSIGRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $typeCoveredValue = $binaryReader.ReadUInt16($true)
-        if ([Enum]::IsDefined([RecordType], $typeCoveredValue)) {
+        [Int32]$type = $binaryReader.ReadUInt16($true)
+        if ([Enum]::IsDefined([RecordType], $type)) {
             $this.TypeCovered = $typeCoveredValue
         } else {
             $this.TypeCovered = [RecordType]::UNKNOWN

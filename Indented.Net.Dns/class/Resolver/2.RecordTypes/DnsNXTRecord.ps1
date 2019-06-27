@@ -1,5 +1,3 @@
-using namespace System.Collections.Generic
-using namespace System.Net.Sockets
 using namespace System.Text
 
 class DnsNXTRecord : DnsResourceRecord {

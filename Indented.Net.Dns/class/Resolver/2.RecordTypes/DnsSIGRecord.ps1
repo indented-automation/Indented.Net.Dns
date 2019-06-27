@@ -38,7 +38,7 @@ class DnsSIGRecord {
     [RecordType]          $TypeCovered
     [EncryptionAlgorithm] $Algorithm
     [Byte]                $Labels
-    [UIng32]              $OriginalTTL
+    [UInt32]              $OriginalTTL
     [DateTime]            $SignatureExpiration
     [DateTime]            $SignatureInception
     [UInt16]              $KeyTag

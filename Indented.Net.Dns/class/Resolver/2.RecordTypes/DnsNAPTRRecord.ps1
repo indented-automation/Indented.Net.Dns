@@ -38,8 +38,8 @@ class DnsNAPTRRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.Order = $this.ReadUInt16($true)
-        $this.Preference = $this.ReadUInt16($true)
+        $this.Order = $binaryReader.ReadUInt16($true)
+        $this.Preference = $binaryReader.ReadUInt16($true)
         $this.Flags = $binaryReader.ReadDnsCharacterString()
         $this.Service = $binaryReader.ReadDnsCharacterString()
         $this.RegularExpression = $binaryReader.ReadDnsCharacterString()

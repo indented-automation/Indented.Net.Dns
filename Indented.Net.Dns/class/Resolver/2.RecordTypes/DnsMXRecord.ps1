@@ -32,7 +32,7 @@ class DnsMXRecord : DnsResourceRecord {
 
     hidden [String] RecordDataToString() {
         return '{0} {1}' -f @(
-            $this.Preference.ToString().PadRight(5, ' '),
+            $this.Preference,
             $this.Exchange
         )
     }
