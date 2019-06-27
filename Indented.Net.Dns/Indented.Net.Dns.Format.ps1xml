@@ -33,13 +33,13 @@
                 <ScriptBlock>$_.AdditionalToString()</ScriptBlock>
               </ListItem>
               <ListItem>
-                <PropertyName>Server</PropertyName>
-              </ListItem>
-              <ListItem>
                 <PropertyName>Size</PropertyName>
               </ListItem>
               <ListItem>
                 <PropertyName>TimeTaken</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>ComputerName</PropertyName>
               </ListItem>
             </ListItems>
           </ListEntry>
@@ -55,23 +55,18 @@
       <TableControl>
         <TableHeaders>
           <TableColumnHeader>
-            <Label>Name</Label>
             <Alignment>left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>TTL</Label>
             <Alignment>left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>RecordType</Label>
             <Alignment>left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>IPAddress</Label>
             <Alignment>left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>ResourceType</Label>
             <Alignment>left</Alignment>
           </TableColumnHeader>
         </TableHeaders>

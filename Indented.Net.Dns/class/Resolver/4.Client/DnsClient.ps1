@@ -1,4 +1,5 @@
 using namespace System.Collections.Generic
+using namespace System.Diagnostics
 using namespace System.Net
 using namespace System.Net.Sockets
 
@@ -10,35 +11,42 @@ class DnsClient {
     hidden [Socket] $socket
 
     DnsClient() {
-        $this.Initialize($false, 5, 5)
-    }
-
-    DnsClient(
-        [Boolean] $UseTcp
-    ) {
-        $this.Initialize($useTcp, 5, 5)
+        $this.Initialize($false, $false, 5, 5)
     }
 
     DnsClient(
         [Boolean] $useTcp,
+        [Boolean] $useIPv6
+    ) {
+        $this.Initialize($useTcp, $useIPv6, 5, 5)
+    }
+
+    DnsClient(
+        [Boolean] $useTcp,
+        [Boolean] $useIPv6,
         [Int32]   $receiveTimeout,
         [Int32]   $sendTimeout
     ) {
-        $this.Initialize($useTcp, $receiveTimeout, $sendTimeout)
+        $this.Initialize($useTcp, $useIPv6, $receiveTimeout, $sendTimeout)
     }
 
     [Void] Initialize(
         [Boolean] $useTcp,
+        [Boolean] $useIPv6,
         [Int32]   $receiveTimeout,
         [Int32]   $sendTimeout
     ) {
-        if ($useTcp) {
-            $this.Socket = [Socket]::new('Stream', 'Tcp')
-        } else {
-            $this.Socket = [Socket]::new('Dgram', 'Udp')
+        $addressFamily = 'InterNetwork'
+        if ($useIPv6) {
+            $addressFamily = 'InterNetworkV6'
         }
-        $this.Socket.ReceiveTimeout = $receiveTimeout
-        $this.Socket.SendTimeout = $sendTimeout
+        if ($useTcp) {
+            $this.Socket = [Socket]::new($addressFamily, 'Stream', 'Tcp')
+        } else {
+            $this.Socket = [Socket]::new($addressFamily, 'Dgram', 'Udp')
+        }
+        $this.Socket.ReceiveTimeout = $receiveTimeout * 1000
+        $this.Socket.SendTimeout = $sendTimeout * 1000
     }
 
     [Void] SendQuestion(
@@ -57,25 +65,36 @@ class DnsClient {
         [IPAddress]  $ipAddress,
         [UInt16]     $port
     ) {
-        $this.RemoteEndPoint = [EndPoint][IPEndPoint]::new($ipAddress, $port)
+        try {
+            $stopWatch = [StopWatch]::StartNew()
 
-        if ($this.socket.ProtocolType -eq 'Tcp') {
-            try {
-                $this.socket.Connect($this.RemoteEndPoint)
-                $this.socket.Send($message.ToByteArray($true, $true))
-            } catch {
-                throw
+            $this.RemoteEndPoint = [EndPoint][IPEndPoint]::new($ipAddress, $port)
+
+            if ($this.socket.ProtocolType -eq 'Tcp') {
+                try {
+                    $this.socket.Connect($this.RemoteEndPoint)
+                    $this.socket.Send($message.ToByteArray($true, $true))
+                } catch {
+                    throw
+                }
+            } else {
+                $null = $this.socket.SendTo(
+                    $message.ToByteArray($false, $true),
+                    $this.RemoteEndPoint
+                )
             }
-        } else {
-            $null = $this.socket.SendTo(
-                $message.ToByteArray($false, $true),
-                $this.RemoteEndPoint
-            )
+        } catch {
+            throw
+        } finally {
+            $stopWatch.Stop()
+            $this.TimeTaken = $stopWatch.Elapsed
         }
     }
 
     [DnsMessage] ReceiveAnswer() {
         try {
+            $stopWatch = [StopWatch]::StartNew()
+
             $buffer = [Byte[]]::new($this.bufferSize)
 
             if ($this.socket.ProtocolType -eq 'Tcp') {
@@ -106,15 +125,15 @@ class DnsClient {
                 $this.RemoteEndPoint = $this.socket.RemoteEndPoint
             } else {
                 if ($this.socket.AddressFamily -eq 'InterNetwork') {
-                    $this.RemoteEndPoint = [IPEndPoint]::new([IPAddress]::Any, 0)
+                    $endPoint = [IPEndPoint]::new([IPAddress]::Any, 0)
                 } else {
-                    $this.RemoteEndPoint = [IPEndPoint]::new([IPAddress]::IPv6Any, 0)
+                    $endPoint = [IPEndPoint]::new([IPAddress]::IPv6Any, 0)
                 }
 
-                $bytesReceived = $this.socket.ReceiveFrom($buffer, [Ref]$this.RemoteEndPoint)
+                $bytesReceived = $this.socket.ReceiveFrom($buffer, [Ref]$endPoint)
+                $this.RemoteEndPoint = $endPoint
 
                 $messageBytes = [Byte[]]::new($bytesReceived)
-
                 [Array]::Copy(
                     $buffer,
                     $messageBytes,
@@ -125,6 +144,9 @@ class DnsClient {
             return [DnsMessage]::new($messageBytes)
         } catch {
             throw
+        } finally {
+            $stopWatch.Stop()
+            $this.TimeTaken += $stopWatch.Elapsed
         }
     }
 

@@ -15,8 +15,7 @@ function Update-InternalRootHint {
         [URI]$Source = "http://www.internic.net/domain/named.root"
     )
 
-    Invoke-WebRequest -Uri $Source |
-        Select-Object -ExpandProperty Content |
-        Set-Content $psscriptroot\var\named.root
+    $path = Join-Path $myinvocation.MyCommand.Module.ModuleBase 'var\named.root'
+    Invoke-WebRequest -Uri $Source -OutFile $path
     Initialize-InternalDnsCache
 }

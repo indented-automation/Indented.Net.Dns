@@ -20,30 +20,6 @@ function Get-Dns {
 
         The name is fully-qualified (or root terminated), no additional suffixes will be appended.
     .EXAMPLE
-        Get-Dns www.domain.example -NoSearchList
-
-        No additional suffixes will be appended.
-    .EXAMPLE
-        Get-Dns www.domain.example -Iterative
-
-        Attempt to perform an iterative lookup of www.domain.example, starting from the root hints.
-    .EXAMPLE
-        Get-Dns www.domain.example CNAME -NSSearch
-
-        Attempt to return the CNAME record for www.domain.example from all authoritative servers for the parent zone.
-    .EXAMPLE
-        Get-Dns -Version -Server 10.0.0.1
-
-        Request a version string from the server 10.0.0.1.
-    .EXAMPLE
-        Get-Dns domain.example -ZoneTransfer -Server 10.0.0.1
-
-        Request a zone transfer, using AXFR, for domain.example from the server 10.0.0.1.
-    .EXAMPLE
-        Get-Dns domain.example -ZoneTransfer -SerialNumber 2 -Server 10.0.0.1
-
-        Request a zone transfer, using IXFR and the serial number 2, for domain.example from the server 10.0.0.1.
-    .EXAMPLE
         Get-Dns example. -DnsSec
 
         Request ANY record for the co.uk domain, advertising DNSSEC support.
@@ -53,83 +29,49 @@ function Get-Dns {
         http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
     #>
 
-    [CmdletBinding(DefaultParameterSetname = 'RecursiveQuery')]
+    [CmdletBinding()]
     [OutputType('DnsMessage')]
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
     param (
         # A resource name to query, by default Get-Dns will use '.' as the name. IP addresses (IPv4 and IPv6) are automatically converted into an appropriate format to aid PTR queries.
+        [Parameter(Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [ValidateDnsName()]
         [String]$Name = ".",
 
         # Any resource record type, by default a query for ANY will be sent.
+        [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
         [Alias('Type')]
         [RecordType]$RecordType = [RecordType]::ANY,
 
         # By default the class is IN. CH (Chaos) may be used to query for name server information. HS (Hesoid) may be used if the name server supports it.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'IterativeQuery')]
         [RecordClass]$RecordClass = [RecordClass]::IN,
 
         # Remove the Recursion Desired (RD) flag from a query. Recursion is requested by default.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
         [Alias('NoRecurse')]
         [Switch]$NoRecursion,
 
         # Advertise support for DNSSEC when executing a query.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'IterativeQuery')]
-        [Parameter(ParameterSetName = 'NSSearch')]
         [Switch]$DnsSec,
 
         # Enable EDNS support, suppresses OPT RR advertising client support in DNS question.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'IterativeQuery')]
-        [Parameter(ParameterSetName = 'NSSearch')]
         [Switch]$EDns,
 
         # By default the EDns buffer size is set to 4096 bytes.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'IterativeQuery')]
-        [Parameter(ParameterSetName = 'NSSearch')]
         [UInt16]$EDnsBufferSize = 4096,
 
         # Disable the use of TCP if a truncated response (TC flag) is seen when using UDP.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'IterativeQuery')]
-        [Parameter(ParameterSetName = 'NSSearch')]
         [Switch]$NoTcpFallback,
 
         # If a name is not root terminated (does not end with '.') a SearchList will be used for recursive queries. If this parameter is not defined Get-Dns will attempt to retrieve a SearchList from the hosts network configuration.
         #
-        # SearchLists are explicitly dropped for Iterative, NSSearch, Zone Transfer and Version queries.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [String[]]$SearchList,
-
-        # The use of a SearchList can be explicitly suppressed using the NoSearchList parameter.
-        #
-        # SearchLists are explicitly dropped for Iterative, NSSearch, Zone Transfer and Version queries.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Switch]$NoSearchList,
-
-        # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
-        #
-        # If a name is used another lookup will be required to resolve the name to an IP. Get-Dns caches responses for queries performed involving the Server parameter. The cache may be viewed and maintained using the *-InternalDnsCache CmdLets.
-        #
-        # If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'Version')]
-        [Parameter(ParameterSetName = 'ZoneTransfer')]
-        [Alias('ComputerName')]
-        [String]$Server = (Get-DnsServerList -IPv6:$IPv6 | Select-Object -First 1),
+        # An empty search list by be specified by providing an empty array for this parameter.
+        [AllowEmptyCollection()]
+        [String[]]$SearchList = (GetDnsSuffixSearchList),
 
         # Recursive, or version, queries can be forced to use TCP by setting the TCP switch parameter.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'Version')]
         [Switch]$Tcp,
 
         # By default, DNS uses TCP or UDP port 53. The port used to send queries may be changed if a server is listening on a different port.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'Version')]
         [UInt16]$Port = 53,
 
         # By default, queries will timeout after 5 seconds. The value may be set between 1 and 30 seconds.
@@ -137,10 +79,15 @@ function Get-Dns {
         [Byte]$Timeout = 5,
 
         # Force the use of IPv6 for queries, if this parameter is set and the Server is set to a name (e.g. ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
-        [Parameter(ParameterSetName = 'RecursiveQuery')]
-        [Parameter(ParameterSetName = 'Version')]
-        [Parameter(ParameterSetName = 'ZoneTransfer')]
         [Switch]$IPv6,
+
+        # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
+        #
+        # If a name is used another lookup will be required to resolve the name to an IP. Get-Dns caches responses for queries performed involving the Server parameter. The cache may be viewed and maintained using the *-InternalDnsCache CmdLets.
+        #
+        # If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
+        [Alias('Server')]
+        [String]$ComputerName = (Get-DnsServerList -IPv6:$IPv6 | Select-Object -First 1),
 
         # Forces Get-Dns to output intermediate requests which would normally be hidden, such as NXDomain replies when using a SearchList.
         [Switch]$DnsDebug
@@ -151,116 +98,87 @@ function Get-Dns {
     }
 
     process {
-        # Global query options
-
-        $GlobalOptions = @{}
-        if (-not $EDns -and $DnsSec) {
-            Write-Warning "Get-Dns: EDNS support is mandatory for DNSSEC. Enabling EDNS for this request."
-            $EDns = $true
-        }
-        if ($EDns) {
-            $GlobalOptions.Add('EDns', $true)
-        } else {
-            $GlobalOptions.Add('EDnsBufferSize', $EDnsBufferSize)
-        }
-        if ($DnsSec) {
-            $GlobalOptions.Add('DnsSec', $true)
-        }
-        if ($NoTcpFallback) {
-            $GlobalOptions.Add('NoTcpFallback', $true)
-        }
-
         try {
-            $serverIPAddress = Resolve-DnsServer -Server $Server -IPv6:$IPv6
+            $serverIPAddress = ResolveDnsServer -ComputerName $ComputerName -IPv6:$IPv6
             if ($serverIPAdddress.AddressFamily -eq [AddressFamily]::InterNetworkv6) {
                 Write-Verbose "Resolve-DnsServer: IPv6 server value used. Using IPv6 transport."
                 $IPv6 = $true
             }
-            $Server = $serverIPAddress
+            $ComputerName = $serverIPAddress
         } catch {
             $pscmdlet.ThrowTerminatingError($_)
         }
 
-        $SearchStatus = [RCode]::NXDomain
-        $i = 0
+        $querySearchList = $SearchList
+        if ($Name.EndsWith('.')) {
+            $querySearchList = ''
+        } elseif ($Name.IndexOf('.') -ne $Name.LastIndexOf('.')) {
+            $querySearchList += ''
+        }
 
-        foreach ($suffix in $SearchList) {
+        $querySearchListPosition = 0
+        foreach ($suffix in $querySearchList) {
+            $querySearchListPosition++
+
             if ($suffix) {
                 $fullName = '{0}.{1}' -f $Name, $suffix
             } else {
                 $fullName = $Name
             }
 
-            # Move this.
-            Write-Debug ("Get-Dns: Query: {0} {1} {2} :: Server: {3} Protocol: {4} AddressFamily: {5}" -f @(
-                $FullName
-                $RecordClass
-                $RecordType
-                $Server
-                ('UDP', 'TCP')[$Tcp.ToBool()]
-                ('IPv4', 'IPv6')[$IPv6.ToBool()]
-            ))
-
-            $message = [DnsMessage]::new(
-                $FullName,
+            $dnsMessage = [DnsMessage]::new(
+                $fullName,
                 $RecordType,
                 $RecordClass
             )
 
             if ($EDns) {
-                $message.SetEDnsBufferSize($EDnsBufferSize)
+                $dnsMessage.SetEDnsBufferSize($EDnsBufferSize)
             }
             if ($DnsSec) {
-                $message.SetAcceptDnsSec()
+                $dnsMessage.SetAcceptDnsSec()
             }
             if ($NoRecursion) {
-                $message.Header.Flags = [HeaderFlags]([UInt16]$DnsQuery.Header.Flags -bxor [UInt16][HeaderFlags]::RD)
-            }
-
-            $client = [DnsClient]@{
-                Server         = $Server
-                Port           = $Port
-                SendTimeout    = $Timeout
-                ReceiveTimeout = $Timeout
-                UseTcp         = $Tcp
+                $dnsMessage.Header.Flags = [HeaderFlags]([UInt16]$DnsQuery.Header.Flags -bxor [UInt16][HeaderFlags]::RD)
             }
 
             try {
-                $client.SendQuestion($message)
-                $client.ReceiveAnswer()
+                $dnsClient = [DnsClient]::new(
+                    $Tcp.IsPresent,
+                    ([IPAddress]$ComputerName).AddressFamily -eq 'InterNetworkV6',
+                    $Timeout,
+                    $Timeout
+                )
 
-                if ($SearchStatus -ne [RCode]::NXDomain -or $DnsDebug) {
-                    if ($DnsResponse.Header.Flags -band [HeaderFlags]::TC) {
-                        if ($NoTcpFallback) {
-                            $DnsResponse
-                        } else {
-                            Write-Debug 'Response is truncated. Resending using TCP'
-                            $DnsResponse = $null
-                            Get-Dns @psboundparameters -Tcp
-                        }
+                $dnsClient.SendQuestion(
+                    $dnsMessage,
+                    $ComputerName,
+                    $Port
+                )
+
+                $dnsResponse = $dnsClient.ReceiveAnswer()
+                $dnsResponse.ComputerName = $dnsClient.RemoteEndPoint
+                $dnsResponse.TimeTaken = $dnsClient.TimeTaken
+                $dnsClient.Close()
+
+                if ($dnsResponse.Header.RCode -ne 'NXDOMAIN' -or
+                    $querySearchListPosition -eq $querySearchList.Count -or
+                    $dnsDebug) {
+
+                    if ($dnsResponse.Header.Flags -band 'TC' -and -not $NoTcpFallback) {
+                        Write-Debug 'Response is truncated. Resending using TCP'
+
+                        Get-Dns @psboundparameters -Tcp
+
+                        break
                     } else {
-                        $DnsResponse
+                        $dnsResponse
                     }
 
-                    if ($DnsResponse) {
-                        $DnsResponse.TimeTaken = (New-TimeSpan $Start (Get-Date)).TotalMilliseconds
-                        $DnsResponse.Server = $DnsResponseData.RemoteEndpoint
-
-                        # Update the SearchList loop exit criteria
-                        $SearchStatus = $DnsResponse.Header.RCode
-
-                        if ($Server -ne $serverIPAddress) {
-                            $DnsResponse.Server = '{0} ({1})' -f $Server, $DnsResponse.Server
-                        }
-
-                        if ($SearchStatus -eq [RCode]::NXDomain -and $i -eq ($SearchList.Count - 1)) {
-                            Write-Warning ('Get-Dns: Name ({0}) does not exist.' -f $Name)
-                        }
+                    if (-not $dnsDebug) {
+                        break
                     }
                 }
-
-                $client.Close()
-
             } catch [SocketException] {
                 $errorRecord = [ErrorRecord]::new(
                     [SocketException]::new($_.Exception.InnerException.NativeErrorCode),
@@ -270,7 +188,7 @@ function Get-Dns {
                 )
                 $pscmdlet.ThrowTerminatingError($errorRecord)
             } catch {
-
+                $pscmdlet.ThrowTerminatingError($_)
             }
         }
     }

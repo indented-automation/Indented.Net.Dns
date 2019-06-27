@@ -21,8 +21,9 @@ function Initialize-InternalDnsCache {
     # Allows quick, if limited, reverse lookups against the cache.
     $Script:dnsCacheReverse = @{}
 
-    if (Test-Path $psscriptroot\var\named.root) {
-        Get-Content $psscriptroot\var\named.root |
+    $path = Join-Path $myinvocation.MyCommand.Module.ModuleBase 'var\named.root'
+    if (Test-Path $path) {
+        Get-Content $path |
             Where-Object { $_ -match '(?<Name>\S+)\s+(?<TTL>\d+)\s+(IN\s+)?(?<RecordType>A\s+|AAAA\s+)(?<IPAddress>\S+)' } |
             ForEach-Object {
                 [PSCustomObject]@{

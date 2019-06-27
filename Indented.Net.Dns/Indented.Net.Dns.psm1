@@ -39,7 +39,6 @@ foreach ($file in $enumeration) {
 }
 
 $class = @(
-    'Dsc\DnsPrimaryZone'
     'Network\EndianBinaryReader'
     'Network\EndianBitConverter'
     'Resolver\0.Miscelleneous\AngularDistance'
@@ -79,12 +78,19 @@ $class = @(
     'Resolver\2.RecordTypes\DnsNIMLOCRecord'
     'Resolver\2.RecordTypes\DnsNINFORecord'
     'Resolver\2.RecordTypes\DnsNSAPRecord'
+    'Resolver\2.RecordTypes\DnsNSAPTRRecord'
+    'Resolver\2.RecordTypes\DnsNSEC3PARAMRecord'
+    'Resolver\2.RecordTypes\DnsNSEC3Record'
+    'Resolver\2.RecordTypes\DnsNSECRecord'
     'Resolver\2.RecordTypes\DnsNSRecord'
     'Resolver\2.RecordTypes\DnsNULLRecord'
     'Resolver\2.RecordTypes\DnsNXTRecord'
     'Resolver\2.RecordTypes\DnsOPTRecord'
     'Resolver\2.RecordTypes\DnsPTRRecord'
     'Resolver\2.RecordTypes\DnsPXRecord'
+    'Resolver\2.RecordTypes\DnsRKEYRecord'
+    'Resolver\2.RecordTypes\DnsRPRecord'
+    'Resolver\2.RecordTypes\DnsRRSIGRecord'
     'Resolver\2.RecordTypes\DnsRTRecord'
     'Resolver\2.RecordTypes\DnsSINKRecord'
     'Resolver\2.RecordTypes\DnsSOARecord'
@@ -95,6 +101,7 @@ $class = @(
     'Resolver\2.RecordTypes\DnsWKSRecord'
     'Resolver\2.RecordTypes\DnsX25Record'
     'Resolver\3.Message\DnsMessage'
+    'Resolver\4.Client\DnsClient'
     'ValidateDnsName'
 )
 
@@ -103,19 +110,6 @@ foreach ($file in $class) {
 }
 
 $private = @(
-    'Network\Connect-Socket'
-    'Network\Disconnect-Socket'
-    'Network\New-Socket'
-    'Network\Receive-Byte'
-    'Network\Remove-Socket'
-    'Network\Send-Byte'
-    'RecordTypesReaders\ReadDnsNSAPTRRecord'
-    'RecordTypesReaders\ReadDnsNSEC3PARAMRecord'
-    'RecordTypesReaders\ReadDnsNSEC3Record'
-    'RecordTypesReaders\ReadDnsNSECRecord'
-    'RecordTypesReaders\ReadDnsRKEYRecord'
-    'RecordTypesReaders\ReadDnsRPRecord'
-    'RecordTypesReaders\ReadDnsRRSIGRecord'
     'RecordTypesReaders\ReadDnsSIGRecord'
     'RecordTypesReaders\ReadDnsSSHFPPRecord'
     'RecordTypesReaders\ReadDnsTARecord'
@@ -123,8 +117,9 @@ $private = @(
     'RecordTypesReaders\ReadDnsTSIGRecord'
     'RecordTypesReaders\ReadDnsWINSRecord'
     'RecordTypesReaders\ReadDnsWINSRRecord'
-    'Resolver\Resolve-DnsServer'
-    'Utility\ConvertTo-TimspanString'
+    'Resolver\GetDnsSuffixSearchList'
+    'Resolver\ResolveDnsServer'
+    'Utility\ConvertTo-TimeSpanString'
 )
 
 foreach ($file in $private) {
@@ -135,9 +130,13 @@ $public = @(
     'Resolver\Add-InternalDnsCacheRecord'
     'Resolver\Get-Dns'
     'Resolver\Get-DnsServerList'
+    'Resolver\Get-DnsVersion'
+    'Resolver\Get-DnsZoneTransfer'
     'Resolver\Get-InternalDnsCacheRecord'
     'Resolver\Initialize-InternalDnsCache'
     'Resolver\Remove-InternalDnsCacheRecord'
+    'Resolver\Search-Dns'
+    'Resolver\Trace-Dns'
     'Resolver\Update-InternalRootHint'
 )
 
@@ -149,13 +148,16 @@ $functionsToExport = @(
     'Add-InternalDnsCacheRecord'
     'Get-Dns'
     'Get-DnsServerList'
+    'Get-DnsVersion'
+    'Get-DnsZoneTransfer'
     'Get-InternalDnsCacheRecord'
     'Initialize-InternalDnsCache'
     'Remove-InternalDnsCacheRecord'
+    'Search-Dns'
+    'Trace-Dns'
     'Update-InternalRootHint'
 )
 Export-ModuleMember -Function $functionsToExport
 
 . ("{0}\InitializeModule.ps1" -f $psscriptroot)
 InitializeModule
-
