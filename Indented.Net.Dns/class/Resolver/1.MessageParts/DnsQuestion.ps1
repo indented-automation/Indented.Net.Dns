@@ -1,3 +1,5 @@
+using namespace System.Collections.Generic
+
 class DnsQuestion {
     <#
                                        1  1  1  1  1  1

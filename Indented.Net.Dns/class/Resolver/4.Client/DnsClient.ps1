@@ -95,6 +95,19 @@ class DnsClient {
         try {
             $stopWatch = [StopWatch]::StartNew()
 
+            $messageBytes = $this.ReceiveBytes()
+
+            return [DnsMessage]::new($messageBytes)
+        } catch {
+            throw
+        } finally {
+            $stopWatch.Stop()
+            $this.TimeTaken += $stopWatch.Elapsed
+        }
+    }
+
+    [Byte[]] ReceiveBytes() {
+        try {
             $buffer = [Byte[]]::new($this.bufferSize)
 
             if ($this.socket.ProtocolType -eq 'Tcp') {
@@ -141,12 +154,9 @@ class DnsClient {
                 )
             }
 
-            return [DnsMessage]::new($messageBytes)
+            return $messageBytes
         } catch {
             throw
-        } finally {
-            $stopWatch.Stop()
-            $this.TimeTaken += $stopWatch.Elapsed
         }
     }
 

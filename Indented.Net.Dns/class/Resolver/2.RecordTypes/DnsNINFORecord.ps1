@@ -35,7 +35,7 @@ class DnsNINFORecord : DnsResourceRecord {
                 $binaryReader.ReadDnsCharacterString([Ref]$length)
 
                 $recordDataLength -= $length
-            } until ($recordDataLength -le 0)
+            } until ($recordDataLength -le 0 -or $length -eq 0)
         }
     }
 

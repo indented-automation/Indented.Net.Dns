@@ -41,54 +41,16 @@ class DnsCSYNCRecord : DnsResourceRecord {
                 [RecordType]$i
             }
         }
-
     }
 
     hidden [String] RecordDataToString() {
         $string = @(
-            '{0} {1} ('
-            '    {2} ; serial'
-            '    {3} ; refresh ({4})'
-            '    {5} ; retry ({6})'
-            '    {7} ; expire ({8})'
-            '    {9} ; minimum ttl ({10})'
-            ')'
+            '{0} {1} {2}'
         ) -join "`n"
         return $string -f @(
-            $this.NameServer,
-            $this.ResponsiblePerson,
-            $this.Serial.ToString().PadRight(10, ' '),
-            $this.Refresh.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.Refresh),
-            $this.Retry.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.Retry),
-            $this.Expire.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.Expire),
-            $this.MinimumTTL.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.MinimumTTL)
+            $this.Serial
+            $this.Flags
+            $this.TypesToProcess
         )
-    }
-
-    hidden [IEnumerable[Byte]] RecordDataToByteArray(
-        [Boolean] $useCompressedNames
-    ) {
-        $bytes = [List[Byte]]::new()
-
-        if ($useCompressedNames) {
-            # MNAME
-            $bytes.AddRange([Byte[]](0xC0, 0x0C))
-            # RNAME
-            $bytes.AddRange([Byte[]](0xC0, 0x0C))
-        } else {
-            $bytes.AddRange([EndianBinaryReader]::GetDnsDomainNameBytes($this.NameServer))
-            # RNAME
-            $bytes.AddRange([EndianBinaryReader]::GetDnsDomainNameBytes($this.ResponsiblePerson))
-        }
-
-        # SerialNumber
-        $bytes.AddRange([EndianBitConverter]::GetBytes($this.Serial, $true))
-        $bytes.AddRange([Byte[]]::new(16))
-
-        return ,$bytes
     }
 }

@@ -39,17 +39,15 @@ class DnsWKSRecord : DnsResourceRecord {
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
         $this.IPAddress = $binaryReader.ReadIPAddress()
         $this.IPProtocolNumber = $binaryReader.ReadByte()
-        $this.ProtocolType = $this.IPProtocolNumber
+        $this.IPProtocolType = $this.IPProtocolNumber
 
-        $stringBuilder = [StringBuilder]::new()
         $bitmapBytes = $binaryReader.ReadBytes($this.RecordDataLength - 5)
         foreach ($byte in $bitmapBytes) {
-            $null = $stringBuilder.Append([Convert]::ToString($byte, 2))
+            $this.BitMap += [Convert]::ToString($byte, 2).PadLeft(8, '0')
         }
-        $this.BitMap = $stringBuilder.ToString()
 
-        $this.Ports = for ([UInt16]$i = 0; $i -lt $this.BitMap.Length; $i++) {
-            if ($this.BitMap[$i] -eq 1) {
+        $this.Ports = for ($i = 0; $i -lt $this.BitMap.Length; $i++) {
+            if ($this.BitMap[$i] -eq '1') {
                 $i
             }
         }
@@ -58,7 +56,7 @@ class DnsWKSRecord : DnsResourceRecord {
     hidden [String] RecordDataToString() {
         return '{0} {1} {2}' -f @(
             $this.IPAddress
-            $this.IPProtocolType
+            $this.IPProtocolNumber
             ($this.Ports -join ' ')
         )
     }

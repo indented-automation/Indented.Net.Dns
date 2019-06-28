@@ -22,7 +22,18 @@ class DnsTXTRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.Text = $binaryReader.ReadDnsCharacterString()
+        $recordDataLength = $this.RecordDataLength
+        if ($recordDataLength -gt 0) {
+            $strings = do {
+                $length = 0
+
+                $binaryReader.ReadDnsCharacterString([Ref]$length)
+
+                $recordDataLength -= $length
+            } until ($recordDataLength -le 0 -or $length -eq 0)#
+
+            $this.Text = $strings -join ' '
+        }
     }
 
     hidden [String] RecordDataToString() {

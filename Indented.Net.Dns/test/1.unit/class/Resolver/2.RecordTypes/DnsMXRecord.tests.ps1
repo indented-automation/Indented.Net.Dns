@@ -17,7 +17,7 @@ if (-not $UseExisting) {
 InModuleScope Indented.Net.Dns {
     Describe DnsMXRecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'AAoDbXgxBmRvbWFpbgdleGFtcGxlAA=='; RecordData = '10    mx1.domain.example.' }
+            @{ Message = 'AAoDbXgxBmRvbWFpbgdleGFtcGxlAA=='; RecordData = '10 mx1.domain.example.' }
         ) {
             param (
                 $Message,

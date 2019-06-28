@@ -63,15 +63,17 @@ class EndianBinaryReader : BinaryReader {
 
     # http://www.ietf.org/rfc/rfc1035.txt
     [String] ReadDnsCharacterString() {
-        $length = $this.ReadByte()
+        $stringLength = $this.ReadByte()
 
-        return [String]::new($this.ReadChars($length))
+        return [String]::new($this.ReadChars($stringLength))
     }
 
     [String] ReadDnsCharacterString([Ref]$Length) {
-        $Length.Value = $this.ReadByte()
+        $stringLength = $this.ReadByte()
 
-        return [String]::new($this.ReadChars($Length.Value))
+        $Length.Value = $stringLength + 1
+
+        return [String]::new($this.ReadChars($stringLength))
     }
 
     #   DNS messages implement compression to avoid bloat by repeated use of labels.
@@ -88,7 +90,10 @@ class EndianBinaryReader : BinaryReader {
         $name = [StringBuilder]::new()
         [UInt64]$CompressionStart = 0
 
-        # Read until we find the null terminator
+        if ($this.BaseStream.Position -eq $this.BaseStream.Length) {
+            return ''
+        }
+
         while ($this.PeekByte() -ne 0) {
             # The length or compression reference
             $length = $this.ReadByte()

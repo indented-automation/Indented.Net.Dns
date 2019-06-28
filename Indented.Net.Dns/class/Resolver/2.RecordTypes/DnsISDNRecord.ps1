@@ -25,14 +25,24 @@ class DnsISDNRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.ISDNAddress = $binaryReader.ReadDnsCharacterString()
-        $this.SubAddress = $binaryReader.ReadDnsCharacterString()
+        $length = 0
+        $this.ISDNAddress = $binaryReader.ReadDnsCharacterString([Ref]$length)
+
+        if ($this.RecordDataLength - $length -gt 0) {
+            $this.SubAddress = $binaryReader.ReadDnsCharacterString()
+        }
     }
 
     hidden [String] RecordDataToString() {
-        return '"{0}" "{1}"' -f @(
-            $this.ISDNAddress,
-            $this.SubAddress
-        )
+        if ($this.SubAddress) {
+            return '"{0}" "{1}"' -f @(
+                $this.ISDNAddress
+                $this.SubAddress
+            )
+        } else {
+            return '"{0}"' -f @(
+                $this.ISDNAddress
+            )
+        }
     }
 }

@@ -59,27 +59,14 @@ class DnsSOARecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        $string = @(
-            '{0} {1} ('
-            '    {2} ; serial'
-            '    {3} ; refresh ({4})'
-            '    {5} ; retry ({6})'
-            '    {7} ; expire ({8})'
-            '    {9} ; minimum ttl ({10})'
-            ')'
-        ) -join "`n"
-        return $string -f @(
-            $this.NameServer,
-            $this.ResponsiblePerson,
-            $this.Serial.ToString().PadRight(10, ' '),
-            $this.Refresh.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.Refresh),
-            $this.Retry.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.Retry),
-            $this.Expire.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.Expire),
-            $this.MinimumTTL.ToString().PadRight(10, ' '),
-            (ConvertTo-TimeSpanString -Seconds $this.MinimumTTL)
+        return '{0} {1} {2} {3} {4} {5} {6}' -f @(
+            $this.NameServer
+            $this.ResponsiblePerson
+            $this.Serial
+            $this.Refresh
+            $this.Retry
+            $this.Expire
+            $this.MinimumTTL
         )
     }
 
@@ -104,5 +91,29 @@ class DnsSOARecord : DnsResourceRecord {
         $bytes.AddRange([Byte[]]::new(16))
 
         return ,$bytes
+    }
+
+    [String] ToLongString() {
+        return @(
+            '{0} {1} ('
+            '    {2,-10} ; serial'
+            '    {3,-10} ; refresh ({4})'
+            '    {5,-10} ; retry ({6})'
+            '    {7,-10} ; expire ({8})'
+            '    {9,-10} ; minimum ttl ({10})'
+            ')'
+        ) -join "`n" -f @(
+            $this.NameServer
+            $this.ResponsiblePerson
+            $this.Serial
+            $this.Refresh
+            (ConvertTo-TimeSpanString -Seconds $this.Refresh)
+            $this.Retry
+            (ConvertTo-TimeSpanString -Seconds $this.Retry)
+            $this.Expire
+            (ConvertTo-TimeSpanString -Seconds $this.Expire)
+            $this.MinimumTTL
+            (ConvertTo-TimeSpanString -Seconds $this.MinimumTTL)
+        )
     }
 }
