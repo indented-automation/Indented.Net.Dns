@@ -34,9 +34,9 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.Precedence = $this.ReadByte()
-        $this.GatewayType = $this.ReadByte()
-        $this.Algorithm = $this.ReadByte()
+        $this.Precedence = $binaryReader.ReadByte()
+        $this.GatewayType = $binaryReader.ReadByte()
+        $this.Algorithm = $binaryReader.ReadByte()
 
         $position = $binaryReader.BaseStream.Position
 
@@ -52,13 +52,11 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        $format = @(
+        return @(
             ' ( {0} {1} {2}'
             '    {3}'
             '    {4} )'
-        ) -join "`n"
-
-        return $format -f @(
+        ) -join "`n" -f @(
             $this.Precedence
             [Byte]$this.GatewayType
             [Byte]$this.Algorithm

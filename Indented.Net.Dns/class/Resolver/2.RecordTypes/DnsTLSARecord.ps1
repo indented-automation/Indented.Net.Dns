@@ -33,7 +33,7 @@ class DnsTLSARecord : DnsResourceRecord {
         $this.CertificateUsage = $binaryReader.ReadByte()
         $this.Selector = $binaryReader.ReadByte()
         $this.MatchingType = $binaryReader.ReadByte()
-        $this.CertificateAssociation = [EndianBitConverter]::ToHexadecimal($this.ReadBytes($this.RecordDataLength - 3))
+        $this.CertificateAssociation = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($this.RecordDataLength - 3))
     }
 
     hidden [String] RecordDataToString() {

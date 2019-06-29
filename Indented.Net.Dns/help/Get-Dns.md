@@ -172,7 +172,7 @@ Disable the use of TCP if a truncated response (TC flag) is seen when using UDP.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: Ignore
 
 Required: False
 Position: Named
@@ -205,7 +205,7 @@ Recursive, or version, queries can be forced to use TCP by setting the TCP switc
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: vc
 
 Required: False
 Position: Named
@@ -253,7 +253,7 @@ ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the serve
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: 6
 
 Required: False
 Position: Named

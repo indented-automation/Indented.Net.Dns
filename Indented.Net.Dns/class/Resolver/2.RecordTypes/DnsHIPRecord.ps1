@@ -39,9 +39,9 @@ class DnsHIPRecord : DnsResourceRecord {
     ) { }
 
     hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.HITLength = $this.ReadByte()
-        $this.PublicKeyAlgorithm = $this.ReadByte()
-        $this.PublicKeyLength = $this.ReadUInt16($true)
+        $this.HITLength = $binaryReader.ReadByte()
+        $this.PublicKeyAlgorithm = $binaryReader.ReadByte()
+        $this.PublicKeyLength = $binaryReader.ReadUInt16($true)
         $this.HIT = [EndianBitConverter]::ToString($binaryReader.ReadBytes($this.HITLength))
         $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($this.PublicKeyLength))
 

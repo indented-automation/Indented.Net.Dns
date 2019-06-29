@@ -61,6 +61,7 @@ function Get-Dns {
         [UInt16]$EDnsBufferSize = 4096,
 
         # Disable the use of TCP if a truncated response (TC flag) is seen when using UDP.
+        [Alias('Ignore')]
         [Switch]$NoTcpFallback,
 
         # If a name is not root terminated (does not end with '.') a SearchList will be used for recursive queries. If this parameter is not defined Get-Dns will attempt to retrieve a SearchList from the hosts network configuration.
@@ -70,6 +71,7 @@ function Get-Dns {
         [String[]]$SearchList = (GetDnsSuffixSearchList),
 
         # Recursive, or version, queries can be forced to use TCP by setting the TCP switch parameter.
+        [Alias('vc')]
         [Switch]$Tcp,
 
         # By default, DNS uses TCP or UDP port 53. The port used to send queries may be changed if a server is listening on a different port.
@@ -80,6 +82,7 @@ function Get-Dns {
         [Byte]$Timeout = 5,
 
         # Force the use of IPv6 for queries, if this parameter is set and the Server is set to a name (e.g. ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
+        [Alias('6')]
         [Switch]$IPv6,
 
         # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
