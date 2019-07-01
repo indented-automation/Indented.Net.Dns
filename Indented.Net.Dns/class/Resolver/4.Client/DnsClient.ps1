@@ -65,8 +65,6 @@ class DnsClient {
         [IPAddress]  $ipAddress,
         [UInt16]     $port
     ) {
-        Write-Host "Sending to $ipAddress and $port ($($this.socket.ProtocolType))"
-
         try {
             $stopWatch = [StopWatch]::StartNew()
 
@@ -114,7 +112,6 @@ class DnsClient {
 
             if ($this.socket.ProtocolType -eq 'Tcp') {
                 $bytesReceived = $this.socket.Receive($buffer)
-
                 $length = [BitConverter]::ToUInt16(($buffer[1, 0]), 0)
                 $messageBytes = [Byte[]]::new($length)
                 [Array]::Copy(
@@ -126,15 +123,17 @@ class DnsClient {
                 )
 
                 $totalBytesReceived = $bytesReceived
+
                 while ($totalBytesReceived -lt $length) {
                     $bytesReceived = $this.socket.Receive($buffer)
                     [Array]::Copy(
                         $buffer,
                         0,
                         $messageBytes,
-                        0,
+                        $totalBytesReceived - 2,
                         $bytesReceived
                     )
+                    $totalBytesReceived += $bytesReceived
                 }
 
                 $this.RemoteEndPoint = $this.socket.RemoteEndPoint

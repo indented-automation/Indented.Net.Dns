@@ -15,12 +15,11 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe DnsATMARecord {
+    Describe DnsAMTRelayRecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'ATYxMjAwMDAwMDAw'; RecordData = '+61200000000' }
-            @{ Message = 'ATYxMjAwMDAwMDAw'; RecordData = '+61200000000' }
-            @{ Message = 'ABI0VniQq83v';     RecordData = '1234567890abcdef' }
-            @{ Message = 'AP7cugmHZUMh';     RecordData = 'fedcba0987654321' }
+            @{ Message = 'CgHLAHEP';                             RecordData = '10 0 1 203.0.113.15' }
+            @{ Message = 'CgIgAQ24AAAAAAAAAAAAAAAV';             RecordData = '10 0 2 2001:DB8::15' }
+            @{ Message = 'gIMJYW10cmVsYXlzB2V4YW1wbGUDY29tAA=='; RecordData = '128 1 3 amtrelays.example.com.' }
         ) {
             param (
                 $Message,
@@ -29,7 +28,7 @@ InModuleScope Indented.Net.Dns {
 
             $recordDataBytes = [Convert]::FromBase64String($Message)
             $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
-            $resourceRecord = [DnsATMARecord]::new()
+            $resourceRecord = [DnsAMTRelayRecord]::new()
             $resourceRecord.RecordDataLength = $recordDataBytes.Count
             $resourceRecord.ReadRecordData($binaryReader)
 

@@ -15,12 +15,11 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe DnsATMARecord {
+    Describe DnsCAARecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'ATYxMjAwMDAwMDAw'; RecordData = '+61200000000' }
-            @{ Message = 'ATYxMjAwMDAwMDAw'; RecordData = '+61200000000' }
-            @{ Message = 'ABI0VniQq83v';     RecordData = '1234567890abcdef' }
-            @{ Message = 'AP7cugmHZUMh';     RecordData = 'fedcba0987654321' }
+            @{ Message = 'AAVpc3N1ZWNhLmV4YW1wbGUubmV0OyBwb2xpY3k9ZXY='; RecordData = '0 issue "ca.example.net; policy=ev"' }
+            @{ Message = 'gAN0YnNVbmtub3du';                             RecordData = '128 tbs "Unknown"' }
+            @{ Message = 'gAN0YnM=';                                     RecordData = '128 tbs ""' }
         ) {
             param (
                 $Message,
@@ -29,11 +28,17 @@ InModuleScope Indented.Net.Dns {
 
             $recordDataBytes = [Convert]::FromBase64String($Message)
             $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
-            $resourceRecord = [DnsATMARecord]::new()
+            $resourceRecord = [DnsCAARecord]::new()
             $resourceRecord.RecordDataLength = $recordDataBytes.Count
             $resourceRecord.ReadRecordData($binaryReader)
 
             $resourceRecord.RecordDataToString() | Should -Be $RecordData
+        }
+
+        It 'Self test' {
+            $describeName = & (Get-Module Pester) { $pester.CurrentTestGroup.Name }
+
+
         }
     }
 }
