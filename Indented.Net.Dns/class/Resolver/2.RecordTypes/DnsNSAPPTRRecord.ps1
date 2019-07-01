@@ -29,7 +29,7 @@ class DnsNSAPPTRRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return $this.Hostname
+        return $this.Owner
     }
 
     [String] ToString() {

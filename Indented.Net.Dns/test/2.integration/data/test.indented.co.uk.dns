@@ -116,7 +116,7 @@ nsap02			NSAP	(
 
 ; type 23
 nsap-ptr01		NSAP-PTR foo.
-nsap-ptr01		NSAP-PTR .
+nsap-ptr02		NSAP-PTR .
 
 ; type 24
 ;sig01			SIG	NXT 1 3 ( 3600 20000102030405

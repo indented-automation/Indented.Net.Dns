@@ -15,11 +15,11 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe DnsCERTRecord {
+    Describe DnsZONEMDRecord {
         It 'Parses <RecordData>' -TestCases @(
             @{
-                Message    = '//7///4zEVxvL2T/K950x9CArOEfl6vQy7+8gvPjkiSyRx4UaCJYKf8bEeFqLpUC4cCg1TPhihTW1V9IJKpBifr//XVTo2V3zSMR4LxpOs74oqYJpg==';
-                RecordData = '65534 65535 PRIVATEOID MxFcby9k/yvedMfQgKzhH5er0Mu/vILz45IkskceFGgiWCn/GxHhai6V AuHAoNUz4YoU1tVfSCSqQYn6//11U6Nld80jEeC8aTrO+KKmCaY='
+                Message    = 'eFfPnAEAwiC4pu1XKKlxkC9+PU/ZOt7qiLBFPC6OjIY9RlqwbPNOuVsmY5jJi1kST6I5y37r'
+                RecordData = '2019020700 1 0 C220B8A6ED5728A971902F7E3D4FD93ADEEA88B0453C2E8E8C863D46 5AB06CF34EB95B266398C98B59124FA239CB7EEB'
             }
         ) {
             param (
@@ -29,7 +29,7 @@ InModuleScope Indented.Net.Dns {
 
             $recordDataBytes = [Convert]::FromBase64String($Message)
             $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
-            $resourceRecord = [DnsCERTRecord]::new()
+            $resourceRecord = [DnsZONEMDRecord]::new()
             $resourceRecord.RecordDataLength = $recordDataBytes.Count
             $resourceRecord.ReadRecordData($binaryReader)
 

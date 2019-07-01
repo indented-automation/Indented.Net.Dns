@@ -17,9 +17,7 @@ if (-not $UseExisting) {
 InModuleScope Indented.Net.Dns {
     Describe DnsEIDRecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'BjEyODlBQg=='; RecordData = '1289AB' }
-            @{ Message = 'BkFBQkJDQw=='; RecordData = 'AABBCC' }
-            @{ Message = 'CDEyIDg5IEFC'; RecordData = '12 89 AB' }
+            @{ Message = 'Eomr'; RecordData = '1289AB' }
         ) {
             param (
                 $Message,

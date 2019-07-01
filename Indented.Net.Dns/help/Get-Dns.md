@@ -253,7 +253,7 @@ ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the serve
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 6
+Aliases:
 
 Required: False
 Position: Named
