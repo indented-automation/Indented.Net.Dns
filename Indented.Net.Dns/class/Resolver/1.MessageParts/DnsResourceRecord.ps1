@@ -82,7 +82,9 @@ class DnsResourceRecord {
     }
 
     # Child classes should override this method
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $binaryReader.ReadBytes($this.RecordDataLength)
     }
 

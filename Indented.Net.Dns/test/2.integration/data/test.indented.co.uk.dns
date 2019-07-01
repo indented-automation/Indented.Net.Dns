@@ -334,6 +334,8 @@ openpgpkey		OPENPGPKEY	( AQMFD5raczCJHViKtLYhWGz8hMY
 ;type	62
 csync01			CSYNC	0 0 A NS AAAA
 csync02			CSYNC	0 0
+csync03         CSYNC   0 0 DLV
+csync04         CSYNC   0 0 NS DLV
 
 ;type	63
 zonemd01		ZONEMD	2019020700 1 0 (
@@ -431,12 +433,9 @@ doa01			DOA	( 1234567890 1234567890 1 "image/gif"
 doa02			DOA	0 1 2 "" aHR0cHM6Ly93d3cuaXNjLm9yZy8=
 
 ; type 260
-amtrelay01		AMTRELAY 0 0 0
-amtrelay02		AMTRELAY 0 1 0
-amtrelay03		AMTRELAY 0 0 1 0.0.0.0
-amtrelay04		AMTRELAY 0 0 2 ::
-amtrelay05		AMTRELAY 0 0 3 example.net.
-amtrelay06		AMTRELAY \# 2 0004
+amtrelay01		AMTRELAY 10 0 1 203.0.113.15
+amtrelay02		AMTRELAY 10 0 2 2001:DB8::15
+amtrelay03		AMTRELAY 128 1 3 amtrelays.example.com.
 
 ; type 261 -- 32767 (unassigned)
 

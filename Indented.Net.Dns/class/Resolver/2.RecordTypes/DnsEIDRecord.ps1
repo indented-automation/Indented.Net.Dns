@@ -22,8 +22,10 @@ class DnsEIDRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.EID = $binaryReader.ReadDnsCharacterString()
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
+        $this.EID = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($this.RecordDataLength))
     }
 
     hidden [String] RecordDataToString() {

@@ -26,37 +26,23 @@ class DnsATMARecord : DnsResourceRecord {
     ) { }
 
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Format = [ATMAFormat]$binaryReader.ReadByte()
 
         $length = $this.RecordDataLength - 1
 
-        $address = [StringBuilder]::new()
-        switch ($this.Format) {
-            'AESA' {
-                $address.Append($binaryReader.ReadChars($length))
-                break
-            }
+        $this.ATMAAddress = switch ($this.Format) {
             'E164' {
-                for ($i = 0; $i -lt $length; $i++) {
-                    if ($i -in 3, 6) {
-                        $null = $address.Append('.')
-                    }
-                    $null = $address.Append($binaryReader.ReadChar())
-                }
+                '+{0}' -f [String]::new($binaryReader.ReadChars($length))
                 break
             }
-            'NSAP' {
-                for ($i = 0; $i -lt $length; $i++) {
-                    if ($i -in 1, 3, 13, 19) {
-                        $null = $address.Append('.')
-                    }
-                    $null = $address.AppendFormat('{0:X2}', $binaryReader.ReadByte())
-                }
+            default {
+                [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($length)).ToLower()
                 break
             }
         }
-        $this.ATMAAddress = $address.ToString()
     }
 
     hidden [String] RecordDataToString() {

@@ -63,18 +63,60 @@ class EndianBinaryReader : BinaryReader {
 
     # http://www.ietf.org/rfc/rfc1035.txt
     [String] ReadDnsCharacterString() {
-        $stringLength = $this.ReadByte()
-
-        return [String]::new($this.ReadChars($stringLength))
+        $length = 0
+        return $this.ReadDnsCharacterString([Ref]$length)
     }
 
     [String] ReadDnsCharacterString([Ref]$Length) {
-        $stringLength = $this.ReadByte()
+        [Char[]]$escapeChars = @(
+            92
+            34
+        )
+        [Char[]]$replaceChars = @(
+            10
+            13
+        )
 
+        $stringLength = $this.ReadByte()
         $Length.Value = $stringLength + 1
 
-        return [String]::new($this.ReadChars($stringLength))
+        $string = [String]::new($this.ReadChars($stringLength))
+
+        foreach ($escapeChar in $escapeChars) {
+            $string = $string.Replace([String]$escapeChar, ('\{0}' -f $escapeChar))
+        }
+        foreach ($replaceChar in $replaceChars) {
+            $string = $string.Replace([String]$replaceChar, ('\{0:000}' -f [Int]$replaceChar))
+        }
+
+        return $string
     }
+
+    [UInt16[]] ReadBitMap([Int32]$length) {
+        [UInt16[]]$bits = while ($length -gt 0) {
+            $windowNumber = $this.ReadByte()
+            $bitMapLength = $this.ReadByte()
+            $bytes = $this.ReadBytes($bitMapLength)
+
+            $binaryString = [StringBuilder]::new()
+            foreach ($byte in $bytes) {
+                $null = $binaryString.Append(
+                    [Convert]::ToString($byte, 2).PadLeft(8, '0')
+                )
+            }
+
+            for ($i = 0; $i -lt $binaryString.Length; $i++) {
+                if ($binaryString[$i] -eq '1') {
+                    $i + (256 * $windowNumber)
+                }
+            }
+
+            $length -= 2 + $bitMapLength
+        }
+
+        return $bits
+    }
+
 
     #   DNS messages implement compression to avoid bloat by repeated use of labels.
     #

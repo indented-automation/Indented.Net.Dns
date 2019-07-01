@@ -16,10 +16,9 @@ class DnsNXTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc3755.txt
     #>
 
-    [RecordType]   $RecordType = [RecordType]::NXT
-    [String]       $DomainName
-    [String]       $BitMap
-    [RecordType[]] $RRTypes
+    [RecordType]      $RecordType = [RecordType]::NXT
+    [String]          $DomainName
+    [DnsRecordType[]] $RRType
 
     DnsNXTRecord() : base() { }
     DnsNXTRecord(
@@ -30,30 +29,21 @@ class DnsNXTRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $length = 0
         $this.DomainName = $binaryReader.ReadDnsDomainName([Ref]$length)
 
-        $bitMapLength = $this.RecordDataLength - $length
-
-        $stringBuilder = [StringBuilder]::new()
-        $bitmapBytes = $binaryReader.ReadBytes($bitMapLength)
-        foreach ($byte in $bitmapBytes) {
-            $null = $stringBuilder.Append([Convert]::ToString($byte, 2))
-        }
-        $this.BitMap = $stringBuilder.ToString()
-
-        $this.RRTypes = foreach ($rrType in [RecordType].GetEnumValues()) {
-            if ($this.BitMap[[Int]$rrType] -eq 1) {
-                $rrType
-            }
-        }
+        $this.RRType = $binaryReader.ReadBitMap(
+            $this.RecordDataLength - $length
+        )
     }
 
     hidden [String] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.DomainName,
-            ($this.RRTypes -join ' ')
+            ($this.RRType -join ' ')
         )
     }
 }

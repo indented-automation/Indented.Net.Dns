@@ -25,14 +25,16 @@ class DnsKXRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Preference = $binaryReader.ReadUInt16($true)
         $this.Exchanger = $binaryReader.ReadDnsDomainName()
     }
 
     hidden [String] RecordDataToString() {
         return '{0} {1}' -f @(
-            $this.Preference,
+            $this.Preference
             $this.Exchanger
         )
     }

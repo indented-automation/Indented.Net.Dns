@@ -1,4 +1,4 @@
-enum TLSASelector {
+enum Selector {
     FullCertificate
     SubjectPublicKeyInfo
 }

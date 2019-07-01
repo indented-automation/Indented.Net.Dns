@@ -52,7 +52,9 @@ class DnsRRSIGRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         [Int32]$type = $binaryReader.ReadUInt16($true)
         if ([Enum]::IsDefined([RecordType], $type)) {
             $this.TypeCovered = $type
@@ -73,23 +75,42 @@ class DnsRRSIGRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return @(
-            '{0} {1} {2} ( ; type-cov={0}, alg={1}, labels={2}'
-            '    {3} ; Signature expiration'
-            '    {4} ; Signature inception'
-            '    {5} ; Key identifier'
-            '    {6} ; Signer'
-            '    {7} ; Signature'
-            ')'
-        ) -join "`n" -f @(
+        return '{0} {1} {2} {3} {4} {5} {6} {7} {8}' -f @(
             $this.TypeCovered
             [Byte]$this.Algorithm
-            [Byte]$this.Labels
+            $this.Labels
+            $this.OriginalTTL
+            $this.SignatureExpiration.ToString('yyyyMMddHHmmss')
+            $this.SignatureInception.ToString('yyyyMMddHHmmss')
+            $this.KeyTag
+            $this.SignersName
+            $this.Signature -split '(?<=\G.{56})' -join ' '
+        )
+    }
+
+    [String] ToLongString() {
+        return (@(
+            '{0} {1} {3} ( ; type-cov={0}, alg={2}, labels={3}'
+            '    {4} ; Original TTL'
+            '    {5} ; Signature expiration ({6})'
+            '    {7} ; Signature inception ({8})'
+            '    {9} ; Key identifier'
+            '    {10} ; Signer'
+            '    {11} ; Signature'
+            ')'
+         ) -join "`n") -f @(
+            $this.TypeCovered
+            [Byte]$this.Algorithm
+            $this.Algorithm
+            $this.Labels
+            $this.OriginalTTL
+            $this.SignatureExpiration.ToString('yyyyMMddHHmmss')
             $this.SignatureExpiration
+            $this.SignatureInception.ToString('yyyyMMddHHmmss')
             $this.SignatureInception
             $this.KeyTag
             $this.SignersName
-            $this.Signature
-        )
+            $this.Signature -split '(?<=\G.{56})' -join ' '
+         )
     }
 }

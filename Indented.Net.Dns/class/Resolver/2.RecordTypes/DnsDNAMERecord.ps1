@@ -22,7 +22,9 @@ class DnsDNAMERecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Target = $binaryReader.ReadDnsDomainName()
     }
 

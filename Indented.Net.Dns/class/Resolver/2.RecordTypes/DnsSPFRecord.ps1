@@ -10,7 +10,7 @@ class DnsSPFRecord : DnsResourceRecord {
     #>
 
     [RecordType] $RecordType = [RecordType]::SPF
-    [String]     $SPF
+    [String[]]   $SPF
 
     DnsSPFRecord() : base() { }
     DnsSPFRecord(
@@ -21,11 +21,22 @@ class DnsSPFRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.SPF = $binaryReader.ReadDnsCharacterString()
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
+        $length = $this.RecordDataLength
+        if ($length -gt 0) {
+            $this.SPF = do {
+                $entryLength = 0
+
+                $binaryReader.ReadDnsCharacterString([Ref]$entryLength)
+
+                $length -= $entryLength
+            } until ($length -le 0)
+        }
     }
 
     hidden [String] RecordDataToString() {
-        return '"{0}"' -f $this.SPF
+        return '"{0}"' -f ($this.SPF -join '" "')
     }
 }

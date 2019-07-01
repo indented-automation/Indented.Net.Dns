@@ -10,7 +10,7 @@ class DnsTXTRecord : DnsResourceRecord {
     #>
 
     [RecordType] $RecordType = [RecordType]::TXT
-    [String]     $Text
+    [String[]]   $Text
 
     DnsTXTRecord() : base() { }
     DnsTXTRecord(
@@ -21,22 +21,22 @@ class DnsTXTRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $recordDataLength = $this.RecordDataLength
-        if ($recordDataLength -gt 0) {
-            $strings = do {
-                $length = 0
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
+        $length = $this.RecordDataLength
+        if ($length -gt 0) {
+            $this.Text = do {
+                $entryLength = 0
 
-                $binaryReader.ReadDnsCharacterString([Ref]$length)
+                $binaryReader.ReadDnsCharacterString([Ref]$entryLength)
 
-                $recordDataLength -= $length
-            } until ($recordDataLength -le 0 -or $length -eq 0)#
-
-            $this.Text = $strings -join ' '
+                $length -= $entryLength
+            } until ($length -le 0)
         }
     }
 
     hidden [String] RecordDataToString() {
-        return '"{0}"' -f $this.Text
+        return '"{0}"' -f ($this.Text -join '" "')
     }
 }

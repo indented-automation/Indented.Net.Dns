@@ -27,7 +27,9 @@ class DnsA6Record : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.PrefixLength = $binaryReader.ReadByte()
 
         $addressSuffixBytes = [Byte[]]::new(16)

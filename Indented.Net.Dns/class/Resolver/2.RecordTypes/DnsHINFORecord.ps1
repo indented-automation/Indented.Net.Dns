@@ -24,7 +24,9 @@ class DnsHINFORecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.CPU = $binaryReader.ReadDnsCharacterString()
         $this.OS = $binaryReader.ReadDnsCharacterString()
     }

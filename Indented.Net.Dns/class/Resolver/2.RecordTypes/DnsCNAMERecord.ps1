@@ -20,7 +20,9 @@ class DnsCNAMERecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 

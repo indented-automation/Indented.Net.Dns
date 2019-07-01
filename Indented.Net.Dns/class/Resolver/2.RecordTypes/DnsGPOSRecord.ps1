@@ -30,7 +30,9 @@ class DnsGPOSRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Longitude = $binaryReader.ReadDnsCharacterString()
         $this.Latitude = $binaryReader.ReadDnsCharacterString()
         $this.Altitude = $binaryReader.ReadDnsCharacterString()

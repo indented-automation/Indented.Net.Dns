@@ -36,7 +36,9 @@ class DnsWKSRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.IPAddress = $binaryReader.ReadIPAddress()
         $this.IPProtocolNumber = $binaryReader.ReadByte()
         $this.IPProtocolType = $this.IPProtocolNumber

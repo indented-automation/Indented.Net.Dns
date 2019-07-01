@@ -24,7 +24,9 @@ class DnsRPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.ResponsibleMailbox = $binaryReader.ReadDnsDomainName()
         $this.DomainName = $binaryReader.ReadDnsDomainName()
     }

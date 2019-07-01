@@ -185,7 +185,7 @@ function Get-Dns {
                 }
             } catch [SocketException] {
                 $errorRecord = [ErrorRecord]::new(
-                    [SocketException]::new($_.Exception.InnerException.NativeErrorCode),
+                    $_.Exception,
                     'Timeout',
                     [ErrorCategory]::ConnectionError,
                     $Socket

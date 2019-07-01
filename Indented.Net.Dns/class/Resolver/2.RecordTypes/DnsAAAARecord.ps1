@@ -26,7 +26,9 @@ class DnsAAAARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.IPAddress = $binaryReader.ReadIPv6Address()
     }
 

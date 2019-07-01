@@ -26,7 +26,9 @@ class DnsAPLRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         if ($this.RecordDataLength -gt 0) {
             $listLength = $this.RecordDataLength
 

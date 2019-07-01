@@ -15,10 +15,10 @@ class DnsCSYNCRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc7477.txt
     #>
 
-    [RecordType]   $RecordType = [RecordType]::CSYNC
-    [UInt32]       $Serial
-    [CSYNCFlags]   $Flags
-    [RecordType[]] $TypesToProcess
+    [RecordType]      $RecordType = [RecordType]::CSYNC
+    [UInt32]          $Serial
+    [CSYNCFlags]      $Flags
+    [DnsRecordType[]] $TypesToProcess
 
 
     DnsCSYNCRecord() : base() { }
@@ -30,27 +30,27 @@ class DnsCSYNCRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Serial = $binaryReader.ReadUInt32($true)
         $this.Flags = $binaryReader.ReadUInt16($true)
 
-        $bitMapLength = $this.RecordDataLength - 6
-        $bitMap = [EndianBitConverter]::ToBinary($binaryReader.ReadBytes($bitMapLength))
-        $this.TypesToProcess = for ($i = 0; $i -lt $bitMap.Length; $i++) {
-            if ($bitMap[$i] -eq 1) {
-                [RecordType]$i
-            }
-        }
+        $this.TypesToProcess = $binaryReader.ReadBitMap($this.RecordDataLength - 6)
     }
 
     hidden [String] RecordDataToString() {
-        $string = @(
-            '{0} {1} {2}'
-        ) -join "`n"
-        return $string -f @(
-            $this.Serial
-            $this.Flags
-            $this.TypesToProcess
-        )
+        if ($this.TypesToProcess.Count -gt 0) {
+            return '{0} {1} {2}' -f @(
+                $this.Serial
+                [Byte]$this.Flags
+                $this.TypesToProcess -join ' '
+            )
+        } else {
+            return '{0} {1}' -f @(
+                $this.Serial
+                [Byte]$this.Flags
+            )
+        }
     }
 }

@@ -39,7 +39,7 @@ class DnsNSEC3Record : DnsResourceRecord {
     [UInt16]             $Iterations
     [String]             $Salt
     [String]             $Hash
-    [RecordType[]]       $RRType
+    [DnsRecordType[]]    $RRType
 
     DnsNSEC3Record() : base() { }
     DnsNSEC3Record(
@@ -50,7 +50,9 @@ class DnsNSEC3Record : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.HashAlgorithm = $binaryReader.ReadByte()
         $this.Flags = $binaryReader.ReadByte()
         $this.OptOut = $this.Flags -band [NSEC3Flags]::OptOut
@@ -64,18 +66,13 @@ class DnsNSEC3Record : DnsResourceRecord {
         $hashLength = $binaryReader.ReadByte()
         $this.Hash = [Convert]::ToBase64String($binaryReader.ReadBytes($hashLength))
 
-        $bitMapLength = $this.RecordDataLength - 6 - $saltLength - $hashLength
-        $bitMap = [EndianBitConverter]::ToBinary($binaryReader.ReadBytes($bitMapLength))
-
-        $this.RRType = for ($i = 0; $i -lt $bitMap.Count; $i++) {
-            if ($bitMap[$i] -eq 1) {
-                [RecordType]$i
-            }
-        }
+        $this.RRType = $binaryReader.ReadBitMap(
+            $this.RecordDataLength - 6 - $saltLength - $hashLength
+        )
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3} (', '{4} {5} )' -join "`n" -f @(
+        return '{0} {1} {2} {3} {4} {5}' -f @(
             [Byte]$this.HashAlgorithm,
             $this.Flags,
             $this.Iterations,

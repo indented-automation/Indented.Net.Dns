@@ -31,7 +31,9 @@ class DnsCERTRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.CertificateType = $binaryReader.ReadUInt16($true)
         $this.KeyTag = $binaryReader.ReadUInt16($true)
         $this.Algorithm = $binaryReader.ReadByte()
@@ -42,10 +44,10 @@ class DnsCERTRecord : DnsResourceRecord {
 
     hidden [String] RecordDataToString() {
         return '{0} {1} {2} {3}' -f @(
-            $this.CertificateType
+            [UInt16]$this.CertificateType
             [UInt16]$this.KeyTag
             $this.Algorithm
-            $this.Certificate
+            $this.Certificate -split '(?<=\G.{56})' -join ' '
         )
     }
 }

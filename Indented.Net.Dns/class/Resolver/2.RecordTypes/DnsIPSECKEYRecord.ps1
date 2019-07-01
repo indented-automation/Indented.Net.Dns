@@ -33,30 +33,40 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Precedence = $binaryReader.ReadByte()
         $this.GatewayType = $binaryReader.ReadByte()
         $this.Algorithm = $binaryReader.ReadByte()
 
-        $position = $binaryReader.BaseStream.Position
-
+        $length = 0
         $this.Gateway = switch ($this.GatewayType) {
-            IPv4       { $binaryReader.ReadIPv4Address(); break }
-            IPv6       { $binaryReader.ReadIPv6Address(); break }
-            DomainName { $binaryReader.ReadDnsDomainName(); break }
+            IPv4       {
+                $binaryReader.ReadIPAddress()
+                $length = 4
+                break
+            }
+            IPv6       {
+                $binaryReader.ReadIPv6Address()
+                $length = 16
+                break
+            }
+            DomainName {
+                $binaryReader.ReadDnsDomainName([Ref]$length)
+                break
+            }
+        }
+        if ($this.Gateway.Length -eq 0) {
+            $this.Gateway = '.'
         }
 
-        $length = $binaryReader.BaseStream.Position - $position
-
-        $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($length))
+        $publicKeyLength = $this.RecordDataLength - $length
+        $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($publicKeyLength))
     }
 
     hidden [String] RecordDataToString() {
-        return @(
-            ' ( {0} {1} {2}'
-            '    {3}'
-            '    {4} )'
-        ) -join "`n" -f @(
+        return '{0} {1} {2} {3} {4}' -f @(
             $this.Precedence
             [Byte]$this.GatewayType
             [Byte]$this.Algorithm

@@ -32,7 +32,9 @@ class DnsRKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Flags = $binaryReader.ReadUInt16($true)
         $this.Protocol = $binaryReader.ReadByte()
         $this.Algorithm = $binaryReader.ReadByte()
@@ -42,11 +44,11 @@ class DnsRKEYRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} ( {3} )' -f @(
+        return '{0} {1} {2} {3}' -f @(
             $this.Flags
             [Byte]$this.Protocol
             [Byte]$this.Algorithm
-            $this.PublicKey
+            $this.PublicKey -split '(?<=\G.{56})' -join ' '
         )
     }
 }

@@ -98,6 +98,12 @@ Write-Host 'Dig Answer'
 Write-Host '=========='
 Write-Host
 
-$response = dig $RecordType $Name --% +short -p 1053 @127.0.0.1
+$response = & (Join-Path $psscriptroot 'Indented.Net.Dns\test\2.integration\bin\dig.exe') @(
+    $Name
+    $RecordType
+    '+short'
+    '-p' , 1053
+    '@127.0.0.1'
+)
 
 Write-Host $response

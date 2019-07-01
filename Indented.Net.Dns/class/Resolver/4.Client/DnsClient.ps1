@@ -65,6 +65,8 @@ class DnsClient {
         [IPAddress]  $ipAddress,
         [UInt16]     $port
     ) {
+        Write-Host "Sending to $ipAddress and $port ($($this.socket.ProtocolType))"
+
         try {
             $stopWatch = [StopWatch]::StartNew()
 

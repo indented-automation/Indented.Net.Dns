@@ -26,17 +26,19 @@ class DnsSSHFPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Algorithm = $binaryReader.ReadByte()
         $this.FPType = $binaryReader.ReadByte()
-        $this.FingerPrint = [BitConverter]::ToString($binaryReader.ReadBytes($this.RecordDataLength - 2))
+        $this.FingerPrint = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($this.RecordDataLength - 2))
     }
 
     hidden [String] RecordDataToString() {
         return '{0} {1} {2}' -f @(
             [Byte]$this.Algorithm
             [Byte]$this.FPType
-            $this.Fingerprint
+            $this.Fingerprint -split '(?<=\G.{56})' -join ' '
         )
     }
 }

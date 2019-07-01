@@ -48,7 +48,9 @@ class DnsSOARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.NameServer = $binaryReader.ReadDnsDomainName()
         $this.ResponsiblePerson = $binaryReader.ReadDnsDomainName()
         $this.Serial = $binaryReader.ReadUInt32($true)
@@ -94,7 +96,7 @@ class DnsSOARecord : DnsResourceRecord {
     }
 
     [String] ToLongString() {
-        return @(
+        return (@(
             '{0} {1} ('
             '    {2,-10} ; serial'
             '    {3,-10} ; refresh ({4})'
@@ -102,7 +104,7 @@ class DnsSOARecord : DnsResourceRecord {
             '    {7,-10} ; expire ({8})'
             '    {9,-10} ; minimum ttl ({10})'
             ')'
-        ) -join "`n" -f @(
+        ) -join "`n") -f @(
             $this.NameServer
             $this.ResponsiblePerson
             $this.Serial

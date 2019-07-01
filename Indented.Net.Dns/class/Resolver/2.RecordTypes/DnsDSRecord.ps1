@@ -30,7 +30,9 @@ class DnsDSRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.KeyTag = $binaryReader.ReadUInt16($true)
         $this.Algorithm = $binaryReader.ReadByte()
         $this.DigestType = $binaryReader.ReadByte()
@@ -41,10 +43,10 @@ class DnsDSRecord : DnsResourceRecord {
 
     hidden [String] RecordDataToString() {
         return '{0} {1} {2} {3}' -f @(
-            $this.KeyTag,
-            [Byte]$this.Algorithm,
-            [Byte]$this.DigestType,
-            $this.Digest
+            $this.KeyTag
+            [Byte]$this.Algorithm
+            [Byte]$this.DigestType
+            $this.Digest -split '(?<=\G.{56})' -join ' '
         )
     }
 }

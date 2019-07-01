@@ -1,5 +1,3 @@
-using namespace System.Collections.Generic
-
 class DnsNSECRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
@@ -13,9 +11,9 @@ class DnsNSECRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType]       $RecordType = [RecordType]::NSEC
-    [String]           $DomainName
-    [List[RecordType]] $RRType
+    [RecordType]      $RecordType = [RecordType]::NSEC
+    [String]          $DomainName
+    [DnsRecordType[]] $RRType
 
     DnsNSECRecord() : base() { }
     DnsNSECRecord(
@@ -26,18 +24,15 @@ class DnsNSECRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $length = 0
         $this.DomainName = $binaryReader.ReadDnsDomainName([Ref]$length)
 
-        $bitMapLength = $this.RecordDataLength - $length
-        $bitMap = [EndianBitConverter]::ToBinary($binaryReader.ReadBytes($bitMapLength))
-
-        $this.RRType = for ($i = 0; $i -lt $bitMap.Length; $i++) {
-            if ($bitMap[$i] -eq 1) {
-                [RecordType]$i
-            }
-        }
+        $this.RRType = $binaryReader.ReadBitMap(
+            $this.RecordDataLength - $length
+        )
     }
 
     hidden [String] RecordDataToString() {

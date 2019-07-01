@@ -14,11 +14,11 @@ class DnsTLSARecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc6698.txt
     #>
 
-    [RecordType]           $RecordType = [RecordType]::TLSA
-    [TlsaCertificateUsage] $CertificateUsage
-    [TlsaSelector]         $Selector
-    [TlsaMatchingType]     $MatchingType
-    [String]               $CertificateAssociation
+    [RecordType]       $RecordType = [RecordType]::TLSA
+    [CertificateUsage] $CertificateUsage
+    [Selector]         $Selector
+    [MatchingType]     $MatchingType
+    [String]           $CertificateAssociation
 
     DnsTLSARecord() : base() { }
     DnsTLSARecord(
@@ -29,7 +29,9 @@ class DnsTLSARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.CertificateUsage = $binaryReader.ReadByte()
         $this.Selector = $binaryReader.ReadByte()
         $this.MatchingType = $binaryReader.ReadByte()
@@ -41,7 +43,7 @@ class DnsTLSARecord : DnsResourceRecord {
             [Byte]$this.CertificateUsage
             [Byte]$this.Selector
             [Byte]$this.MatchingType
-            [Byte]$this.CertificateAssociation
+            $this.CertificateAssociation -split '(?<=\G.{56})' -join ' '
         )
     }
 }

@@ -15,7 +15,7 @@ class DnsSINKRecord : DnsResourceRecord {
     [RecordType] $RecordType = [RecordType]::SINK
     [Byte]       $Coding
     [Byte]       $Subcoding
-    [Byte[]]     $Data
+    [String]     $Data
 
     DnsSINKRecord() : base() { }
     DnsSINKRecord(
@@ -26,13 +26,23 @@ class DnsSINKRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Coding = $binaryReader.ReadByte()
         $this.Subcoding = $binaryReader.ReadByte()
-        $this.Data = $binaryReader.ReadBytes($this.RecordDataLength - 2)
+
+        $dataLength = $this.RecordDataLength - 2
+        if ($dataLength -gt 0) {
+            $this.Data = $binaryReader.ReadBytes($dataLength)
+        }
     }
 
     hidden [String] RecordDataToString() {
-        return ''
+        return '{0} {1} {2}' -f @(
+            [Byte]$this.Coding
+            [Byte]$this.Subcoding
+            [String]$this.Data
+        )
     }
 }

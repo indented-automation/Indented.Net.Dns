@@ -32,7 +32,9 @@ class DnsSRVRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Priority = $binaryReader.ReadUInt16($true)
         $this.Weight = $binaryReader.ReadUInt16($true)
         $this.Port = $binaryReader.ReadUInt16($true)

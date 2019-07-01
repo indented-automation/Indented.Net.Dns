@@ -37,7 +37,9 @@ class DnsWINSRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.MappingFlag = $binaryReader.ReadUInt32($true)
         $this.LookupTimeout = $binaryReader.ReadUInt32($true)
         $this.CacheTimeout = $binaryReader.ReadUInt32($true)
@@ -45,7 +47,7 @@ class DnsWINSRecord {
         $numberOfServers = $binaryReader.ReadUInt32($true)
 
         $this.ServerList = for ($i = 0; $i -lt $numberOfServers; $i++) {
-            $binaryReader.ReadIPv4Address()
+            $binaryReader.ReadIPAddress()
         }
     }
 

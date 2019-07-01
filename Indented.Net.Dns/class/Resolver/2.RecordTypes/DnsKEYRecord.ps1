@@ -39,7 +39,9 @@ class DnsKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $position = $binaryReader.BaseStream.Position
 
         $this.Flags = $binaryReader.ReadUInt16($true)

@@ -21,9 +21,7 @@ class DnsHIPRecord : DnsResourceRecord {
     #>
 
     [RecordType]     $RecordType = [RecordType]::HIP
-    [Byte]           $HITLength
     [IPSECAlgorithm] $PublicKeyAlgorithm
-    [UInt16]         $PublicKeyLength
     [String]         $HIT
     [String]         $PublicKey
     [String[]]       $RendezvousServers
@@ -38,14 +36,19 @@ class DnsHIPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $this.HITLength = $binaryReader.ReadByte()
-        $this.PublicKeyAlgorithm = $binaryReader.ReadByte()
-        $this.PublicKeyLength = $binaryReader.ReadUInt16($true)
-        $this.HIT = [EndianBitConverter]::ToString($binaryReader.ReadBytes($this.HITLength))
-        $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($this.PublicKeyLength))
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
+        $hitLength = $binaryReader.ReadByte()
 
-        $length = $this.RecordDataLength - 4 - $this.HITLength - $this.PublicKeyLength
+        $this.PublicKeyAlgorithm = $binaryReader.ReadByte()
+
+        $publicKeyLength = $binaryReader.ReadUInt16($true)
+
+        $this.HIT = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($hitLength))
+        $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($publicKeyLength))
+
+        $length = $this.RecordDataLength - 4 - $hitLength - $publicKeyLength
         if ($length -gt 0) {
             $this.RendezvousServers = do {
                 $entryLength = 0
@@ -58,17 +61,11 @@ class DnsHIPRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        $format = @(
-            '( {0} {1}',
-            '    {2}',
-            '    {3} )'
-        ) -join "`n"
-
-        return $format -f @(
-            [Byte]$this.Algorithm,
+        return '{0} {1} {2} {3}' -f @(
+            [Byte]$this.PublicKeyAlgorithm,
             $this.HIT,
             $this.PublicKey,
-            ($this.RendezvousServers -join "`n")
+            ($this.RendezvousServers -join ' ')
         )
     }
 }

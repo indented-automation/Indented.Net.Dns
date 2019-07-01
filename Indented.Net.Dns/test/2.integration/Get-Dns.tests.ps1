@@ -167,10 +167,6 @@ Describe Get-Dns -Tag Integration {
         @{ Name = 'zonemd01';   RecordType = 'ZONEMD' }
         @{ Name = 'spf01';      RecordType = 'SPF' }
         @{ Name = 'spf02';      RecordType = 'SPF' }
-        @{ Name = 'uinfo01';    RecordType = 'UINFO' }
-        @{ Name = 'uid01';      RecordType = 'UID' }
-        @{ Name = 'gid01';      RecordType = 'GID' }
-        @{ Name = 'unspec01';   RecordType = 'UNSPEC' }
         @{ Name = 'nid';        RecordType = 'NID' }
         @{ Name = 'l32';        RecordType = 'L32' }
         @{ Name = 'l64';        RecordType = 'L64' }
@@ -186,12 +182,6 @@ Describe Get-Dns -Tag Integration {
         @{ Name = 'avc';        RecordType = 'AVC' }
         @{ Name = 'doa01';      RecordType = 'DOA' }
         @{ Name = 'doa02';      RecordType = 'DOA' }
-        @{ Name = 'amtrelay01'; RecordType = 'AMTRELAY' }
-        @{ Name = 'amtrelay02'; RecordType = 'AMTRELAY' }
-        @{ Name = 'amtrelay03'; RecordType = 'AMTRELAY' }
-        @{ Name = 'amtrelay04'; RecordType = 'AMTRELAY' }
-        @{ Name = 'amtrelay05'; RecordType = 'AMTRELAY' }
-        @{ Name = 'amtrelay06'; RecordType = 'AMTRELAY' }
         @{ Name = 'ta';         RecordType = 'TA' }
         @{ Name = 'dlv';        RecordType = 'DLV' }
         @{ Name = 'dlv';        RecordType = 'DLV' }
@@ -217,5 +207,59 @@ Describe Get-Dns -Tag Integration {
         $getDnsResponse.Answer.Count | Should -Be 1
         $getDnsResponse.Answer[0].RecordType | Should -Be $RecordType
         $getDnsResponse.Answer[0].RecordDataToString() | Should -Be $digResponse
+    }
+
+    It 'Record data string for <Name> <RecordType> matches dig output for ANY' -TestCases @(
+        @{ Name = 'uinfo01';    RecordType = 'UINFO' }
+        @{ Name = 'uid01';      RecordType = 'UID' }
+        @{ Name = 'gid01';      RecordType = 'GID' }
+        @{ Name = 'unspec01';   RecordType = 'UNSPEC' }
+    ) {
+        param (
+            $Name,
+
+            $RecordType,
+
+            $Expect
+        )
+
+        $Name = ('{0}.test.indented.co.uk' -f $Name).TrimStart('.')
+
+        $getDnsResponse = Get-Dns -Name $Name -RecordType $RecordType @defaultParams
+        $digResponse = & 'bin\dig.exe' @(
+            '+short'
+            'ANY'
+            $Name
+            '-p', $defaultParams.Port
+            '@{0}' -f $defaultParams.ComputerName
+        )
+
+        $getDnsResponse.Header.RCode | Should -Be NoError
+        $getDnsResponse.Answer.Count | Should -Be 1
+        $getDnsResponse.Answer[0].RecordType | Should -Be $RecordType
+        $getDnsResponse.Answer[0].RecordDataToString() | Should -Be $digResponse
+    }
+
+    It 'Record data string for <Name> <RecordType> matches defined output' -TestCases @(
+        @{ Name = 'amtrelay01'; RecordType = 'AMTRelay'; Expect = '10 0 1 203.0.113.15' }
+        @{ Name = 'amtrelay02'; RecordType = 'AMTRelay'; Expect = '10 0 2 2001:DB8::15' }
+        @{ Name = 'amtrelay03'; RecordType = 'AMTRelay'; Expect = '128 1 3 amtrelays.example.com.' }
+    ) {
+        param (
+            $Name,
+
+            $RecordType,
+
+            $Expect
+        )
+
+        $Name = ('{0}.test.indented.co.uk' -f $Name).TrimStart('.')
+
+        $getDnsResponse = Get-Dns -Name $Name -RecordType $RecordType @defaultParams
+
+        $getDnsResponse.Header.RCode | Should -Be NoError
+        $getDnsResponse.Answer.Count | Should -Be 1
+        $getDnsResponse.Answer[0].RecordType | Should -Be $RecordType
+        $getDnsResponse.Answer[0].RecordDataToString() | Should -Be $Expect
     }
 }

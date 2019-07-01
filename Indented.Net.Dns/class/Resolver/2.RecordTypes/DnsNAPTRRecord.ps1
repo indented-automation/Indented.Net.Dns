@@ -37,7 +37,9 @@ class DnsNAPTRRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Order = $binaryReader.ReadUInt16($true)
         $this.Preference = $binaryReader.ReadUInt16($true)
         $this.Flags = $binaryReader.ReadDnsCharacterString()
@@ -47,18 +49,12 @@ class DnsNAPTRRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        $format = @(
-            ''
-            '    ;;  order    pref  flags  service       regexp              replacement'
-            '        {0} {1} {2} {3} {4} {5}'
-        ) -join "`n"
-
-        return $format -f @(
-            $this.Order.ToString().PadRight(8, ' '),
-            $this.Preference.ToString().PadRight(5, ' '),
-            $this.Flags.PadRight(6, ' '),
-            $this.Service.PadRight(13, ' '),
-            $this.RegularExpression.PadRight(19, ' '),
+        return '{0} {1} "{2}" "{3}" "{4}" {5}' -f @(
+            $this.Order
+            $this.Preference
+            $this.Flags
+            $this.Service
+            $this.RegularExpression
             $this.Replacement
         )
     }

@@ -22,7 +22,9 @@ class DnsMRRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.MailboxName = $binaryReader.ReadDnsDomainName()
     }
 

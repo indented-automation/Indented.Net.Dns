@@ -43,7 +43,9 @@ class DnsDNSKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Flags = $binaryReader.ReadUInt16($true)
         $this.ZoneKey = $this.Flags -band 0x0100
         $this.SecureEntryPoint = $this.Flags -band 0x0001
@@ -60,7 +62,7 @@ class DnsDNSKEYRecord : DnsResourceRecord {
             $this.Flags
             [Byte]$this.Protocol
             [Byte]$this.Algorithm
-            $this.PublicKey
+            $this.PublicKey -split '(?<=\G.{56})' -join ' '
         )
     }
 }

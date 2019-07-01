@@ -45,7 +45,9 @@ class DnsLOCRecord : DnsResourceRecord {
         )) / 100
     }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Version = $binaryReader.ReadByte()
 
         $this.Size = $this.ConvertFromIntegerPair($binaryReader.ReadByte())

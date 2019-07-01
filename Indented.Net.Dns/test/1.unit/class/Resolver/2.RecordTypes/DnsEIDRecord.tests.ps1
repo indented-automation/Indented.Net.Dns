@@ -26,8 +26,10 @@ InModuleScope Indented.Net.Dns {
                 $RecordData
             )
 
-            $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Convert]::FromBase64String($Message)
+            $recordDataBytes = [Convert]::FromBase64String($Message)
+            $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
             $resourceRecord = [DnsEIDRecord]::new()
+            $resourceRecord.RecordDataLength = $recordDataBytes.Count
             $resourceRecord.ReadRecordData($binaryReader)
 
             $resourceRecord.RecordDataToString() | Should -Be $RecordData

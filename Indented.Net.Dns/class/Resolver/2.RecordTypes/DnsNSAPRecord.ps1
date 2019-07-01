@@ -22,7 +22,9 @@ class DnsNSAPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Data = '0x{0}' -f @(
             [EndianBitConverter]::ToHexadecimal(
                 $binaryReader.Read($this.RecordDataLength)

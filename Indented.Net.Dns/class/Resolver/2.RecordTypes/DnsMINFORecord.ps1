@@ -27,7 +27,9 @@ class DnsMINFORecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.ResponsibleMailbox = $binaryReader.ReadDnsDomainName()
         $this.ErrorMailbox = $binaryReader.ReadDnsDomainName()
     }

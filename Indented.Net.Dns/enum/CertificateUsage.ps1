@@ -1,4 +1,4 @@
-enum TLSACertificateUsage {
+enum CertificateUsage {
     CAConstraint
     ServiceCertificateConstraint
     TrustAnchorAssertion

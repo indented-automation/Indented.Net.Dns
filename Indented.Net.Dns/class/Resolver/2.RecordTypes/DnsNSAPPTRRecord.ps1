@@ -22,7 +22,9 @@ class DnsNSAPPTRRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Owner = $binaryReader.ReadDnsDomainName()
     }
 
@@ -31,11 +33,11 @@ class DnsNSAPPTRRecord : DnsResourceRecord {
     }
 
     [String] ToString() {
-        return '{0} {1} {2} {3} {4}' -f @(
-            $this.Name.PadRight(29, ' ')
-            $this.TTL.ToString().PadRight(10, ' ')
-            $this.RecordClass.ToString().PadRight(5, ' ')
-            'NSAP-PTR'.PadRight(10, ' ')
+        return '{0,-29} {1,-10} {2,-5} {3,-10} {4}' -f @(
+            $this.Name
+            $this.TTL
+            $this.RecordClass
+            'NSAP-PTR'
             $this.RecordDataToString()
         )
     }

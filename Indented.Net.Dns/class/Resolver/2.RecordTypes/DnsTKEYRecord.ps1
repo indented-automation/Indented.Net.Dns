@@ -48,7 +48,9 @@ class DnsTKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Algorithm = $binaryReader.ReadDnsDomainName()
         $this.Inception = (Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadUInt32($true))
         # Property: Expiration
@@ -68,8 +70,8 @@ class DnsTKEYRecord : DnsResourceRecord {
     hidden [String] RecordDataToString() {
         return '{0} {1} {2} {3} {4} {5}' -f @(
             $this.Algorithm
-            $this.Inception
-            $this.Expiration
+            $this.Inception.ToString('yyyyMMddHHmmss')
+            $this.Expiration.ToString('yyyyMMddHHmmss')
             $this.Mode
             $this.KeyData
             $this.OtherData

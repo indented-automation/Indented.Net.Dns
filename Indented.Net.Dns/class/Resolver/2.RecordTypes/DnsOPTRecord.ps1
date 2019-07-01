@@ -120,7 +120,7 @@ class DnsOPTRecord : DnsResourceRecord {
 
     DnsOPTRecord() : base() { }
     DnsOPTRecord(
-        [DnsResourceRecord]$dnsResourceRecord,
+        [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) {
         $this.MaximumPayloadSize = $binaryReader.ReadUInt16($true)
@@ -135,7 +135,9 @@ class DnsOPTRecord : DnsResourceRecord {
         }
     }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $optionsLength = $this.RecordDataLength
 
         $this.OptionData = while ($optionsLength -gt 0) {

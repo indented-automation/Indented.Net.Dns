@@ -26,16 +26,18 @@ class DnsNINFORecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
-        $recordDataLength = $this.RecordDataLength
-        if ($recordDataLength -gt 0) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
+        $length = $this.RecordDataLength
+        if ($length -gt 0) {
             $this.ZSData = do {
-                $length = 0
+                $entryLength = 0
 
-                $binaryReader.ReadDnsCharacterString([Ref]$length)
+                $binaryReader.ReadDnsCharacterString([Ref]$entryLength)
 
-                $recordDataLength -= $length
-            } until ($recordDataLength -le 0 -or $length -eq 0)
+                $length -= $entryLength
+            } until ($length -le 0)
         }
     }
 

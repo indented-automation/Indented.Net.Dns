@@ -24,7 +24,9 @@ class DnsISDNRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $length = 0
         $this.ISDNAddress = $binaryReader.ReadDnsCharacterString([Ref]$length)
 

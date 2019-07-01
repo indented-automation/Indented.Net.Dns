@@ -30,7 +30,9 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.HashAlgorithm = $binaryReader.ReadByte()
         $this.Flags = $binaryReader.ReadByte()
         $this.Iterations = $binaryReader.ReadUInt16($true)

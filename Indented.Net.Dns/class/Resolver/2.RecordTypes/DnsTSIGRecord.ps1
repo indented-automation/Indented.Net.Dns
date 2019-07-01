@@ -47,7 +47,9 @@ class DnsTSIGRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         $this.Algorithm = $binaryReader.ReadDnsDomainName()
         $this.TimeSigned = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt48($true))
         $this.Fudge = (New-TimeSpan -Seconds ($binaryReader.ReadUInt16($true))).TotalMinutes
@@ -66,7 +68,7 @@ class DnsTSIGRecord : DnsResourceRecord {
     hidden [String] RecordDataToString() {
         return '{0} {1} {2} {3} {4}' -f @(
             $this.Algorithm
-            $this.TimeSigned
+            $this.TimeSigned.ToString('yyyyMMddHHmmss')
             $this.Fudge
             $this.MAC
             $this.OtherData

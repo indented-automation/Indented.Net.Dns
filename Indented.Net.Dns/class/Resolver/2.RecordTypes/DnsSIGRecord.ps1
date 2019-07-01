@@ -54,7 +54,9 @@ class DnsSIGRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData([EndianBinaryReader] $binaryReader) {
+    hidden [Void] ReadRecordData(
+        [EndianBinaryReader] $binaryReader
+    ) {
         [Int32]$type = $binaryReader.ReadUInt16($true)
         if ([Enum]::IsDefined([RecordType], $type)) {
             $this.TypeCovered = [RecordType]$type
@@ -74,19 +76,35 @@ class DnsSIGRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return @(
-            '{0} {1} {2} ( ; type-cov={0}, alg={1}, labels={2}'
-            '    {3} ; Signature expiration'
-            '    {4} ; Signature inception'
-            '    {5} ; Key identifier'
-            '    {6} ; Signer'
-            '    {7} ; Signature'
-            ')'
-         ) -join "`n" -f @(
+        return '{0} {1} {2} {3} {4} {5} {6} {7}' -f @(
             $this.TypeCovered
             [Byte]$this.Algorithm
-            [Byte]$this.Labels
+            $this.Labels
+            $this.SignatureExpiration.ToString('yyyyMMddHHmmss')
+            $this.SignatureInception.ToString('yyyyMMddHHmmss')
+            $this.KeyTag
+            $this.SignersName
+            $this.Signature
+         )
+    }
+
+    [String] ToLongString() {
+        return (@(
+            '{0} {1} {3} ( ; type-cov={0}, alg={2}, labels={3}'
+            '    {4} ; Signature expiration ({5})'
+            '    {6} ; Signature inception ({7})'
+            '    {8} ; Key identifier'
+            '    {9} ; Signer'
+            '    {10} ; Signature'
+            ')'
+         ) -join "`n") -f @(
+            $this.TypeCovered
+            [Byte]$this.Algorithm
+            $this.Algorithm
+            $this.Labels
+            $this.SignatureExpiration.ToString('yyyyMMddHHmmss')
             $this.SignatureExpiration
+            $this.SignatureInception.ToString('yyyyMMddHHmmss')
             $this.SignatureInception
             $this.KeyTag
             $this.SignersName
