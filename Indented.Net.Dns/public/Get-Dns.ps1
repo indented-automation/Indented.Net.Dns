@@ -161,7 +161,7 @@ function Get-Dns {
 
                 $dnsResponse = $dnsClient.ReceiveAnswer()
                 $dnsResponse.ComputerName = $dnsClient.RemoteEndPoint
-                $dnsResponse.TimeTaken = $dnsClient.TimeTaken
+                $dnsResponse.TimeTaken = $dnsClient.TimeTaken.TotalMilliseconds
                 $dnsClient.Close()
 
                 if ($dnsResponse.Header.RCode -ne 'NXDOMAIN' -or

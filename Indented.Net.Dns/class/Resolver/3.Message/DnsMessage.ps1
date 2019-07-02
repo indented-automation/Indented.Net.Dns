@@ -28,7 +28,7 @@ class DnsMessage {
     [DnsResourceRecord[]] $Authority
     [DnsResourceRecord[]] $Additional
     [Int]                 $Size
-    [TimeSpan]            $TimeTaken
+    [Int64]               $TimeTaken
     [String]              $ComputerName
 
     DnsMessage() { }
