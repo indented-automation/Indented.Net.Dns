@@ -87,7 +87,7 @@ class DnsMessage {
 
     # Methods
 
-    Hidden [String] RecordSetToString(
+    hidden [String] RecordSetToString(
         [DnsResourceRecord[]] $resourceRecords
     ) {
         if ($resourceRecords.Count -gt 0) {

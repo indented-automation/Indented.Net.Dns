@@ -30,7 +30,7 @@ class DnsClient {
         $this.Initialize($useTcp, $useIPv6, $receiveTimeout, $sendTimeout)
     }
 
-    [Void] Initialize(
+    hidden [Void] Initialize(
         [Boolean] $useTcp,
         [Boolean] $useIPv6,
         [Int32]   $receiveTimeout,
