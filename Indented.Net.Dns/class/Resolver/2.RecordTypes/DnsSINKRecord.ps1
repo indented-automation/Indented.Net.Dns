@@ -10,9 +10,12 @@ class DnsSINKRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
         http://tools.ietf.org/id/draft-eastlake-kitchen-sink-02.txt
+
+        The structure above is modified to match dig. Adding a meaning byte.
     #>
 
     [RecordType] $RecordType = [RecordType]::SINK
+    [Byte]       $Meaning
     [Byte]       $Coding
     [Byte]       $Subcoding
     [String]     $Data
@@ -29,20 +32,30 @@ class DnsSINKRecord : DnsResourceRecord {
     hidden [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
+        $this.Meaning = $binaryReader.ReadByte()
         $this.Coding = $binaryReader.ReadByte()
         $this.Subcoding = $binaryReader.ReadByte()
 
         $dataLength = $this.RecordDataLength - 2
         if ($dataLength -gt 0) {
-            $this.Data = $binaryReader.ReadBytes($dataLength)
+            $this.Data = [Convert]::ToBase64String($binaryReader.ReadBytes($dataLength))
         }
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2}' -f @(
-            [Byte]$this.Coding
-            [Byte]$this.Subcoding
-            [String]$this.Data
-        )
+        if ($this.Data) {
+            return '{0} {1} {2} {3}' -f @(
+                [Byte]$this.Meaning
+                [Byte]$this.Coding
+                [Byte]$this.Subcoding
+                [String]$this.Data
+            )
+        } else {
+            return '{0} {1} {2}' -f @(
+                [Byte]$this.Meaning
+                [Byte]$this.Coding
+                [Byte]$this.Subcoding
+            )
+        }
     }
 }

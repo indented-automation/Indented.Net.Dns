@@ -63,7 +63,9 @@ class DnsMessage {
         $this.Authority = [DnsSOARecord]@{ Serial = $Serial }
     }
 
-    DnsMessage([Byte[]]$message) {
+    DnsMessage(
+        [Byte[]]$message
+    ) {
         $binaryReader = [EndianBinaryReader][MemoryStream]$message
         $this.Size = $message.Length
 
@@ -136,6 +138,10 @@ class DnsMessage {
         $this.Header.Flags = $this.Header.Flags -bor [HeaderFlags]::AD
     }
 
+    [Void] DisableRecursion() {
+        $this.Header.Flags = [UInt16]$this.Header.Flags -bxor [UInt16][HeaderFlags]::RD
+    }
+
     [Byte[]] ToByteArray() {
         return $this.ToByteArray($false, $true)
     }
@@ -167,7 +173,6 @@ class DnsMessage {
         }
 
         if ($tcp) {
-            # A value must be added to denote payload length when using a stream-based protocol.
             $length = [BitConverter]::GetBytes([UInt16]$bytes.Count)
             [Array]::Reverse($length)
             $bytes.InsertRange(0, $length)

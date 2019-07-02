@@ -87,6 +87,7 @@ class DnsClient {
             throw
         } finally {
             $stopWatch.Stop()
+
             $this.TimeTaken = $stopWatch.Elapsed
         }
     }
@@ -102,6 +103,7 @@ class DnsClient {
             throw
         } finally {
             $stopWatch.Stop()
+
             $this.TimeTaken += $stopWatch.Elapsed
         }
     }

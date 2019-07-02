@@ -142,7 +142,7 @@ function Get-Dns {
                 $dnsMessage.SetAcceptDnsSec()
             }
             if ($NoRecursion) {
-                $dnsMessage.Header.Flags = [HeaderFlags]([UInt16]$DnsQuery.Header.Flags -bxor [UInt16][HeaderFlags]::RD)
+                $dnsMessage.DisableRecursion()
             }
 
             try {

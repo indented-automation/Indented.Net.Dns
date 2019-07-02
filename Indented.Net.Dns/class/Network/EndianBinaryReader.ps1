@@ -137,31 +137,24 @@ class EndianBinaryReader : BinaryReader {
         }
 
         while ($this.PeekByte() -ne 0) {
-            # The length or compression reference
             $length = $this.ReadByte()
 
             if (($length -band [MessageCompression]::Enabled) -eq [MessageCompression]::Enabled) {
-                # Record the current position as the start of the compression operation.
-                # Reader will be returned here after this operation is complete.
                 if ($compressionStart -eq 0) {
                     $compressionStart = $this.BaseStream.Position
                 }
+
                 # Remove the compression flag bits to calculate the offset value (relative to the start of the message)
                 [UInt16]$offset = ([UInt16]($length -bxor [MessageCompression]::Enabled) -shl 8) -bor $this.ReadByte()
-                # Move to the offset
                 $null = $this.BaseStream.Seek($offset, 'Begin')
             } else {
-                # Read a label
-                $null = $name.Append($this.ReadChars($length))
-                $null = $name.Append('.')
+                $null = $name.Append($this.ReadChars($length)).Append('.')
             }
         }
-        # If expansion was used, return to the starting point (plus 1 byte)
         if ($compressionStart -gt 0) {
             $null = $this.BaseStream.Seek($compressionStart, 'Begin')
         }
 
-        # Read off and discard the null termination on the end of the name
         $null = $this.ReadByte()
 
         if ($name[-1] -ne '.') {

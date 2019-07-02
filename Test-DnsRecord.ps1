@@ -1,12 +1,18 @@
 using namespace System.IO
 
 param (
-    $Name,
+    [String]$Name,
 
-    $RecordType
+    [String]$RecordType = 'ANY',
+
+    [Switch]$Tcp,
+
+    [Switch]$Full
 )
 
-$Name = ('{0}.test.indented.co.uk.' -f $Name).TrimStart('.')
+if (-not $Name.EndsWith('.')) {
+    $Name = ('{0}.test.indented.co.uk.' -f $Name).TrimStart('.')
+}
 
 $path = Join-Path $psscriptroot 'Indented.Net.Dns'
 'enum', 'class' | ForEach-Object {
@@ -20,8 +26,9 @@ $dnsMessage = [DnsMessage]::new(
     $RecordType,
     'IN'
 )
+$dnsMessage.SetAcceptDnsSec()
 
-$dnsClient = [DnsClient]::new()
+$dnsClient = [DnsClient]::new($Tcp.IsPresent, $false)
 $dnsClient.SendQuestion($dnsMessage, '127.0.0.1', 1053)
 $message = $dnsClient.ReceiveBytes()
 
@@ -46,36 +53,36 @@ if ($header.AnswerCount -gt 0) {
     for ($i = 0; $i -lt $header.AnswerCount; $i++) {
         $answer = [DnsResourceRecord]::Parse($binaryReader)
         $answer | Format-List | Out-String | Write-Host
+
+        $null = $binaryReader.BaseStream.Seek(-$answer.RecordDataLength, 'Current')
+        $bytes = $binaryReader.ReadBytes($answer.RecordDataLength)
+
+        Write-Host 'Hexadecimal'
+        Write-Host '==========='
+        Write-Host
+
+        ($bytes | ForEach-Object { '{0:X2}' -f $_ }) -join '' -split '(?<=\G.{60})' -replace '([0-9a-f]{2})', '$1 ' | Write-Host
+
+        Write-Host
+        Write-Host 'Bytes'
+        Write-Host '====='
+        Write-Host
+
+        ($bytes | ForEach-Object { $_.ToString().PadLeft(4) }) -join '' -split '(?<=\G.{88})' | Write-Host
+
+        Write-Host
+        Write-Host 'Base64'
+        Write-Host '======'
+        Write-Host
+        [Convert]::ToBase64String($bytes) | Write-Host
+
+        Write-Host
+        Write-Host 'Answer ToString'
+        Write-Host '==============='
+        Write-Host
+        Write-Host $answer.RecordDataToString()
+        Write-Host
     }
-
-    $null = $binaryReader.BaseStream.Seek(-$answer[0].RecordDataLength, 'Current')
-    $bytes = $binaryReader.ReadBytes($answer[0].RecordDataLength)
-
-    Write-Host 'Hexadecimal'
-    Write-Host '==========='
-    Write-Host
-
-    ($bytes | ForEach-Object { '{0:X2}' -f $_ }) -join '' -split '(?<=\G.{60})' -replace '([0-9a-f]{2})', '$1 ' | Write-Host
-
-    Write-Host
-    Write-Host 'Bytes'
-    Write-Host '====='
-    Write-Host
-
-    ($bytes | ForEach-Object { $_.ToString().PadLeft(4) }) -join '' -split '(?<=\G.{88})' | Write-Host
-
-    Write-Host
-    Write-Host 'Base64'
-    Write-Host '======'
-    Write-Host
-    [Convert]::ToBase64String($bytes) | Write-Host
-
-    Write-Host
-    Write-Host 'Answer ToString'
-    Write-Host '==============='
-    Write-Host
-    Write-Host $answer.RecordDataToString()
-    Write-Host
 }
 
 Write-Host 'Dig Answer'
@@ -85,9 +92,10 @@ Write-Host
 $response = & (Join-Path $psscriptroot 'Indented.Net.Dns\test\2.integration\bin\dig.exe') @(
     $Name
     $RecordType
-    '+short'
+    @('+short', $null)[$Full.IsPresent]
+    '+dnssec'
     '-p' , 1053
     '@127.0.0.1'
-)
+) | Out-String
 
 Write-Host $response
