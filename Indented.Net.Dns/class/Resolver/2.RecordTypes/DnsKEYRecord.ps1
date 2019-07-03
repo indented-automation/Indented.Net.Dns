@@ -42,8 +42,6 @@ class DnsKEYRecord : DnsResourceRecord {
     hidden [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
-        $position = $binaryReader.BaseStream.Position
-
         $this.Flags = $binaryReader.ReadUInt16($true)
         $this.AuthenticationConfidentiality = [Byte]($this.Flags -shr 14)
 
@@ -51,23 +49,23 @@ class DnsKEYRecord : DnsResourceRecord {
             $this.FlagsExtension = $binaryReader.ReadUInt16($true)
         }
 
-        $this.NameType = [Byte](($this.Flags -band 0x0300) -shr 9)
-        $this.SignatoryField = [Boolean]($this.Flags -band 0x000F)
+        $this.NameType = ($this.Flags -band 0x0300) -shr 9
+        $this.SignatoryField = $this.Flags -band 0x000F
         $this.Protocol = $binaryReader.ReadByte()
         $this.Algorithm = $binaryReader.ReadByte()
 
-        $length = $this.RecordDataLength - $binaryReader.BaseStream.Position + $position
+        $length = $this.RecordDataLength - 4
         if ($this.AuthenticationConfidentiality -ne 'NoKey' -and $length -gt 0) {
             $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($length))
         }
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} ( {3} )' -f @(
+        return '{0} {1} {2} {3}' -f @(
             $this.Flags
             [Byte]$this.Protocol
             [Byte]$this.Algorithm
-            $this.PublicKey
+            $this.PublicKey -split '(?<=\G.{56})' -join ' '
         )
     }
 }

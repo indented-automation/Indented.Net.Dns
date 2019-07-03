@@ -19,7 +19,7 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
     [NSEC3HashAlgorithm] $HashAlgorithm
     [Byte]               $Flags
     [UInt16]             $Iterations
-    [String]             $Salt
+    [String]             $Salt = '-'
 
     DnsNSEC3PARAMRecord() : base() { }
     DnsNSEC3PARAMRecord(
@@ -39,7 +39,7 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
 
         $saltLength = $binaryReader.ReadByte()
         if ($saltLength -gt 0) {
-            $this.Salt = [Convert]::ToBase64String($binaryReader.ReadBytes($saltLength))
+            $this.Salt = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($saltLength))
         }
     }
 

@@ -119,17 +119,17 @@ nsap-ptr01		NSAP-PTR foo.
 nsap-ptr02		NSAP-PTR .
 
 ; type 24
-;sig01			SIG	NXT 1 3 ( 3600 20000102030405
-;				19961211100908 2143 foo.nil.
-;				MxFcby9k/yvedMfQgKzhH5er0Mu/vILz45I
-;				kskceFGgiWCn/GxHhai6VAuHAoNUz4YoU1t
-;				VfSCSqQYn6//11U6Nld80jEeC8aTrO+KKmCaY= )
+sig01			SIG	NXT 1 3 ( 3600 20000102030405
+				19961211100908 2143 foo.nil.
+				MxFcby9k/yvedMfQgKzhH5er0Mu/vILz45I
+				kskceFGgiWCn/GxHhai6VAuHAoNUz4YoU1t
+				VfSCSqQYn6//11U6Nld80jEeC8aTrO+KKmCaY= )
 
 ; type 25
-;key01			KEY	512 ( 255 1 AQMFD5raczCJHViKtLYhWGz8hMY
-;				9UGRuniJDBzC7w0aRyzWZriO6i2odGWWQVucZqKV
-;				sENW91IOW4vqudngPZsY3GvQ/xVA8/7pyFj6b7Esg
-;				a60zyGW6LFe9r8n6paHrlG5ojqf0BaqHT+8= )
+key01			KEY	512 ( 255 1 AQMFD5raczCJHViKtLYhWGz8hMY
+				9UGRuniJDBzC7w0aRyzWZriO6i2odGWWQVucZqKV
+				sENW91IOW4vqudngPZsY3GvQ/xVA8/7pyFj6b7Esg
+				a60zyGW6LFe9r8n6paHrlG5ojqf0BaqHT+8= )
 
 ; type 26
 px01			PX	65535 foo. bar.
@@ -149,10 +149,9 @@ loc02			LOC 	60 09 00.000 N 24 39 00.000 E 10.00m 20.00m (
 				  2000.00m 20.00m )
 
 ; type 30
-;nxt01			NXT	a.secure.nil. ( NS SOA MX RRSIG KEY LOC NXT )
-;nxt02			NXT	. NXT NSAP-PTR
-;nxt03			NXT	. 1
-;nxt04			NXT	. 127
+nxt01			NXT	a.secure.nil. ( NS SOA MX RRSIG KEY LOC NXT )
+nxt02			NXT	. NXT NSAP-PTR
+nxt03			NXT	. 1
 
 ; type 31
 eid01			EID	12 89 AB
@@ -262,7 +261,7 @@ kcd3juae64f9c5csl1kif1htaui7un0g	NSEC3 1 0 10 D2CF0294C020CE6C KD5MN2M20340DGO0B
 mr5ukvsk1l37btu4q7b1dfevft4hkqdk	NSEC3 1 0 10 D2CF0294C020CE6C MT38J6VG7S0SN5G17MCUF6IQIKFUAJ05  A AAAA RRSIG
 
 ; type 51
-; @			NSEC3PARAM 1 0 1 868BCF7ED4108929
+@			NSEC3PARAM 1 0 1 868BCF7ED4108929
 
 ; type 52
 tlsa			TLSA	( 1 1 2 92003ba34942dc74152e2f2c408d29ec
@@ -388,20 +387,20 @@ eui64			EUI64	01-23-45-67-89-ab-cd-ef
 ; This example was written based on the bind9 RR parsing code.
 ;tkey01			TKEY	928321914 928321915 (
 ;				255		; algorithm
-;				65535 		; mode
+;				65535 	; mode
 ;				0		; error
 ;				3 		; key size
-;				aaaa		; key data
+;				aaaa	; key data
 ;				3 		; other size
-;				bbbb		; other data
+;				bbbb	; other data
 ;				)
 ;; A TKEY with empty "other data"
 ;tkey02			TKEY	928321914 928321915 (
 ;				255		; algorithm
-;				65535 		; mode
+;				65535 	; mode
 ;				0		; error
 ;				3 		; key size
-;				aaaa		; key data
+;				aaaa	; key data
 ;				0 		; other size
 ;						; other data
 ;				)

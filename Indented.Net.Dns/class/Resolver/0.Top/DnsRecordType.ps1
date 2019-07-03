@@ -2,36 +2,34 @@ class DnsRecordType {
     [String] $Name
     [UInt16] $TypeID
 
-    hidden [Hashtable] $validValues = @{}
-
     DnsRecordType(
         [String] $value
     ) {
-        $this.Initialize()
+        if ($value -eq 'NSAPTR') {
+            $this.Name = 'NSA-PTR'
+        } else {
+            $this.Name = $value
+        }
 
-        $this.Name = $value
-        $this.TypeID = $this.validValues[$value]
+        if ([RecordType].IsEnumDefined($value)) {
+            $this.TypeID = [RecordType]$value
+        } elseif ($value -match '^TYPE(\d+)$') {
+            $this.TypeID = $matches[1]
+        }
     }
 
     DnsRecordType(
         [Int32] $value
     ) {
-        $this.Initialize()
-
         $this.TypeID = $value
-        $this.Name = $this.validValues.Keys.Where{ $this.validValues[$_] -eq $value }
-        if (-not $this.Name) {
-            $this.Name = 'TYPE{0}' -f $value
-        }
-    }
-
-    [Void] Initialize() {
-        foreach ($value in [RecordType].GetEnumValues()) {
+        if ([RecordType].IsEnumDefined($value)) {
             if ($value -eq 23) {
-                $this.validValues.Add('NSAP-PTR', $value)
+                $this.Name = 'NSAP-PTR'
             } else {
-                $this.validValues.Add([String]$value, $value)
+                $this.Name = [RecordType]$value
             }
+        } else {
+            $this.Name = 'TYPE{0}' -f $value
         }
     }
 

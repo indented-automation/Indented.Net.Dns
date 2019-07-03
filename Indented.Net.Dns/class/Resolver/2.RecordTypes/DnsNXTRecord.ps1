@@ -35,9 +35,16 @@ class DnsNXTRecord : DnsResourceRecord {
         $length = 0
         $this.DomainName = $binaryReader.ReadDnsDomainName([Ref]$length)
 
-        $this.RRType = $binaryReader.ReadBitMap(
-            $this.RecordDataLength - $length
-        )
+        $bitMapLength = $this.RecordDataLength - $length
+        $bitMap = $binaryReader.ReadBytes($bitMapLength)
+
+        $this.RRType = for ($i = 0; $i -lt $bitMapLength; $i++) {
+            for ($j = 7; $j -ge 0; $j--) {
+                if ($bitMap[$i] -band 1 -shl $j) {
+                    8 * $i + 7 - $j
+                }
+            }
+        }
     }
 
     hidden [String] RecordDataToString() {

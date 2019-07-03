@@ -110,6 +110,8 @@ Describe Get-Dns -Tag Integration {
         @{ Name = 'atma04';     RecordType = 'ATMA' }
         @{ Name = 'naptr01';    RecordType = 'NAPTR' }
         @{ Name = 'naptr02';    RecordType = 'NAPTR' }
+        @{ Name = 'sig01';      RecordType = 'SIG' }
+        @{ Name = 'key01';      RecordType = 'KEY' }
         @{ Name = 'kx01';       RecordType = 'KX' }
         @{ Name = 'kx02';       RecordType = 'KX' }
         @{ Name = 'cert01';     RecordType = 'CERT' }
@@ -141,6 +143,7 @@ Describe Get-Dns -Tag Integration {
         @{ Name = 'dhcid01';    RecordType = 'DHCID' }
         @{ Name = 'dhcid02';    RecordType = 'DHCID' }
         @{ Name = 'dhcid03';    RecordType = 'DHCID' }
+        @{ Name = '';           RecordType = 'NSEC3PARAM' }
         @{ Name = 'tlsa';       RecordType = 'TLSA' }
         @{ Name = 'smimea';     RecordType = 'SMIMEA' }
         @{ Name = 'hip1';       RecordType = 'HIP' }

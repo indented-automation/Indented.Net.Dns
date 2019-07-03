@@ -91,12 +91,12 @@ class DnsRRSIGRecord : DnsResourceRecord {
     [String] ToLongString() {
         return (@(
             '{0} {1} {3} ( ; type-cov={0}, alg={2}, labels={3}'
-            '    {4} ; Original TTL'
-            '    {5} ; Signature expiration ({6})'
-            '    {7} ; Signature inception ({8})'
-            '    {9} ; Key identifier'
-            '    {10} ; Signer'
-            '    {11} ; Signature'
+            '    {4,-16} ; Original TTL'
+            '    {5,-16} ; Signature expiration ({6})'
+            '    {7,-16} ; Signature inception ({8})'
+            '    {9,-16} ; Key identifier'
+            '    {10,-16} ; Signer'
+            '    {11,-16} ; Signature'
             ')'
          ) -join "`n") -f @(
             $this.TypeCovered

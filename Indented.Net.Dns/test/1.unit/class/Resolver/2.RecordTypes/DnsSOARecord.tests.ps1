@@ -21,10 +21,6 @@ InModuleScope Indented.Net.Dns {
                 Message    = 'A25zMQdleGFtcGxlAApob3N0bWFzdGVyB2V4YW1wbGUAX215tQAAAAUAAAAFABuvgAAADhA='
                 RecordData = 'ns1.example. hostmaster.example. 1601010101 5 5 1814400 3600'
             }
-            @{
-                Message    = 'A25zMcAMCmhvc3RtYXN0ZXLADFNFUjAAAAAFAAAABQAbr4AAAA4Q'
-                RecordData = 'ns1.test.indented.co.uk. hostmaster.test.indented.co.uk. 1397051952 5 5 1814400 3600'
-            }
         ) {
             param (
                 $Message,

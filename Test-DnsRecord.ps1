@@ -32,6 +32,19 @@ $dnsClient = [DnsClient]::new($Tcp.IsPresent, $false)
 $dnsClient.SendQuestion($dnsMessage, '127.0.0.1', 1053)
 $message = $dnsClient.ReceiveBytes()
 
+Write-Host 'Message Hexadecimal'
+Write-Host '==================='
+Write-Host
+
+($message | ForEach-Object { '{0:X2}' -f $_ }) -join '' -split '(?<=\G.{60})' -replace '([0-9a-f]{2})', '$1 ' | Write-Host
+
+Write-Host
+Write-Host 'Message Bytes'
+Write-Host '============='
+Write-Host
+
+($message | ForEach-Object { $_.ToString().PadLeft(4) }) -join '' -split '(?<=\G.{88})' | Write-Host
+
 $binaryReader = [EndianBinaryReader][MemoryStream]$message
 
 $header = [DnsHeader]$binaryReader
@@ -57,22 +70,22 @@ if ($header.AnswerCount -gt 0) {
         $null = $binaryReader.BaseStream.Seek(-$answer.RecordDataLength, 'Current')
         $bytes = $binaryReader.ReadBytes($answer.RecordDataLength)
 
-        Write-Host 'Hexadecimal'
-        Write-Host '==========='
+        Write-Host 'Answer Hexadecimal'
+        Write-Host '=================='
         Write-Host
 
         ($bytes | ForEach-Object { '{0:X2}' -f $_ }) -join '' -split '(?<=\G.{60})' -replace '([0-9a-f]{2})', '$1 ' | Write-Host
 
         Write-Host
-        Write-Host 'Bytes'
-        Write-Host '====='
+        Write-Host 'Answer Bytes'
+        Write-Host '============'
         Write-Host
 
         ($bytes | ForEach-Object { $_.ToString().PadLeft(4) }) -join '' -split '(?<=\G.{88})' | Write-Host
 
         Write-Host
-        Write-Host 'Base64'
-        Write-Host '======'
+        Write-Host 'Answer Base64'
+        Write-Host '============='
         Write-Host
         [Convert]::ToBase64String($bytes) | Write-Host
 
