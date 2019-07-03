@@ -3,6 +3,10 @@ Describe Get-Dns -Tag Integration {
         Push-Location $psscriptroot
 
         if (-not (Test-Path 'bin\named.exe')) {
+            if (-not (Test-Path 'bin')) {
+                $null = New-Item bin -ItemType Directory
+            }
+
             $params = @{
                 Uri     = 'https://downloads.isc.org/isc/bind9/9.14.3/BIND9.14.3.x64.zip'
                 OutFile = 'bin\BIND9.zip'
@@ -25,6 +29,7 @@ Describe Get-Dns -Tag Integration {
             PassThru     = $true
         }
         $process = Start-Process @params
+        Start-Sleep -Seconds 5
 
         $defaultParams = @{
             ComputerName = '127.0.0.1'
