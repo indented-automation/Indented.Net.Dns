@@ -44,8 +44,8 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f @(
-            [Byte]$this.HashAlgorithm
+        return '{0:D} {1} {2} {3}' -f @(
+            $this.HashAlgorithm
             $this.Flags
             $this.Iterations
             $this.Salt

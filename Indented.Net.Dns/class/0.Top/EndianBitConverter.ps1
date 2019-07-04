@@ -48,4 +48,28 @@ class EndianBitConverter {
         }
         return $string.ToString()
     }
+
+    static [String] ToBase32String(
+        [Byte[]] $bytes
+    ) {
+        $base32Characters = '0123456789ABCDEFGHIJKLMNOPQRSTUV'
+
+        if ($bytes.Count -eq 0) {
+            return ''
+        }
+
+        $binaryString = ''
+        foreach ($byte in $bytes) {
+            $binaryString += [Convert]::ToString($byte, 2).PadLeft(8, '0')
+        }
+
+        $chars = foreach ($value in $binaryString -split '(?<=\G.{5})') {
+            if ($value) {
+                $byte = [Convert]::ToByte($value.PadRight('0', 5), 2)
+                $base32Characters[$byte]
+            }
+        }
+
+        return [String]::new($chars)
+    }
 }

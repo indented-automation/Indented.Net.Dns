@@ -56,10 +56,10 @@ class DnsAMTRelayRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f @(
+        return '{0} {1:D} {2:D} {3}' -f @(
             $this.Precedence
             [Byte]$this.DiscoveryOptional
-            [Byte]$this.Type
+            $this.Type
             $this.Relay
         )
     }

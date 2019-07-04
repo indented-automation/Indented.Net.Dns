@@ -27,7 +27,6 @@ class DnsRRSIGRecord : DnsResourceRecord {
         /                                               /
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-        .LINK
         http://www.ietf.org/rfc/rfc3755.txt
         http://www.ietf.org/rfc/rfc4034.txt
     #>
@@ -75,13 +74,13 @@ class DnsRRSIGRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3} {4} {5} {6} {7} {8}' -f @(
+        return '{0} {1:D} {2} {3} {4:yyyyMMddHHmmss} {5:yyyyMMddHHmmss} {6} {7} {8}' -f @(
             $this.TypeCovered
-            [Byte]$this.Algorithm
+            $this.Algorithm
             $this.Labels
             $this.OriginalTTL
-            $this.SignatureExpiration.ToString('yyyyMMddHHmmss')
-            $this.SignatureInception.ToString('yyyyMMddHHmmss')
+            $this.SignatureExpiration
+            $this.SignatureInception
             $this.KeyTag
             $this.SignersName
             $this.Signature -split '(?<=\G.{56})' -join ' '
@@ -90,27 +89,24 @@ class DnsRRSIGRecord : DnsResourceRecord {
 
     [String] ToLongString() {
         return (@(
-            '{0} {1} {3} ( ; type-cov={0}, alg={2}, labels={3}'
-            '    {4,-16} ; Original TTL'
-            '    {5,-16} ; Signature expiration ({6})'
-            '    {7,-16} ; Signature inception ({8})'
-            '    {9,-16} ; Key identifier'
-            '    {10,-16} ; Signer'
-            '    {11,-16} ; Signature'
+            '{0} {1:D} {2} ( ; type-cov={0}, alg={1}, labels={2}'
+            '    {3,-16} ; OriginalTTL'
+            '    {4,-16:yyyyMMddHHmmss} ; Signature expiration ({4:u})'
+            '    {5,-16:yyyyMMddHHmmss} ; Signature inception ({5:u})'
+            '    {6,-16} ; Key identifier'
+            '    {7,-16} ; Signer'
+            '    {8,-16} ; Signature'
             ')'
          ) -join "`n") -f @(
             $this.TypeCovered
-            [Byte]$this.Algorithm
             $this.Algorithm
             $this.Labels
             $this.OriginalTTL
-            $this.SignatureExpiration.ToString('yyyyMMddHHmmss')
             $this.SignatureExpiration
-            $this.SignatureInception.ToString('yyyyMMddHHmmss')
             $this.SignatureInception
             $this.KeyTag
             $this.SignersName
             $this.Signature -split '(?<=\G.{56})' -join ' '
-         )
+        )
     }
 }

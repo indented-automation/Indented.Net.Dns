@@ -67,9 +67,9 @@ class DnsAPLRecord : DnsResourceRecord {
 
     hidden [String] RecordDataToString() {
         $values = foreach ($item in $this.List) {
-            '{0}{1}:{2}/{3}' -f @(
+            '{0}{1:D}:{2}/{3}' -f @(
                 ('', '!')[$item.Negation]
-                [UInt16]$item.AddressFamily
+                $item.AddressFamily
                 $item.Address
                 $item.Prefix
             )

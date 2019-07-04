@@ -60,11 +60,11 @@ class DnsNSEC3Record : DnsResourceRecord {
 
         $saltLength = $binaryReader.ReadByte()
         if ($saltLength -gt 0) {
-            $this.Salt = [Convert]::ToBase64String($binaryReader.ReadBytes($saltLength))
+            $this.Salt = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($saltLength))
         }
 
         $hashLength = $binaryReader.ReadByte()
-        $this.Hash = [Convert]::ToBase64String($binaryReader.ReadBytes($hashLength))
+        $this.Hash = [EndianBitConverter]::ToBase32String($binaryReader.ReadBytes($hashLength))
 
         $this.RRType = $binaryReader.ReadBitMap(
             $this.RecordDataLength - 6 - $saltLength - $hashLength
@@ -72,13 +72,13 @@ class DnsNSEC3Record : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3} {4} {5}' -f @(
-            [Byte]$this.HashAlgorithm,
-            $this.Flags,
-            $this.Iterations,
-            $this.Salt,
-            $this.Hash,
-            ($this.RRType -join ' ')
+        return '{0:D} {1} {2} {3} {4} {5}' -f @(
+            $this.HashAlgorithm
+            $this.Flags
+            $this.Iterations
+            $this.Salt
+            $this.Hash
+            $this.RRType -join ' '
         )
     }
 }

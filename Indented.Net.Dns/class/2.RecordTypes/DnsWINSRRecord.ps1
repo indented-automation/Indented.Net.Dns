@@ -1,4 +1,4 @@
-class DnsWINSRRecord {
+class DnsWINSRRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -26,7 +26,7 @@ class DnsWINSRRecord {
     [WINSMappingFlag] $MappingFlag
     [UInt32]          $LookupTimeout
     [UInt32]          $CacheTimeout
-    [String[]]        $DomainList
+    [String]          $DomainToAppend
 
     DnsWINSRRecord() : base() { }
     DnsWINSRRecord(
@@ -44,17 +44,14 @@ class DnsWINSRRecord {
         $this.LookupTimeout = $binaryReader.ReadUInt32($true)
         $this.CacheTimeout = $binaryReader.ReadUInt32($true)
 
-        $numberOfDomains = $binaryReader.ReadUInt32($true)
-        $this.DomainList = for ($i = 0; $i -lt $numberOfDomains; $i++) {
-            $binaryReader.ReadDnsDomainName()
-        }
+        $this.DomainToAppend = $binaryReader.ReadDnsDomainName()
     }
 
     hidden [String] RecordDataToString() {
         $value = 'L{0} C{1} ( {2} )' -f @(
             $this.LookupTimeout
             $this.CacheTimeout
-            ($this.DomainList -join ' ')
+            $this.DomainToAppend
         )
         if ($this.MappingFlag -eq 0x10000) {
             return 'LOCAL {0}' -f $value

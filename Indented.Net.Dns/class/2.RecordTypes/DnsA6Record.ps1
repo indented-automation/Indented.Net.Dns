@@ -45,7 +45,10 @@ class DnsA6Record : DnsResourceRecord {
         )
 
         $this.AddressSuffix = [IPAddress]::new($addressSuffixBytes)
-        $this.PrefixName = $binaryReader.ReadDnsDomainName()
+
+        if ($this.RecordDataLength - $length - 1 -gt 0) {
+            $this.PrefixName = $binaryReader.ReadDnsDomainName()
+        }
     }
 
     hidden [String] RecordDataToString() {

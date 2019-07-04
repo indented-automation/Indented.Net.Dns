@@ -15,12 +15,16 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe DnsA6Record {
+    Describe DnsNSEC3Record {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'AP////////////////////8GZG9tYWluBG5hbWUA'; RecordData = '0 ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff domain.name.' }
-            @{ Message = 'QP//////////BmRvbWFpbgRuYW1lAA==';         RecordData = '64 ::ffff:ffff:ffff:ffff domain.name.' }
-            @{ Message = 'fwEGZG9tYWluBG5hbWUA';                     RecordData = '127 ::1 domain.name.' }
-            @{ Message = 'gAZkb21haW4EbmFtZQA=';                     RecordData = '128  domain.name.' }
+            @{
+                Message    = 'AQAACgRQU4UbFCOoYJQQufu3X9nqFk8Irh4JedGJAAciAAAAAAKQ/yAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=='
+                RecordData = '1 0 10 5053851B 4EK6150GN7TRENUPT8B4U25E3O4NJKC9 NS SOA RRSIG DNSKEY NSEC3PARAM TYPE65534'
+            }
+            @{
+                Message    = 'AQAACgRQU4UbFHRMHDEHjAvVDCHdh7YzWKmgDQ2hAAZAAAAAAAI='
+                RecordData = '1 0 10 5053851B EH61OC87HG5TA311RM3RCCQOL6G0Q3D1 A RRSIG'
+            }
         ) {
             param (
                 $Message,
@@ -29,7 +33,7 @@ InModuleScope Indented.Net.Dns {
 
             $recordDataBytes = [Convert]::FromBase64String($Message)
             $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
-            $resourceRecord = [DnsA6Record]::new()
+            $resourceRecord = [DnsNSEC3Record]::new()
             $resourceRecord.RecordDataLength = $recordDataBytes.Count
             $resourceRecord.ReadRecordData($binaryReader)
 

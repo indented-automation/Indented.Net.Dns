@@ -66,9 +66,9 @@ class DnsTSIGRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3} {4}' -f @(
+        return '{0} {1:yyyyMMddHHmmss} {2} {3} {4}' -f @(
             $this.Algorithm
-            $this.TimeSigned.ToString('yyyyMMddHHmmss')
+            $this.TimeSigned
             $this.Fudge
             $this.MAC
             $this.OtherData

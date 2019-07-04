@@ -108,7 +108,7 @@ class DnsOPTRecord : DnsResourceRecord {
         http://files.dns-sd.org/draft-sekar-dns-ul.txt
         http://www.ietf.org/rfc/rfc5001.txt
         http://www.ietf.org/rfc/rfc6975.txt
-        http://www.ietf.org/id/draft-vandergaast-edns-client-subnet-02.txt
+        https://tools.ietf.org/html/rfc7871
     #>
 
     [RecordType]   $RecordType = [RecordType]::OPT
@@ -178,8 +178,8 @@ class DnsOPTRecord : DnsResourceRecord {
                 }
                 'EDNSClientSubnet' {
                     $option = [PSCustomObject]@{
-                        OptionCode   = $optionCode
-                        OptionLength = $optionLength
+                        OptionCode    = $optionCode
+                        OptionLength  = $optionLength
                         AddressFamily = [IanaAddressFamily]$binaryReader.ReadUInt16($true)
                         SourceNetMask = $binaryReader.ReadByte()
                         ScopeNetMask  = $binaryReader.ReadByte()

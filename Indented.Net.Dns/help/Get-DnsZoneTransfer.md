@@ -1,31 +1,24 @@
 ---
 external help file: Indented.Net.Dns-help.xml
 Module Name: Indented.Net.Dns
-online version: http://www.ietf.org/rfc/rfc1034.txt
-http://www.ietf.org/rfc/rfc1035.txt
-http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
+online version:
 schema: 2.0.0
 ---
 
 # Get-DnsZoneTransfer
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Get the content of a DNS zone using zone transfer.
 
 ## SYNTAX
 
-### AXFR (Default)
 ```
-Get-DnsZoneTransfer [-Name <String>] [<CommonParameters>]
-```
-
-### IXFR
-```
-Get-DnsZoneTransfer [-Name <String>] [-SerialNumber <UInt32>] [<CommonParameters>]
+Get-DnsZoneTransfer [-ZoneName] <String> [-SerialNumber <UInt32>] [-Port <UInt16>] [-IPv6]
+ [-ComputerName <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Get the content of a DNS zone using zone transfer.
 
 ## EXAMPLES
 
@@ -38,28 +31,82 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Name
-{{ Fill Name Description }}
+### -ZoneName
+The name of the zone to transfer.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: Named
+Required: True
+Position: 2
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 
 ### -SerialNumber
-{{ Fill SerialNumber Description }}
+If the serial number is set, an incremental zone transfer is performed.
 
 ```yaml
 Type: UInt32
-Parameter Sets: IXFR
+Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Port
+By default, DNS uses TCP or UDP port 53.
+The port used to send queries may be changed if a server is listening on a different port.
+
+```yaml
+Type: UInt16
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 53
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -IPv6
+Force the use of IPv6 for queries, if this parameter is set and the ComputerName is set to a name (e.g.
+ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ComputerName
+A server name or IP address to execute a query against.
+If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
+
+If a name is used another lookup will be required to resolve the name to an IP.
+Get-Dns caches responses for queries performed involving the Server parameter.
+The cache may be viewed and maintained using the *-InternalDnsCache CmdLets.
+
+If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases: Server
 
 Required: False
 Position: Named
@@ -73,11 +120,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
 ## NOTES
 
 ## RELATED LINKS

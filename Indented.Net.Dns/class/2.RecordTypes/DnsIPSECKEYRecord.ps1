@@ -61,15 +61,15 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
             $this.Gateway = '.'
         }
 
-        $publicKeyLength = $this.RecordDataLength - $length
+        $publicKeyLength = $this.RecordDataLength - $length - 3
         $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($publicKeyLength))
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3} {4}' -f @(
+        return '{0} {1:D} {2:D} {3} {4}' -f @(
             $this.Precedence
-            [Byte]$this.GatewayType
-            [Byte]$this.Algorithm
+            $this.GatewayType
+            $this.Algorithm
             $this.Gateway
             $this.PublicKey
         )

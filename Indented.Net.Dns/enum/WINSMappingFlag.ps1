@@ -1,4 +1,4 @@
 enum WINSMappingFlag {
-    Replication   = 0
-    NoReplication = 65536
+    Replicated = 0
+    LocalOnly  = 65536
 }

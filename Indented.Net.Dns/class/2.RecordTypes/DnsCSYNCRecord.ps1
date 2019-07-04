@@ -41,15 +41,15 @@ class DnsCSYNCRecord : DnsResourceRecord {
 
     hidden [String] RecordDataToString() {
         if ($this.TypesToProcess.Count -gt 0) {
-            return '{0} {1} {2}' -f @(
+            return '{0} {1:D} {2}' -f @(
                 $this.Serial
-                [Byte]$this.Flags
+                $this.Flags
                 $this.TypesToProcess -join ' '
             )
         } else {
-            return '{0} {1}' -f @(
+            return '{0} {1:D}' -f @(
                 $this.Serial
-                [Byte]$this.Flags
+                $this.Flags
             )
         }
     }

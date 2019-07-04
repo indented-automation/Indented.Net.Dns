@@ -43,8 +43,8 @@ class DnsCAARecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} "{2}"' -f @(
-            [Byte]$this.CAAFlag
+        return '{0:D} {1} "{2}"' -f @(
+            $this.CAAFlag
             $this.Tag
             $this.Value
         )

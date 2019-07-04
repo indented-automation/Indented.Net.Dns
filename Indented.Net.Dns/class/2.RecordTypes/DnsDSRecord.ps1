@@ -42,10 +42,10 @@ class DnsDSRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f @(
+        return '{0} {1:D} {2:D} {3}' -f @(
             $this.KeyTag
-            [Byte]$this.Algorithm
-            [Byte]$this.DigestType
+            $this.Algorithm
+            $this.DigestType
             $this.Digest -split '(?<=\G.{56})' -join ' '
         )
     }

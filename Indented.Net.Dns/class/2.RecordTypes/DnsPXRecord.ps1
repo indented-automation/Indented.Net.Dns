@@ -38,8 +38,8 @@ class DnsPXRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2}' -f @(
-            $this.Preference.ToString().PadRight(5, ' ')
+        return '{0,-5} {1} {2}' -f @(
+            $this.Preference
             $this.MAP822
             $this.MAPX400
         )

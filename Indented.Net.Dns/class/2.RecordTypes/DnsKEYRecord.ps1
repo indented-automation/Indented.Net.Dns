@@ -61,10 +61,10 @@ class DnsKEYRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f @(
+        return '{0} {1:D} {2:D} {3}' -f @(
             $this.Flags
-            [Byte]$this.Protocol
-            [Byte]$this.Algorithm
+            $this.Protocol
+            $this.Algorithm
             $this.PublicKey -split '(?<=\G.{56})' -join ' '
         )
     }

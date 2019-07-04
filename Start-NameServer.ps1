@@ -21,6 +21,7 @@ $params = @{
         '-f'
     )
     PassThru     = $true
+    WindowStyle  = 'Hidden'
 }
 Start-Process @params
 

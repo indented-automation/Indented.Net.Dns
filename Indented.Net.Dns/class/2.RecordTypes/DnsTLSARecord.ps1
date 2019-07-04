@@ -39,10 +39,10 @@ class DnsTLSARecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f @(
-            [Byte]$this.CertificateUsage
-            [Byte]$this.Selector
-            [Byte]$this.MatchingType
+        return '{0:D} {1:D} {2:D} {3}' -f @(
+            $this.CertificateUsage
+            $this.Selector
+            $this.MatchingType
             $this.CertificateAssociation -split '(?<=\G.{56})' -join ' '
         )
     }

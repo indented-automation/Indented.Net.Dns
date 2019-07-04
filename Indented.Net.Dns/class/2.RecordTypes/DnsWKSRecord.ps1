@@ -59,7 +59,7 @@ class DnsWKSRecord : DnsResourceRecord {
         return '{0} {1} {2}' -f @(
             $this.IPAddress
             $this.IPProtocolNumber
-            ($this.Ports -join ' ')
+            $this.Ports -join ' '
         )
     }
 }

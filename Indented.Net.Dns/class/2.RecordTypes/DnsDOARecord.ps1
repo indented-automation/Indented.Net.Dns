@@ -56,10 +56,10 @@ class DnsDOARecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} "{3}" {4}' -f @(
+        return '{0} {1} {2:D} "{3}" {4}' -f @(
             $this.Enterprise
             $this.Type
-            [Byte]$this.Location
+            $this.Location
             $this.MediaType
             $this.Data
         )

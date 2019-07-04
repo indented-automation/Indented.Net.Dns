@@ -23,10 +23,6 @@ function Get-Dns {
         Get-Dns example. -DnsSec
 
         Request ANY record for the co.uk domain, advertising DNSSEC support.
-    .LINK
-        http://www.ietf.org/rfc/rfc1034.txt
-        http://www.ietf.org/rfc/rfc1035.txt
-        http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
     #>
 
     [CmdletBinding()]
@@ -54,7 +50,7 @@ function Get-Dns {
         # Advertise support for DNSSEC when executing a query.
         [Switch]$DnsSec,
 
-        # Enable EDNS support, suppresses OPT RR advertising client support in DNS question.
+        # Enable EDNS support, suppresses OPT RR advertising client support in DNS question. Automatically enabled if DNSSEC is requested.
         [Switch]$EDns,
 
         # By default the EDns buffer size is set to 4096 bytes.
@@ -81,7 +77,7 @@ function Get-Dns {
         [ValidateRange(1, 30)]
         [Byte]$Timeout = 5,
 
-        # Force the use of IPv6 for queries, if this parameter is set and the Server is set to a name (e.g. ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
+        # Force the use of IPv6 for queries, if this parameter is set and the ComputerName is set to a name (e.g. ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
         [Switch]$IPv6,
 
         # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
@@ -135,7 +131,7 @@ function Get-Dns {
                 $RecordClass
             )
 
-            if ($EDns) {
+            if ($EDns -or $DnsSec) {
                 $dnsMessage.SetEDnsBufferSize($EDnsBufferSize)
             }
             if ($DnsSec) {

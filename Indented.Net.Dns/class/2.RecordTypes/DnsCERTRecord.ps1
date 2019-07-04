@@ -43,9 +43,9 @@ class DnsCERTRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f @(
-            [UInt16]$this.CertificateType
-            [UInt16]$this.KeyTag
+        return '{0:D} {1:D} {2} {3}' -f @(
+            $this.CertificateType
+            $this.KeyTag
             $this.Algorithm
             $this.Certificate -split '(?<=\G.{56})' -join ' '
         )

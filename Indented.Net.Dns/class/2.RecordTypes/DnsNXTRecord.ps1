@@ -49,8 +49,8 @@ class DnsNXTRecord : DnsResourceRecord {
 
     hidden [String] RecordDataToString() {
         return '{0} {1}' -f @(
-            $this.DomainName,
-            ($this.RRType -join ' ')
+            $this.DomainName
+            $this.RRType -join ' '
         )
     }
 }

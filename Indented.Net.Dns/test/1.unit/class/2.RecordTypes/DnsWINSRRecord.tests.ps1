@@ -15,12 +15,9 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe DnsA6Record {
+    Describe DnsWINSRRecord {
         It 'Parses <RecordData>' -TestCases @(
-            @{ Message = 'AP////////////////////8GZG9tYWluBG5hbWUA'; RecordData = '0 ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff domain.name.' }
-            @{ Message = 'QP//////////BmRvbWFpbgRuYW1lAA==';         RecordData = '64 ::ffff:ffff:ffff:ffff domain.name.' }
-            @{ Message = 'fwEGZG9tYWluBG5hbWUA';                     RecordData = '127 ::1 domain.name.' }
-            @{ Message = 'gAZkb21haW4EbmFtZQA=';                     RecordData = '128  domain.name.' }
+            @{ Message = 'AAAAAAAAAAIAAA4QBHRlc3QIaW5kZW50ZWQCY28CdWsA'; RecordData = 'L2 C3600 ( test.indented.co.uk. )' }
         ) {
             param (
                 $Message,
@@ -29,7 +26,7 @@ InModuleScope Indented.Net.Dns {
 
             $recordDataBytes = [Convert]::FromBase64String($Message)
             $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
-            $resourceRecord = [DnsA6Record]::new()
+            $resourceRecord = [DnsWINSRRecord]::new()
             $resourceRecord.RecordDataLength = $recordDataBytes.Count
             $resourceRecord.ReadRecordData($binaryReader)
 

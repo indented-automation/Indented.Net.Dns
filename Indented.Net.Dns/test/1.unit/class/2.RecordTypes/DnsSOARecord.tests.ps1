@@ -36,7 +36,7 @@ InModuleScope Indented.Net.Dns {
 
         It 'Can write the SOA record <RecordData> string in a long format' -TestCases @(
                 @{
-                    Message = 'A25zMQdleGFtcGxlAApob3N0bWFzdGVyB2V4YW1wbGUAX215tQAAAAUAAAAFABuvgAAADhA='
+                    Message    = 'A25zMQdleGFtcGxlAApob3N0bWFzdGVyB2V4YW1wbGUAX215tQAAAAUAAAAFABuvgAAADhA='
                     RecordData = @(
                         'ns1.example. hostmaster.example. ('
                         '    1601010101 ; serial'

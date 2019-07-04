@@ -72,7 +72,7 @@ class DnsSOARecord : DnsResourceRecord {
         )
     }
 
-    hidden [IEnumerable[Byte]] RecordDataToByteArray(
+    hidden [Byte[]] RecordDataToByteArray(
         [Boolean] $useCompressedNames
     ) {
         $bytes = [List[Byte]]::new()
@@ -92,7 +92,7 @@ class DnsSOARecord : DnsResourceRecord {
         $bytes.AddRange([EndianBitConverter]::GetBytes($this.Serial, $true))
         $bytes.AddRange([Byte[]]::new(16))
 
-        return ,$bytes
+        return $bytes.ToArray()
     }
 
     [String] ToLongString() {

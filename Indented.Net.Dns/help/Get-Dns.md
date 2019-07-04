@@ -1,9 +1,7 @@
 ---
 external help file: Indented.Net.Dns-help.xml
 Module Name: Indented.Net.Dns
-online version: http://www.ietf.org/rfc/rfc1034.txt
-http://www.ietf.org/rfc/rfc1035.txt
-http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
+online version:
 schema: 2.0.0
 ---
 
@@ -138,6 +136,7 @@ Accept wildcard characters: False
 
 ### -EDns
 Enable EDNS support, suppresses OPT RR advertising client support in DNS question.
+Automatically enabled if DNSSEC is requested.
 
 ```yaml
 Type: SwitchParameter
@@ -247,7 +246,7 @@ Accept wildcard characters: False
 ```
 
 ### -IPv6
-Force the use of IPv6 for queries, if this parameter is set and the Server is set to a name (e.g.
+Force the use of IPv6 for queries, if this parameter is set and the ComputerName is set to a name (e.g.
 ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
 
 ```yaml
@@ -310,10 +309,3 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
-
-[http://www.ietf.org/rfc/rfc1034.txt
-http://www.ietf.org/rfc/rfc1035.txt
-http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01](http://www.ietf.org/rfc/rfc1034.txt
-http://www.ietf.org/rfc/rfc1035.txt
-http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01)
-

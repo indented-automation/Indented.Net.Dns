@@ -55,3 +55,7 @@ build
 temp
 **/test/*integration/bin
 **/managed-keys*
+**/K*.key
+**/K*.private
+**/*.jbk
+**/*.signed*

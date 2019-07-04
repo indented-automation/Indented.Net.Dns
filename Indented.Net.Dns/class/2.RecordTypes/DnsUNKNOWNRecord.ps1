@@ -8,8 +8,9 @@ class DnsUNKNOWNRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType] $RecordType = [RecordType]::UNKNOWN
-    [Byte[]]     $BinaryData
+    [RecordType]    $RecordType = [RecordType]::UNKNOWN
+    [DnsRecordType] $Type
+    [Byte[]]        $BinaryData
 
     DnsUNKNOWNRecord() : base() { }
     DnsUNKNOWNRecord(

@@ -61,11 +61,11 @@ class DnsHIPRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f @(
-            [Byte]$this.PublicKeyAlgorithm,
-            $this.HIT,
-            $this.PublicKey,
-            ($this.RendezvousServers -join ' ')
+        return '{0:D} {1} {2} {3}' -f @(
+            $this.PublicKeyAlgorithm
+            $this.HIT
+            $this.PublicKey
+            $this.RendezvousServers -join ' '
         )
     }
 }

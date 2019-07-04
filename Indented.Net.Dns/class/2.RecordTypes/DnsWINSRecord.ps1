@@ -1,4 +1,4 @@
-class DnsWINSRecord {
+class DnsWINSRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -55,7 +55,7 @@ class DnsWINSRecord {
         $value = 'L{0} C{1} ( {2} )' -f @(
             $this.LookupTimeout
             $this.CacheTimeout
-            ($this.ServerList -join ' ')
+            $this.ServerList -join ' '
         )
         if ($this.MappingFlag -eq 0x10000) {
             return 'LOCAL {0}' -f $value

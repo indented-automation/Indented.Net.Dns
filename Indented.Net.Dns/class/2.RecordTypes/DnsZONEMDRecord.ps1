@@ -40,9 +40,9 @@ class DnsZONEMDRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2} {3}' -f @(
+        return '{0} {1:D} {2} {3}' -f @(
             $this.Serial
-            [Byte]$this.DigestType
+            $this.DigestType
             $this.Reserved
             $this.Digest -split '(?<=\G.{56})' -join ' '
         )

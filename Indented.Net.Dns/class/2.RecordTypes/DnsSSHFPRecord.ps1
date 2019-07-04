@@ -35,9 +35,9 @@ class DnsSSHFPRecord : DnsResourceRecord {
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1} {2}' -f @(
-            [Byte]$this.Algorithm
-            [Byte]$this.FPType
+        return '{0:D} {1:D} {2}' -f @(
+            $this.Algorithm
+            $this.FPType
             $this.Fingerprint -split '(?<=\G.{56})' -join ' '
         )
     }
