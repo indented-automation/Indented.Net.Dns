@@ -1,80 +1,13 @@
 Describe Get-Dns -Tag Integration {
     Context 'Named' {
         BeforeAll {
-            Push-Location $psscriptroot
-
-            if (-not (Test-Path 'bin\named.exe')) {
-                if (-not (Test-Path 'bin')) {
-                    $null = New-Item bin -ItemType Directory
-                }
-
-                $params = @{
-                    Uri     = 'https://downloads.isc.org/isc/bind9/9.14.3/BIND9.14.3.x64.zip'
-                    OutFile = 'bin\BIND9.zip'
-                }
-                Invoke-WebRequest @params
-                $params = @{
-                    Path            = $params.OutFile
-                    DestinationPath = 'bin'
-                }
-                Expand-Archive @params
-            }
-
-            $argumentList = @(
-                '-K', 'data'
-                '-a', 'RSASHA512'
-                '-b', '2048'
-                '-3'
-                '-f', 'KSK'
-                'test2.indented.co.uk'
-            )
-            & 'bin\dnssec-keygen.exe' @argumentList
-
-            $argumentList = @(
-                '-K', 'data'
-                '-a', 'RSASHA512'
-                '-b', '2048'
-                '-3'
-                'test2.indented.co.uk'
-            )
-            & 'bin\dnssec-keygen.exe' @argumentList
-
-            $params = @{
-                FilePath     = 'bin\named.exe'
-                ArgumentList = @(
-                    '-c'
-                    '"{0}"' -f (Join-Path $pwd 'data\named.conf')
-                    '-f'
-                )
-                PassThru     = $true
-                WindowStyle  = 'Hidden'
-            }
-            $process = Start-Process @params
-            Start-Sleep -Seconds 5
-
-            $argumentList = @(
-                'signing'
-                '-nsec3param', '1', '0', '10'
-                '5053851B'
-                'test2.indented.co.uk.'
-            )
-            & 'bin\rndc' @argumentList
+            & (Join-Path $psscriptroot 'script\Start-NameServer.ps1')
+            $dig = Join-Path $psscriptroot 'bin\dig.exe'
 
             $defaultParams = @{
                 ComputerName = '127.0.0.1'
                 Port         = 1053
             }
-        }
-
-        AfterAll {
-            $process | Stop-Process
-
-            Push-Location Data
-
-            Remove-Item K*.key, K*.private, managed-key*, *.jbk, *.signed*
-
-            Pop-Location
-            Pop-Location
         }
 
         It 'Record data string for <Name> <RecordType> matches dig output' -TestCases @(
@@ -234,10 +167,10 @@ Describe Get-Dns -Tag Integration {
                 $RecordType
             )
 
-            $Name = ('{0}.test1.indented.co.uk' -f $Name).TrimStart('.')
+            $Name = ('{0}.default.indented.co.uk' -f $Name).TrimStart('.')
 
             $getDnsResponse = Get-Dns -Name $Name -RecordType $RecordType @defaultParams
-            $digResponse = & 'bin\dig.exe' @(
+            $digResponse = & $dig @(
                 '+short'
                 $RecordType
                 $Name
@@ -263,10 +196,10 @@ Describe Get-Dns -Tag Integration {
                 $Expect
             )
 
-            $Name = ('{0}.test1.indented.co.uk' -f $Name).TrimStart('.')
+            $Name = ('{0}.default.indented.co.uk' -f $Name).TrimStart('.')
 
             $getDnsResponse = Get-Dns -Name $Name -RecordType $RecordType @defaultParams
-            $digResponse = & 'bin\dig.exe' @(
+            $digResponse = & $dig @(
                 '+short'
                 'ANY'
                 $Name
@@ -291,7 +224,7 @@ Describe Get-Dns -Tag Integration {
                 $Expect
             )
 
-            $Name = ('{0}.test1.indented.co.uk' -f $Name).TrimStart('.')
+            $Name = ('{0}.default.indented.co.uk' -f $Name).TrimStart('.')
 
             $getDnsResponse = Get-Dns -Name $Name -RecordType $RecordType @defaultParams
 
@@ -302,7 +235,7 @@ Describe Get-Dns -Tag Integration {
         }
 
         It 'Parses NSEC3 records in an authority section' {
-            $Name = 'doesnotexist.test2.indented.co.uk'
+            $Name = 'doesnotexist.signed.indented.co.uk'
 
             $getDnsResponse = Get-Dns -Name $Name -RecordType 'ANY' @defaultParams -DnsSec
             $getDnsResponse.Header.RCode | Should -Be NXDOMAIN
@@ -310,12 +243,10 @@ Describe Get-Dns -Tag Integration {
             $nsec3Records = $getDnsResponse.Authority | Where-Object RecordType -eq 'NSEC3'
 
             $nsec3Records | Should -Not -BeNullOrEmpty
-
-            $nsec3Records.RecordDataToString() | Should -Be '1 0 10 5053851B 4EK6150GN7TRENUPT8B4U25E3O4NJKC9 NS SOA RRSIG DNSKEY NSEC3PARAM TYPE65534'
         }
 
         It 'DNSSEC responses include an OPT record in the additional section' {
-            $Name = 'test2.indented.co.uk'
+            $Name = 'signed.indented.co.uk'
 
             $getDnsResponse = Get-Dns -Name $Name -RecordType 'ANY' @defaultParams -DnsSec
             $getDnsResponse.Header.RCode | Should -Be NoError

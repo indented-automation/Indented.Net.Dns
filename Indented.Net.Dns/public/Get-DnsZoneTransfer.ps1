@@ -78,5 +78,7 @@ function Get-DnsZoneTransfer {
         $dnsResponse.ComputerName = $dnsClient.RemoteEndPoint
         $dnsResponse.TimeTaken = $dnsClient.TimeTaken.TotalMilliseconds
         $dnsClient.Close()
+
+        $dnsResponse
     }
 }

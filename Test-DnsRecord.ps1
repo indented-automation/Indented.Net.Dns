@@ -10,8 +10,10 @@ param (
     [Switch]$Full
 )
 
+& (Join-Path $psscriptroot 'indented.net.dns\test\2.integration\script\Start-NameServer.ps1')
+
 if (-not $Name.EndsWith('.')) {
-    $Name = ('{0}.test1.indented.co.uk.' -f $Name).TrimStart('.')
+    $Name = ('{0}.default.indented.co.uk.' -f $Name).TrimStart('.')
 }
 
 $path = Join-Path $psscriptroot 'Indented.Net.Dns'
