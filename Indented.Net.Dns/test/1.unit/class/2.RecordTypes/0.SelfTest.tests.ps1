@@ -17,7 +17,7 @@ if (-not $UseExisting) {
 Describe 'Record parser test suite self test' {
     Context 'Test files' {
         BeforeAll {
-            $testCases = Get-ChildItem $moduleBase\class\Resolver\*RecordTypes\Dns*Record.ps1 | ForEach-Object {
+            $testCases = Get-ChildItem $moduleBase\class\*RecordTypes\Dns*Record.ps1 | ForEach-Object {
                 @{ ClassName = $_.BaseName }
             }
         }
@@ -147,7 +147,7 @@ Describe 'Record parser test suite self test' {
         Context 'RecordType' {
             BeforeAll {
                 $moduleBase = $psscriptroot.Substring(0, $psscriptroot.IndexOf("\test"))
-                $testCases = Get-ChildItem $moduleBase\class\Resolver\*RecordTypes\Dns*Record.ps1 | ForEach-Object {
+                $testCases = Get-ChildItem $moduleBase\class\*RecordTypes\Dns*Record.ps1 | ForEach-Object {
                     @{ ClassName = $_.BaseName; RecordType = $_.BaseName -replace '^Dns|Record$' }
                 }
             }
