@@ -9,8 +9,7 @@ class DnsGIDRecord : DnsResourceRecord {
         IANA-Reserved
     #>
 
-    [RecordType] $RecordType = [RecordType]::GID
-    [Byte[]]     $Data
+    [Byte[]] $Data
 
     DnsGIDRecord() : base() { }
     DnsGIDRecord(

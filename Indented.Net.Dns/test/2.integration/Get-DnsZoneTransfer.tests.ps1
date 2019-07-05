@@ -1,6 +1,4 @@
-'server 127.0.0.1 1053', 'update add a99.test2.indented.co.uk. 3600 A 1.2.3.4', 'send' | .\bin\nsupdate --% -y hmac-sha256:ddns-key:5mJtXnJvb/1FDQQ/5jiB+WellbkBLazVEdIssxAsg1Q= -L 9
-
-Describe Get-Dns -Tag Integration {
+Describe Get-DnsZoneTransfer -Tag Integration {
     Context 'Named' {
         BeforeAll {
             & (Join-Path $psscriptroot 'script\Start-NameServer.ps1')
@@ -9,12 +7,16 @@ Describe Get-Dns -Tag Integration {
 
             @(
                 'server 127.0.0.1 1053'
-                'update add a98.test2.indented.co.uk. 3600 A 1.2.3.4'
+                'update add a98.signed.indented.co.uk. 3600 A 1.2.3.4'
+                'update add a99.signed.indented.co.uk. 3600 A 1.2.3.4'
                 'send'
-            ) | & $nsupdate -y hmac-sha256:ddns-key:5mJtXnJvb/1FDQQ/5jiB+WellbkBLazVEdIssxAsg1Q= -L 9
+                'update add a97.signed.indented.co.uk. 3600 A 1.2.3.4'
+                'update add a96.signed.indented.co.uk. 3600 A 1.2.3.4'
+                'send'
+            ) | & $nsupdate -y hmac-sha256:ddns-key:5mJtXnJvb/1FDQQ/5jiB+WellbkBLazVEdIssxAsg1Q= -L 9 2>$null
 
             $defaultParams = @{
-                ZoneName     = 'test2.indented.co.uk'
+                ZoneName     = 'signed.indented.co.uk.'
                 ComputerName = '127.0.0.1'
                 Port         = 1053
             }

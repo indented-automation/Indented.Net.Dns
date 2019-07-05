@@ -22,7 +22,6 @@ class DnsWINSRRecord : DnsResourceRecord {
         http://msdn.microsoft.com/en-us/library/ms682748%28VS.85%29.aspx
     #>
 
-    [RecordType]      $RecordType = [RecordType]::WINSR
     [WINSMappingFlag] $MappingFlag
     [UInt32]          $LookupTimeout
     [UInt32]          $CacheTimeout

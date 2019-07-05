@@ -16,7 +16,6 @@ class DnsNXTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc3755.txt
     #>
 
-    [RecordType]      $RecordType = [RecordType]::NXT
     [String]          $DomainName
     [DnsRecordType[]] $RRType
 

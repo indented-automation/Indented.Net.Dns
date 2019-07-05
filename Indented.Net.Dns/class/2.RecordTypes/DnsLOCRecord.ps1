@@ -20,7 +20,6 @@ class DnsLOCRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1876.txt
     #>
 
-    [RecordType]      $RecordType = [RecordType]::LOC
     [Byte]            $Version
     [Decimal]         $Size
     [Decimal]         $HorizontalPrecision

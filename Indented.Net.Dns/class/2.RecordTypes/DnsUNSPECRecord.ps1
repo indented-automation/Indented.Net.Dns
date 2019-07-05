@@ -9,8 +9,7 @@ class DnsUNSPECRecord : DnsResourceRecord {
         IANA-Reserved
     #>
 
-    [RecordType] $RecordType = [RecordType]::UNSPEC
-    [Byte[]]     $Data
+    [Byte[]] $Data
 
     DnsUNSPECRecord() : base() { }
     DnsUNSPECRecord(

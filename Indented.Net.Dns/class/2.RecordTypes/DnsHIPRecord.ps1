@@ -20,7 +20,6 @@ class DnsHIPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc5205.txt
     #>
 
-    [RecordType]     $RecordType = [RecordType]::HIP
     [IPSECAlgorithm] $PublicKeyAlgorithm
     [String]         $HIT
     [String]         $PublicKey

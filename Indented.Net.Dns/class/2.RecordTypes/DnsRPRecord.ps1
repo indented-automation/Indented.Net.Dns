@@ -11,9 +11,8 @@ class DnsRPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::RP
-    [String]     $ResponsibleMailbox
-    [String]     $DomainName
+    [String] $ResponsibleMailbox
+    [String] $DomainName
 
     DnsRPRecord() : base() { }
     DnsRPRecord(

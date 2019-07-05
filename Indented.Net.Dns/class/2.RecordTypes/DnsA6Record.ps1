@@ -13,10 +13,9 @@ class DnsA6Record : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType] $RecordType = [RecordType]::A6
-    [Byte]       $PrefixLength
-    [IPAddress]  $AddressSuffix
-    [String]     $PrefixName
+    [Byte]      $PrefixLength
+    [IPAddress] $AddressSuffix
+    [String]    $PrefixName
 
     DnsA6Record() : base() { }
     DnsA6Record(

@@ -10,8 +10,7 @@ class DnsMDRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::MD
-    [String]     $Hostname
+    [String] $Hostname
 
     DnsMDRecord() : base() { }
     DnsMDRecord(

@@ -12,8 +12,7 @@ class DnsEUI48Record : DnsResourceRecord {
         http://cpansearch.perl.org/src/MIKER/Net-DNS-Codes-0.11/extra_docs/draft-ietf-nimrod-dns-02.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::EUI48
-    [String]     $Address
+    [String] $Address
 
     DnsEUI48Record() : base() { }
     DnsEUI48Record(

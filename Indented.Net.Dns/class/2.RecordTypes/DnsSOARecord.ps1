@@ -30,14 +30,13 @@ class DnsSOARecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::SOA
-    [String]     $NameServer
-    [String]     $ResponsiblePerson
-    [UInt32]     $Serial
-    [UInt32]     $Refresh
-    [UInt32]     $Retry
-    [UInt32]     $Expire
-    [UInt32]     $MinimumTTL
+    [String] $NameServer
+    [String] $ResponsiblePerson
+    [UInt32] $Serial
+    [UInt32] $Refresh
+    [UInt32] $Retry
+    [UInt32] $Expire
+    [UInt32] $MinimumTTL
 
     DnsSOARecord() : base() { }
     DnsSOARecord(

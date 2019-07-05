@@ -12,9 +12,8 @@ class DnsMXRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::MX
-    [UInt16]     $Preference
-    [String]     $Exchange
+    [UInt16] $Preference
+    [String] $Exchange
 
     DnsMXRecord() : base() { }
     DnsMXRecord(

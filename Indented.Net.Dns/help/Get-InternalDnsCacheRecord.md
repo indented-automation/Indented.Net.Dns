@@ -13,7 +13,7 @@ Get the content of the internal DNS cache used by Get-Dns.
 ## SYNTAX
 
 ```
-Get-InternalDnsCacheRecord [[-Name] <String>] [[-RecordType] <RecordType>] [-IPAddress <IPAddress>]
+Get-InternalDnsCacheRecord [[-Name] <String>] [[-RecordType] <String>] [-IPAddress <IPAddress>]
  [-ResourceType <String>] [<CommonParameters>]
 ```
 
@@ -53,10 +53,9 @@ Accept wildcard characters: False
 {{ Fill RecordType Description }}
 
 ```yaml
-Type: RecordType
+Type: String
 Parameter Sets: (All)
 Aliases:
-Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, TLSA, SMIMEA, HIP, NINFO, RKEY, TALINK, CDS, CDNSKEY, OPENPGPKEY, CSYNC, ZONEMD, SPF, UINFO, UID, GID, UNSPEC, NID, L32, L64, LP, EUI48, EUI64, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, URI, CAA, AVC, DOA, AMTRELAY, TA, DLV, WINS, WINSR, UNKNOWN
 
 Required: False
 Position: 3

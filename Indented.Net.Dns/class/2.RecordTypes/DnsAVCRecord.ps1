@@ -7,7 +7,6 @@ class DnsAVCRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType] $RecordType = [RecordType]::AVC
     [String[]]   $Data
 
     DnsAVCRecord() : base() { }

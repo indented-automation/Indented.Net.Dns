@@ -30,14 +30,13 @@ class DnsTKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2930.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::TKEY
-    [String]     $Algorithm
-    [DateTime]   $Inception
-    [DateTime]   $Expiration
-    [TKEYMode]   $Mode
-    [RCode]      $TKEYError
-    [String]     $KeyData
-    [String]     $OtherData
+    [String]   $Algorithm
+    [DateTime] $Inception
+    [DateTime] $Expiration
+    [TKEYMode] $Mode
+    [RCode]    $TKEYError
+    [String]   $KeyData
+    [String]   $OtherData
 
     DnsTKEYRecord() : base() { }
     DnsTKEYRecord(

@@ -14,7 +14,6 @@ class DnsAPLRecord : DnsResourceRecord {
         http://tools.ietf.org/html/rfc3123
     #>
 
-    [RecordType] $RecordType = [RecordType]::APL
     [PSObject[]] $List
 
     DnsAPLRecord() : base() { }

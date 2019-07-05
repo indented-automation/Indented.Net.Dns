@@ -9,8 +9,7 @@ class DnsSPFRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::SPF
-    [String[]]   $SPF
+    [String[]] $SPF
 
     DnsSPFRecord() : base() { }
     DnsSPFRecord(

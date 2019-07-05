@@ -10,8 +10,7 @@ class DnsDNAMERecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2672.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::DNAME
-    [String]     $Target
+    [String] $Target
 
     DnsDNAMERecord() : base() { }
     DnsDNAMERecord(

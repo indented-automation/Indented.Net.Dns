@@ -10,8 +10,7 @@ class DnsDHCIDRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4701.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::DHCID
-    [Byte[]]     $BinaryData
+    [Byte[]] $BinaryData
 
     DnsDHCIDRecord() : base() { }
     DnsDHCIDRecord(

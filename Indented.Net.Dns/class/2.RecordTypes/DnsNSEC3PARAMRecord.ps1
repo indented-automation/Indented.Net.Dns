@@ -15,7 +15,6 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc5155.txt
     #>
 
-    [RecordType]         $RecordType = [RecordType]::NSEC3PARAM
     [NSEC3HashAlgorithm] $HashAlgorithm
     [Byte]               $Flags
     [UInt16]             $Iterations

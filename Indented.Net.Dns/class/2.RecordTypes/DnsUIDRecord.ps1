@@ -9,8 +9,7 @@ class DnsUIDRecord : DnsResourceRecord {
         IANA-Reserved
     #>
 
-    [RecordType] $RecordType = [RecordType]::UID
-    [Byte[]]     $Data
+    [Byte[]] $Data
 
     DnsUIDRecord() : base() { }
     DnsUIDRecord(

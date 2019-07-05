@@ -12,7 +12,6 @@ class DnsAFSDBRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [RecordType]   $RecordType = [RecordType]::AFSDB
     [AFSDBSubType] $SubType
     [UInt16]       $SubTypeValue
     [String]       $Hostname

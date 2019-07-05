@@ -14,7 +14,6 @@ class DnsDLVRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4431.txt
     #>
 
-    [RecordType]          $RecordType = [RecordType]::DLV
     [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [DigestType]          $DigestType

@@ -16,7 +16,6 @@ class DnsCERTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4398.txt
     #>
 
-    [RecordType]          $RecordType = [RecordType]::CERT
     [CertificateType]     $CertificateType
     [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm

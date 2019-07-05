@@ -20,7 +20,6 @@ class DnsKEYRecord : DnsResourceRecord {
         +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
     #>
 
-    [RecordType]          $RecordType = [RecordType]::KEY
     [UInt16]              $Flags
     [KEYAC]               $AuthenticationConfidentiality
     [UInt16]              $FlagsExtension

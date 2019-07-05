@@ -25,7 +25,6 @@ class DnsDOARecord : DnsResourceRecord {
         https://www.iana.org/assignments/enterprise-numbers/enterprise-numbers
     #>
 
-    [RecordType]  $RecordType = [RecordType]::DOA
     [UInt32]      $Enterprise
     [UInt32]      $Type
     [DOALocation] $Location

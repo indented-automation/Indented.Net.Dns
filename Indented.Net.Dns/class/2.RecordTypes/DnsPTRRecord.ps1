@@ -10,8 +10,7 @@ class DnsPTRRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::PTR
-    [String]     $Hostname
+    [String] $Hostname
 
     DnsPTRRecord() : base() { }
     DnsPTRRecord(

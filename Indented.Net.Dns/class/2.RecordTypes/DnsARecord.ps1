@@ -7,8 +7,7 @@ class DnsARecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType] $RecordType = [RecordType]::A
-    [IPAddress]  $IPAddress
+    [IPAddress] $IPAddress
 
     DnsARecord() : base() { }
     DnsARecord(

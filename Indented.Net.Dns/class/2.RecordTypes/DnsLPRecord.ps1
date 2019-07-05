@@ -12,9 +12,8 @@ class DnsLPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2230.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::LP
-    [UInt16]     $Preference
-    [String]     $FQDN
+    [UInt16] $Preference
+    [String] $FQDN
 
     DnsLPRecord() : base() { }
     DnsLPRecord(

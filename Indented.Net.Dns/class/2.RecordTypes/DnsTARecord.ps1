@@ -14,7 +14,6 @@ class DnsTARecord : DnsResourceRecord {
         http://tools.ietf.org/html/draft-lewis-dns-undocumented-types-01
     #>
 
-    [RecordType]          $RecordType = [RecordType]::TA
     [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [DigestType]          $DigestType

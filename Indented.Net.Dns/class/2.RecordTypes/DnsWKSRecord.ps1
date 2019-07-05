@@ -20,7 +20,6 @@ class DnsWKSRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1010.txt
     #>
 
-    [RecordType]   $RecordType = [RecordType]::WKS
     [IPAddress]    $IPAddress
     [Byte]         $IPProtocolNumber
     [ProtocolType] $IPProtocolType

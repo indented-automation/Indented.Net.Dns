@@ -8,8 +8,7 @@ class DnsCNAMERecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType] $RecordType = [RecordType]::CNAME
-    [String]     $Hostname
+    [String] $Hostname
 
     DnsCNAMERecord() : base() { }
     DnsCNAMERecord(

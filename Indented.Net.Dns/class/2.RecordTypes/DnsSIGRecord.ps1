@@ -34,7 +34,6 @@ class DnsSIGRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2931.txt
     #>
 
-    [RecordType]          $RecordType = [RecordType]::SIG
     [DnsRecordType]       $TypeCovered
     [EncryptionAlgorithm] $Algorithm
     [Byte]                $Labels

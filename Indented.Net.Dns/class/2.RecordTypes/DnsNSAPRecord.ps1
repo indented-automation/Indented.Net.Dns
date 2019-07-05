@@ -9,9 +9,8 @@ class DnsNSAPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1706.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::NSAP
-    [String]     $Text
-    [String]     $Data
+    [String] $Text
+    [String] $Data
 
     DnsNSAPRecord() : base() { }
     DnsNSAPRecord(

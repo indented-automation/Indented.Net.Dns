@@ -10,8 +10,7 @@ class DnsNSAPPTRRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1348.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::NSAPPTR
-    [String]     $Owner
+    [String] $Owner
 
     DnsNSAPPTRRecord() : base() { }
     DnsNSAPPTRRecord(
@@ -38,7 +37,7 @@ class DnsNSAPPTRRecord : DnsResourceRecord {
             $this.TTL
             $this.RecordClass
             'NSAP-PTR'
-            $this.RecordDataToString()
+            $this.RecordData
         )
     }
 }

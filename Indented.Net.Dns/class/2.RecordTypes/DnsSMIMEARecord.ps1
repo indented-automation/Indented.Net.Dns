@@ -14,7 +14,6 @@ class DnsSMIMEARecord : DnsResourceRecord {
         https://tools.ietf.org/html/rfc8162
     #>
 
-    [RecordType]       $RecordType = [RecordType]::SMIMEA
     [CertificateUsage] $CertificateUsage
     [Selector]         $Selector
     [MatchingType]     $MatchingType

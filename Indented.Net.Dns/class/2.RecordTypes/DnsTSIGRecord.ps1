@@ -30,13 +30,12 @@ class DnsTSIGRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2845.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::TSIG
-    [String]     $Algorithm
-    [DateTime]   $TimeSigned
-    [Int32]      $Fudge
-    [String]     $MAC
-    [RCode]      $TSIGError
-    [String]     $OtherData
+    [String]   $Algorithm
+    [DateTime] $TimeSigned
+    [Int32]    $Fudge
+    [String]   $MAC
+    [RCode]    $TSIGError
+    [String]   $OtherData
 
     DnsTSIGRecord() : base() { }
     DnsTSIGRecord(

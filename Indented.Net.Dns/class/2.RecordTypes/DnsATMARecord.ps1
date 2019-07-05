@@ -12,7 +12,6 @@ class DnsATMARecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType] $RecordType = [RecordType]::ATMA
     [ATMAFormat] $Format
     [String]     $ATMAAddress
 

@@ -9,8 +9,7 @@ class DnsTXTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::TXT
-    [String[]]   $Text
+    [String[]] $Text
 
     DnsTXTRecord() : base() { }
     DnsTXTRecord(

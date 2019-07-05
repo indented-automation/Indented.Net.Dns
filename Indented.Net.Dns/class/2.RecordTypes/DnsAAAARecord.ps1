@@ -14,8 +14,7 @@ class DnsAAAARecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType] $RecordType = [RecordType]::AAAA
-    [IPAddress]  $IPAddress
+    [IPAddress] $IPAddress
 
     DnsAAAARecord() : base() { }
     DnsAAAARecord(

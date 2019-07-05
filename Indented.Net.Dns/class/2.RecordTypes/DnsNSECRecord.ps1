@@ -11,7 +11,6 @@ class DnsNSECRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType]      $RecordType = [RecordType]::NSEC
     [String]          $DomainName
     [DnsRecordType[]] $RRType
 

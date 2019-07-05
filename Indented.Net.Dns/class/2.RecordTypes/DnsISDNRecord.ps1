@@ -11,7 +11,6 @@ class DnsISDNRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::ISDN
     [String]     $ISDNAddress
     [String]     $SubAddress
 

@@ -20,7 +20,7 @@ function Get-InternalDnsCacheRecord {
         [String]$Name,
 
         [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
-        [RecordType]$RecordType,
+        [String]$RecordType,
 
         [Parameter(ValueFromPipelineByPropertyName)]
         [IPAddress]$IPAddress,

@@ -12,7 +12,6 @@ class DnsAMTRelayRecord : DnsResourceRecord {
         https://tools.ietf.org/html/draft-ietf-mboned-driad-amt-discovery-06
     #>
 
-    [RecordType]   $RecordType = [RecordType]::AMTRelay
     [Byte]         $Precedence
     [Boolean]      $DiscoveryOptional
     [AMTRelayType] $Type

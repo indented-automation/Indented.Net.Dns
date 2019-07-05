@@ -13,9 +13,8 @@ class DnsTALINKRecord : DnsResourceRecord {
         https://www.iana.org/assignments/dns-parameters/TALINK/talink-completed-template
     #>
 
-    [RecordType] $RecordType = [RecordType]::TALINk
-    [String]     $Previous
-    [String]     $Next
+    [String] $Previous
+    [String] $Next
 
     DnsTALINKRecord() : base() { }
     DnsTALINKRecord(

@@ -16,10 +16,9 @@ class DnsGPOSRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1712.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::GPOS
-    [String]     $Longitude
-    [String]     $Latitude
-    [String]     $Altitude
+    [String] $Longitude
+    [String] $Latitude
+    [String] $Altitude
 
     DnsGPOSRecord() : base() { }
     DnsGPOSRecord(

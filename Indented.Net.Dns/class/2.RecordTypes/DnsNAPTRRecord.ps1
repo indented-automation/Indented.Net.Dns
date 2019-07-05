@@ -20,13 +20,12 @@ class DnsNAPTRRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2915.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::NAPTR
-    [UInt16]     $Order
-    [UInt16]     $Preference
-    [String]     $Flags
-    [String]     $Service
-    [String]     $RegularExpression
-    [String]     $Replacement
+    [UInt16] $Order
+    [UInt16] $Preference
+    [String] $Flags
+    [String] $Service
+    [String] $RegularExpression
+    [String] $Replacement
 
     DnsNAPTRRecord() : base() { }
     DnsNAPTRRecord(

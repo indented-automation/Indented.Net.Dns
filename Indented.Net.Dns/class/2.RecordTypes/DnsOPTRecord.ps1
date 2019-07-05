@@ -111,18 +111,22 @@ class DnsOPTRecord : DnsResourceRecord {
         https://tools.ietf.org/html/rfc7871
     #>
 
-    [RecordType]   $RecordType = [RecordType]::OPT
     [UInt16]       $MaximumPayloadSize
     [UInt16]       $ExtendedRCode
     [UInt32]       $Version
     [EDnsDNSSECOK] $Z
     [PSObject[]]   $OptionData
 
-    DnsOPTRecord() : base() { }
+    DnsOPTRecord() : base() {
+        $this.RecordType = 'OPT'
+    }
     DnsOPTRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) {
+        $this.Name = $dnsResourceRecord.Name
+        $this.RecordType = $dnsResourceRecord.RecordType
+
         $this.MaximumPayloadSize = $binaryReader.ReadUInt16($true)
         $this.ExtendedRCode = $binaryReader.ReadByte()
         $this.Version = $binaryReader.ReadByte()

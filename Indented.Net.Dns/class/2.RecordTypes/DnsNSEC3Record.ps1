@@ -32,7 +32,6 @@ class DnsNSEC3Record : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc5155.txt
     #>
 
-    [RecordType]         $RecordType = [RecordType]::NSEC3
     [NSEC3HashAlgorithm] $HashAlgorithm
     [Byte]               $Flags
     [Boolean]            $OptOut

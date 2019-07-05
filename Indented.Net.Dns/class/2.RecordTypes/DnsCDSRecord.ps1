@@ -14,7 +14,6 @@ class DnsCDSRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc7344.txt
     #>
 
-    [RecordType]          $RecordType = [RecordType]::CDS
     [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [DigestType]          $DigestType

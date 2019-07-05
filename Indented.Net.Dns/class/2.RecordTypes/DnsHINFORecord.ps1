@@ -11,9 +11,8 @@ class DnsHINFORecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::HINFO
-    [String]     $CPU
-    [String]     $OS
+    [String] $CPU
+    [String] $OS
 
     DnsHINFORecord() : base() { }
     DnsHINFORecord(

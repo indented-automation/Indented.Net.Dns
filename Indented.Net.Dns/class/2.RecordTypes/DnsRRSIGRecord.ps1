@@ -31,8 +31,7 @@ class DnsRRSIGRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4034.txt
     #>
 
-    [RecordType]          $RecordType = [RecordType]::RRSIG
-    [RecordType]          $TypeCovered
+    [DnsRecordType]       $TypeCovered
     [EncryptionAlgorithm] $Algorithm
     [Byte]                $Labels
     [UInt32]              $OriginalTTL
@@ -54,13 +53,7 @@ class DnsRRSIGRecord : DnsResourceRecord {
     hidden [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
-        [Int32]$type = $binaryReader.ReadUInt16($true)
-        if ([Enum]::IsDefined([RecordType], $type)) {
-            $this.TypeCovered = $type
-        } else {
-            $this.TypeCovered = [RecordType]::UNKNOWN
-        }
-
+        $this.TypeCovered = $binaryReader.ReadUInt16($true)
         $this.Algorithm = $binaryReader.ReadByte()
         $this.Labels = $binaryReader.ReadByte()
         $this.OriginalTTL = $binaryReader.ReadUInt32($true)

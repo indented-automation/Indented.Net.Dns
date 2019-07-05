@@ -12,9 +12,8 @@ class DnsKXRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2230.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::KX
-    [UInt16]     $Preference
-    [String]     $Exchanger
+    [UInt16] $Preference
+    [String] $Exchanger
 
     DnsKXRecord() : base() { }
     DnsKXRecord(

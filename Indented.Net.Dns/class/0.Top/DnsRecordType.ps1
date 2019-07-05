@@ -3,6 +3,18 @@ class DnsRecordType {
     [UInt16] $TypeID
 
     DnsRecordType(
+        [RecordType] $value
+    ) {
+        if ($value -eq 'NSAPTR') {
+            $this.Name = 'NSA-PTR'
+        } else {
+            $this.Name = $value
+        }
+
+        $this.TypeId = $value
+    }
+
+    DnsRecordType(
         [String] $value
     ) {
         if ($value -eq 'NSAPTR') {

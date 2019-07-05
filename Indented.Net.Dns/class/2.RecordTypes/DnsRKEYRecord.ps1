@@ -17,7 +17,6 @@ class DnsRKEYRecord : DnsResourceRecord {
         http://tools.ietf.org/html/draft-reid-dnsext-rkey-00
     #>
 
-    [RecordType]          $RecordType = [RecordType]::RKEY
     [UInt16]              $Flags
     [KEYProtocol]         $Protocol
     [EncryptionAlgorithm] $Algorithm

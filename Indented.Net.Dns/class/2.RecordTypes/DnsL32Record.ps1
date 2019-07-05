@@ -12,9 +12,8 @@ class DnsL32Record : DnsResourceRecord {
         https://www.ietf.org/rfc/rfc6742.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::L32
-    [UInt16]     $Preference
-    [String]     $Locator
+    [UInt16] $Preference
+    [String] $Locator
 
     DnsL32Record() : base() { }
     DnsL32Record(

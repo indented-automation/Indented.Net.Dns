@@ -14,7 +14,6 @@ class DnsTLSARecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc6698.txt
     #>
 
-    [RecordType]       $RecordType = [RecordType]::TLSA
     [CertificateUsage] $CertificateUsage
     [Selector]         $Selector
     [MatchingType]     $MatchingType

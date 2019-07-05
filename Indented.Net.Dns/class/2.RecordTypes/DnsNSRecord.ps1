@@ -8,8 +8,7 @@ class DnsNSRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [RecordType] $RecordType = [RecordType]::NS
-    [String]     $Hostname
+    [String] $Hostname
 
     DnsNSRecord() : base() { }
     DnsNSRecord(

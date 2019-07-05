@@ -15,10 +15,9 @@ class DnsCAARecord : DnsResourceRecord {
         http://tools.ietf.org/html/rfc6844
     #>
 
-    [RecordType] $RecordType = [RecordType]::CAA
-    [CAAFlag]    $CAAFlag
-    [String]     $Tag
-    [String]     $Value
+    [CAAFlag] $CAAFlag
+    [String]  $Tag
+    [String]  $Value
 
     DnsCAARecord() : base() { }
     DnsCAARecord(

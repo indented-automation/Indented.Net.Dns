@@ -23,32 +23,41 @@ class DnsResourceRecord {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String]      $Name
-    [UInt32]      $TTL
-    [RecordClass] $RecordClass      = [RecordClass]::IN
-    [RecordType]  $RecordType       = [RecordType]::Empty
-    [UInt16]      $RecordDataLength
+    [String]        $Name
+    [UInt32]        $TTL
+    [RecordClass]   $RecordClass      = [RecordClass]::IN
+    [DnsRecordType] $RecordType       = 'EMPTY'
+    [String]        $RecordData
+    [UInt16]        $RecordDataLength
 
     hidden [Boolean] $IsTruncated
 
-    DnsResourceRecord() { }
+    DnsResourceRecord() {
+        $thisTypeName = $this.GetType().Name
+        if ($thisTypeName -ne 'DnsResourceRecord') {
+            $this.RecordType = $thisTypeName -replace '^Dns|Record$'
+        }
+    }
 
     DnsResourceRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Name = $dnsResourceRecord.Name
-        $this.RecordClass = [RecordClass]$binaryReader.ReadUInt16($true)
+        $this.RecordType = $dnsResourceRecord.RecordType
+
+        $this.RecordClass = $binaryReader.ReadUInt16($true)
         $this.TTL = $binaryReader.ReadUInt32($true)
         $this.RecordDataLength = $binaryReader.ReadUInt16($true)
 
         if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + $this.RecordDataLength)) {
             $this.ReadRecordData($binaryReader)
         }
+        $this.RecordData = $this.RecordDataToString()
     }
 
     static [DnsResourceRecord] Parse(
-        [Byte[]]$bytes
+        [Byte[]] $bytes
     ) {
         $binaryReader = [EndianBinaryReader][MemoryStream]$bytes
 
@@ -56,24 +65,27 @@ class DnsResourceRecord {
     }
 
     static [DnsResourceRecord] Parse(
-        [EndianBinaryReader]$binaryReader
+        [EndianBinaryReader] $binaryReader
     ) {
         $resourceRecord = [DnsResourceRecord]::new()
         $resourceRecord.Name = $binaryReader.ReadDnsDomainName()
 
         if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + 10)) {
-            [Int32]$type = $binaryReader.ReadUInt16($true)
-            if ([Enum]::IsDefined([RecordType], $type)) {
-                $resourceRecord.RecordType = [RecordType]$type
-            } else {
-                $resourceRecord.RecordType = [RecordType]::Unknown
-            }
+            $resourceRecord.RecordType = [Int32]$binaryReader.ReadUInt16($true)
             $typeName = 'Dns{0}Record' -f $resourceRecord.RecordType
 
-            return ($typeName -as [Type])::new(
-                $resourceRecord,
-                $binaryReader
-            )
+            if ($typeName -as [Type]) {
+                return ($typeName -as [Type])::new(
+                    $resourceRecord,
+                    $binaryReader
+                )
+            } else {
+                # Avoids a race condition when loading classes.
+                return ('DnsUnknownRecord' -as [Type])::new(
+                    $resourceRecord,
+                    $binaryReader
+                )
+            }
         } else {
             $resourceRecord.IsTruncated = $true
         }
@@ -93,7 +105,7 @@ class DnsResourceRecord {
         return ''
     }
 
-    # Child classes shoudl override this method if appropriate
+    # Child classes should override this method if appropriate
     hidden [Byte[]] RecordDataToByteArray(
         [Boolean] $useCompressedNames
     ) {
@@ -133,7 +145,7 @@ class DnsResourceRecord {
             $this.TTL
             $this.RecordClass
             $this.RecordType
-            $this.RecordDataToString()
+            $this.RecordData
         )
     }
 }

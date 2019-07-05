@@ -9,8 +9,7 @@ class DnsNIMLOCRecord : DnsResourceRecord {
         http://ana-3.lcs.mit.edu/~jnc/nimrod/dns.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::NIMLOC
-    [Byte[]]     $BinaryData
+    [Byte[]] $BinaryData
 
     DnsNIMLOCRecord() : base() { }
     DnsNIMLOCRecord(

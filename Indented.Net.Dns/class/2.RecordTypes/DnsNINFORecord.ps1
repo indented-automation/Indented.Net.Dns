@@ -14,8 +14,7 @@ class DnsNINFORecord : DnsResourceRecord {
         http://tools.ietf.org/html/draft-reid-dnsext-zs-01
     #>
 
-    [RecordType] $RecordType = [RecordType]::NINFO
-    [String[]]   $ZSData
+    [String[]] $ZSData
 
     DnsNINFORecord() : base() { }
     DnsNINFORecord(

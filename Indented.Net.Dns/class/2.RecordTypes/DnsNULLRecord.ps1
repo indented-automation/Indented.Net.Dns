@@ -10,8 +10,7 @@ class DnsNULLRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::NULL
-    [Byte[]]     $BinaryData
+    [Byte[]] $BinaryData
 
     DnsNULLRecord() : base() { }
     DnsNULLRecord(

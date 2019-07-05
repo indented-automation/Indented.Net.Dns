@@ -25,7 +25,6 @@ class DnsCDNSKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc7344.txt
     #>
 
-    [RecordType]          $RecordType = [RecordType]::CDNSKEY
     [UInt16]              $Flags
     [Boolean]             $ZoneKey
     [Boolean]             $SecureEntryPoint

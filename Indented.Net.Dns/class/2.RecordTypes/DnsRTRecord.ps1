@@ -13,9 +13,8 @@ class DnsRTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::RT
-    [UInt16]     $Preference
-    [String]     $IntermediateHost
+    [UInt16] $Preference
+    [String] $IntermediateHost
 
     DnsRTRecord() : base() { }
     DnsRTRecord(

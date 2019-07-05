@@ -9,8 +9,7 @@ class DnsOPENPGPKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::OPENPGPKEY
-    [String]     $Key
+    [String] $Key
 
     DnsOPENPGPKEYRecord() : base() { }
     DnsOPENPGPKEYRecord(

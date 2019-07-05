@@ -17,7 +17,6 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4025.txt
     #>
 
-    [RecordType]       $RecordType = [RecordType]::IPSECKEY
     [Byte]             $Precedence
     [IPSECGatewayType] $GatewayType
     [IPSECAlgorithm]   $Algorithm

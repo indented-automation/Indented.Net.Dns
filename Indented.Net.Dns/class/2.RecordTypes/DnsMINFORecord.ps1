@@ -14,9 +14,8 @@ class DnsMINFORecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [RecordType] $RecordType = [RecordType]::MINFO
-    [String]     $ResponsibleMailbox
-    [String]     $ErrorMailbox
+    [String] $ResponsibleMailbox
+    [String] $ErrorMailbox
 
     DnsMINFORecord() : base() { }
     DnsMINFORecord(

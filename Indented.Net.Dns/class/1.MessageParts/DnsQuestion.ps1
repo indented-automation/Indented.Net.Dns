@@ -14,9 +14,9 @@ class DnsQuestion {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String]     $Name
-    [RecordType] $RecordType
-    [Object]     $RecordClass
+    [String]        $Name
+    [DnsRecordType] $RecordType
+    [Object]        $RecordClass
 
     DnsQuestion() { }
 
@@ -34,12 +34,12 @@ class DnsQuestion {
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Name = $binaryReader.ReadDnsDomainName()
-        $this.RecordType = [RecordType]$BinaryReader.ReadUInt16($true)
+        $this.RecordType = [DnsRecordType]$binaryReader.ReadUInt16($true)
 
-        if ($this.RecordType -eq [RecordType]::OPT) {
-            $this.RecordClass = $BinaryReader.ReadUInt16($true)
+        if ($this.RecordType -eq 'OPT') {
+            $this.RecordClass = $binaryReader.ReadUInt16($true)
         } else {
-            $this.RecordClass = [RecordClass]$BinaryReader.ReadUInt16($true)
+            $this.RecordClass = [RecordClass]$binaryReader.ReadUInt16($true)
         }
     }
 
@@ -54,10 +54,10 @@ class DnsQuestion {
     }
 
     [String] ToString() {
-        return '{0}            {1} {2}' -f @(
-            $this.Name.PadRight(29, ' ')
-            $this.RecordClass.ToString().PadRight(5, ' ')
-            $this.RecordType.ToString().PadRight(5, ' ')
+        return '{0,-29}            {1,-5} {2,-5}' -f @(
+            $this.Name
+            $this.RecordClass
+            $this.RecordType
         )
     }
 }

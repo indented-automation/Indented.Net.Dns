@@ -15,7 +15,6 @@ class DnsCSYNCRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc7477.txt
     #>
 
-    [RecordType]      $RecordType = [RecordType]::CSYNC
     [UInt32]          $Serial
     [CSYNCFlags]      $Flags
     [DnsRecordType[]] $TypesToProcess

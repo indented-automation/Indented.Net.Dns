@@ -15,7 +15,6 @@ class DnsZONEMDRecord : DnsResourceRecord {
         https://tools.ietf.org/html/draft-wessels-dns-zone-digest-06
     #>
 
-    [RecordType]       $RecordType = [RecordType]::ZONEMD
     [UInt32]           $Serial
     [ZONEMDDigestType] $DigestType
     [Byte]             $Reserved

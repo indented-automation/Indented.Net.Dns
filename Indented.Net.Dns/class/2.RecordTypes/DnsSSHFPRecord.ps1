@@ -12,7 +12,6 @@ class DnsSSHFPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4255.txt
     #>
 
-    [RecordType]   $RecordType = [RecordType]::SSHFP
     [SSHAlgorithm] $Algorithm
     [SSHFPType]    $FPType
     [String]       $Fingerprint

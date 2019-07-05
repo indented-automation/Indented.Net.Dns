@@ -14,11 +14,10 @@ class DnsSINKRecord : DnsResourceRecord {
         The structure above is modified to match dig. Adding a meaning byte.
     #>
 
-    [RecordType] $RecordType = [RecordType]::SINK
-    [Byte]       $Meaning
-    [Byte]       $Coding
-    [Byte]       $Subcoding
-    [String]     $Data
+    [Byte]   $Meaning
+    [Byte]   $Coding
+    [Byte]   $Subcoding
+    [String] $Data
 
     DnsSINKRecord() : base() { }
     DnsSINKRecord(
