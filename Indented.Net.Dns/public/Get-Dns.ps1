@@ -93,7 +93,7 @@ function Get-Dns {
     )
 
     begin {
-        Remove-InternalDnsCacheRecord -AllExpired
+        Clear-InternalDnsCache -ExpiredOnly
     }
 
     process {

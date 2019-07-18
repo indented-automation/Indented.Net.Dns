@@ -6,7 +6,6 @@ function Get-InternalDnsCacheRecord {
         Get-InternalDnsCacheRecord displays records held in the cache.
     .INPUTS
         Indented.Net.Dns.CacheRecord
-        Indented.Net.Dns.ResourceRecord
     .EXAMPLE
         Get-InternalDnsCacheRecord
     .EXAMPLE
@@ -16,44 +15,34 @@ function Get-InternalDnsCacheRecord {
     [CmdletBinding()]
     [OutputType('DnsCacheRecord')]
     param (
+        # The name of the record to retrieve.
         [Parameter(Position = 1, ValueFromPipelineByPropertyName)]
         [String]$Name,
 
+        # The record type to retrieve.
         [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
         [String]$RecordType,
 
-        [Parameter(ValueFromPipelineByPropertyName)]
-        [IPAddress]$IPAddress,
-
+        # The resource type to retrieve.
         [ValidateSet('Address', 'Hint')]
         [String]$ResourceType
     )
 
     process {
-        $whereStatementText = '$_'
-        if ($ResourceType) {
-            $whereStatementText += ' -and $_.ResourceType -eq $ResourceType'
-        }
-        if ($RecordType) {
-            $whereStatementText += ' -and $_.RecordType -eq $RecordType'
-        }
-        if ($IPAddress) {
-            $whereStatementText += ' -and $_.IPAddress -eq $IPAddress'
-        }
-        # Create a ScriptBlock using the statements above.
-        $whereStatement = [ScriptBlock]::Create($whereStatementText)
-
         if ($Name) {
             if (-not $Name.EndsWith('.')) {
-                $Name = '{0}.' -f $Name
+                $Name += '.'
             }
             if ($Script:dnsCache.Contains($Name)) {
-                $Script:dnsCache[$Name] | Where-Object $whereStatement
+                $Script:dnsCache[$Name] | Where-Object {
+                    -not $RecordType -or $_.RecordType -eq $RecordType
+                }
             }
         } else {
-            # Each key may contain multiple values. Forcing a pass through ForEach-Object will
-            # remove the multi-dimensional aspect of the return value.
-            $Script:dnsCache.Values | ForEach-Object { $_ } | Where-Object $whereStatement
+            $Script:dnsCache.Values | ForEach-Object { $_ } | Where-Object {
+                (-not $RecordType -or $_.RecordType -eq $RecordType) -and
+                (-not $ResourceType -or $_.ResourceType -eq $ResourceType)
+            }
         }
     }
 }

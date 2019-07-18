@@ -1,11 +1,11 @@
-function ConvertTo-TimeSpanString {
+function ConvertToTimeSpanString {
     <#
     .SYNOPSIS
         Converts a number of seconds to a string.
     .DESCRIPTION
-        ConvertTo-TimeSpanString accepts values in seconds then uses integer division to represent that time as a string.
+        ConvertToTimeSpanString accepts values in seconds then uses integer division to represent that time as a string.
 
-        ConvertTo-TimeSpanString accepts UInt32 values, overcoming the Int32 type limitation built into New-TimeSpan.
+        ConvertToTimeSpanString accepts UInt32 values, overcoming the Int32 type limitation built into New-TimeSpan.
 
         The format below is used, omitting any values of 0:
 
@@ -13,11 +13,11 @@ function ConvertTo-TimeSpanString {
     .INPUTS
         System.UInt32
     .EXAMPLE
-        ConvertTo-TimeSpanString 28800
+        ConvertToTimeSpanString 28800
     .EXAMPLE
-        [UInt32]::MaxValue | ConvertTo-TimeSpanString
+        [UInt32]::MaxValue | ConvertToTimeSpanString
     .EXAMPLE
-        86400, 700210 | ConvertTo-TimeSpanString
+        86400, 700210 | ConvertToTimeSpanString
     #>
 
     [CmdletBinding()]

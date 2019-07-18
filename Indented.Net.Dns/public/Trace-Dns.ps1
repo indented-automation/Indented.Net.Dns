@@ -1,4 +1,13 @@
 function Trace-Dns {
+    <#
+    .SYNOPSIS
+        Iteratively trace resolution of a name from a root or specified name server.
+    .DESCRIPTION
+        Trace-Dns attempts to resolve a name from a root or specified name server by following authority records.
+    .EXAMPLE
+        Trace-Dns www.google.com.
+    #>
+
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
     [CmdletBinding()]
     param (
@@ -6,13 +15,12 @@ function Trace-Dns {
         [Parameter(Mandatory, Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [String]$Name,
 
-        # The zone name is used to ensure the correct zone is searched for records. This avoids the need for tricks to discover the authority for record types such as CNAME.
-        [Parameter(Mandatory, Position = 2, ValueFromPipelineByPropertyName)]
-        [String]$ZoneName,
-
         # The record type to search for.
         [Parameter(Position = 3, ValueFromPipelineByPropertyName)]
         [RecordType]$RecordType = 'ANY',
+
+        # Advertise support for DNSSEC when executing a query.
+        [Switch]$DnsSec,
 
         # Recursive, or version, queries can be forced to use TCP by setting the TCP switch parameter.
         [Alias('vc')]
@@ -33,48 +41,27 @@ function Trace-Dns {
         [String]$ComputerName
     )
 
-    if (-not $ComputerName) {
-        $rootHints = Get-InternalDnsCacheRecord -RecordType A -ResourceType Hint
-        $ComputerName = $rootHints[(Get-Random -Minimum 0 -Maximum $rootHints.Count)] | Select-Object -ExpandProperty IPAddress
+    begin {
+        if (-not $ComputerName) {
+            $nameServerRecordType = 'A'
+            if ($IPv6) {
+                $nameServerRecordType = 'AAAA'
+            }
+
+            $rootHints = Get-InternalDnsCacheRecord -RecordType $nameServerRecordType -ResourceType Hint
+            $ComputerName = $rootHints.Name | Sort-Object { Get-Random } | Select-Object -First 1
+        }
     }
 
+    process {
+        do {
+            $dnsResponse = Get-Dns @psboundparameters -NoRecursion -ComputerName $ComputerName
 
+            if ($dnsResponse.Header.AuthorityCount -gt 0) {
+                $ComputerName = $dnsResponse.Authority[0].Hostname
+            }
 
-        # Iterative searches
-        #
-
-        # if ($Iterative) {
-        #     # Pick a random(ish) server from Root Hints
-
-
-        #     $NoError = $true; $NoAnswer = $true
-        #     while ($NoError -and $NoAnswer) {
-        #         $DnsResponse = Get-Dns $Name -RecordType $RecordType -RecordClass $RecordClass -NoRecursion -Server $Server @GlobalOptions
-
-        #         if ($DnsResponse.Header.RCode -ne [RCode]::NoError)  {
-        #             $NoError = $false
-        #         } else {
-        #             if ($DnsResponse.Header.ANCount -gt 0) {
-        #                 $NoAnswer = $false
-        #             } elseif ($DnsResponse.Header.NSCount -gt 0) {
-        #                 $Authority = $DnsResponse.Authority | Select-Object -First 1
-
-        #                 # Attempt to match between Authority and Additional. No need to execute another lookup if we have the information.
-        #                 $Server = $DnsResponse.Additional |
-        #                     Where-Object { $_.Name -eq $Authority.Hostname -and $_.RecordType -eq [RecordType]::A } |
-        #                     Select-Object -ExpandProperty IPAddress |
-        #                     Select-Object -First 1
-        #                 if ($Server) {
-        #                     Write-Verbose "Get-Dns: Iterative query: Next name server IP: $Server"
-        #                 } else {
-        #                     $Server = $Authority[0].Hostname
-        #                     Write-Verbose "Get-Dns: Iterative query: Next name server Name: $Server"
-        #                 }
-        #             }
-        #         }
-
-        #         # Return the response to the output pipeline
-        #         $DnsResponse
-        #     }
-        # }
+            $dnsResponse
+        } until ($dnsResponse.Header.AnswerCount -gt 0 -or $dnsResponse.Header.RCode -eq 'NXDOMAIN')
+    }
 }

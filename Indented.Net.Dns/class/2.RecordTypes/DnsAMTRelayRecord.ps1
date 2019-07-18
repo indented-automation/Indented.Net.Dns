@@ -1,4 +1,4 @@
-class DnsAMTRelayRecord : DnsResourceRecord {
+class DnsAMTRELAYRecord : DnsResourceRecord {
     <#
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -17,8 +17,8 @@ class DnsAMTRelayRecord : DnsResourceRecord {
     [AMTRelayType] $Type
     [String]       $Relay
 
-    DnsAMTRelayRecord() : base() { }
-    DnsAMTRelayRecord(
+    DnsAMTRELAYRecord() : base() { }
+    DnsAMTRELAYRecord(
         [DnsResourceRecord]  $dnsResourceRecord,
         [EndianBinaryReader] $binaryReader
     ) : base(

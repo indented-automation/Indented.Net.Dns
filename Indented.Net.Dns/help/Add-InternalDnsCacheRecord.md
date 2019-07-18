@@ -14,22 +14,18 @@ Add a new CacheRecord to the DNS cache object.
 
 ### CacheRecord (Default)
 ```
-Add-InternalDnsCacheRecord -CacheRecord <Object> [-ResourceType <String>] [-Permanent] [<CommonParameters>]
+Add-InternalDnsCacheRecord -CacheRecord <DnsCacheRecord> [-ResourceType <CacheResourceType>] [-Permanent]
+ [<CommonParameters>]
 ```
 
 ### ResourceRecord
 ```
-Add-InternalDnsCacheRecord -ResourceRecord <DnsResourceRecord> [-ResourceType <String>] [-Permanent]
+Add-InternalDnsCacheRecord -ResourceRecord <DnsResourceRecord> [-ResourceType <CacheResourceType>] [-Permanent]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Cache records must expose the following property members:
-
-  - Name
-  - TTL
-  - RecordType
-  - IPAddress
+The DNS cache is used to reduce the effort required to resolve DNS server names used with the ComputerName parameter.
 
 ## EXAMPLES
 
@@ -44,7 +40,7 @@ $CacheRecord | Add-InternalDnsCacheRecord
 A record to add to the cache.
 
 ```yaml
-Type: Object
+Type: DnsCacheRecord
 Parameter Sets: CacheRecord
 Aliases:
 
@@ -74,9 +70,10 @@ Accept wildcard characters: False
 The cache object type.
 
 ```yaml
-Type: String
+Type: CacheResourceType
 Parameter Sets: (All)
 Aliases:
+Accepted values: Hint, Address
 
 Required: False
 Position: Named
@@ -106,7 +103,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### Indented.Net.Dns.CacheRecord
+### DnsCacheRecord
+### DnsResourceRecord
 ## OUTPUTS
 
 ### DnsCacheRecord

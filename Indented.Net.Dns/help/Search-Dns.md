@@ -13,8 +13,8 @@ Search all name servers for a specific record.
 ## SYNTAX
 
 ```
-Search-Dns [-Name] <String> [-ZoneName] <String> [[-RecordType] <RecordType>] [-Tcp] [-Port <UInt16>] [-IPv6]
- [-ComputerName <String>] [<CommonParameters>]
+Search-Dns [-Name] <String> [-ZoneName] <String> [[-RecordType] <RecordType>] [-DnsSec] [-Tcp] [-Port <UInt16>]
+ [-IPv6] [-ComputerName <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -76,6 +76,21 @@ Required: False
 Position: 4
 Default value: ANY
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -DnsSec
+Advertise support for DNSSEC when executing a query.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

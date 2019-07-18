@@ -3,6 +3,7 @@ $enumeration = @(
     'AMTRelayType'
     'ATMAFormat'
     'CAAFlag'
+    'CacheResourceType'
     'CertificateType'
     'CertificateUsage'
     'CSYNCFlags'
@@ -143,6 +144,7 @@ $class = @(
     '2.RecordTypes\DnsZONEMDRecord'
     '3.Message\DnsMessage'
     '4.Client\DnsClient'
+    '5.Cache\DnsCacheRecord'
     'ValidateDnsName'
 )
 
@@ -151,7 +153,7 @@ foreach ($file in $class) {
 }
 
 $private = @(
-    'ConvertTo-TimeSpanString'
+    'ConvertToTimeSpanString'
     'GetDnsSuffixSearchList'
     'ResolveDnsServer'
 )
@@ -162,6 +164,8 @@ foreach ($file in $private) {
 
 $public = @(
     'Add-InternalDnsCacheRecord'
+    'Clear-InternalDnsCacheRecord'
+    'Format-DnsResponse'
     'Get-Dns'
     'Get-DnsServerList'
     'Get-DnsVersion'
@@ -180,6 +184,8 @@ foreach ($file in $public) {
 
 $functionsToExport = @(
     'Add-InternalDnsCacheRecord'
+    'Clear-InternalDnsCache'
+    'Format-DnsResponse'
     'Get-Dns'
     'Get-DnsServerList'
     'Get-DnsVersion'

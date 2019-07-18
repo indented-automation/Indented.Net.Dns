@@ -18,22 +18,11 @@ function Initialize-InternalDnsCache {
     # The primary cache variable stores a stub resource record
     $Script:dnsCache = @{}
 
-    # Allows quick, if limited, reverse lookups against the cache.
-    $Script:dnsCacheReverse = @{}
-
     $path = Join-Path $myinvocation.MyCommand.Module.ModuleBase 'var\named.root'
     if (Test-Path $path) {
         Get-Content $path |
-            Where-Object { $_ -match '(?<Name>\S+)\s+(?<TTL>\d+)\s+(IN\s+)?(?<RecordType>A\s+|AAAA\s+)(?<IPAddress>\S+)' } |
-            ForEach-Object {
-                [PSCustomObject]@{
-                    Name       = $matches.Name
-                    TTL        = [UInt32]$matches.TTL
-                    RecordType = [RecordType]$matches.RecordType
-                    IPAddress  = [IPAddress]$matches.IPAddress
-                    PSTypeName = 'DnsCacheRecord'
-                }
-            } |
-            Add-InternalDnsCacheRecord -Permanent -ResourceType Hint
+            Where-Object { -not $_.StartsWith(';') -and $_ -cmatch '\d+\s+A' } |
+            ForEach-Object { [DnsCacheRecord]::Parse($_) } |
+            Add-InternalDnsCacheRecord -ResourceType Hint -Permanent
     }
 }

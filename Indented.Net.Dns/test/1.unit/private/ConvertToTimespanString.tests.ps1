@@ -15,7 +15,7 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe ConvertTo-TimeSpanString {
+    Describe ConvertToTimeSpanString {
         It 'Converts <Value> to <String>' -TestCases @(
             @{ Value = 1;       String = '1 second' }
             @{ Value = 60;      String = '1 minute' }
@@ -35,7 +35,7 @@ InModuleScope Indented.Net.Dns {
                 [String]$String
             )
 
-            ConvertTo-TimeSpanString -Seconds $Value | Should -Be $String
+            ConvertToTimeSpanString -Seconds $Value | Should -Be $String
         }
     }
 }

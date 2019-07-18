@@ -11,6 +11,7 @@ function Search-Dns {
     param (
         # The name of the record to search for. The name can either be fully-qualified or relative to the zone name.
         [Parameter(Mandatory, Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [AllowEmptyString()]
         [String]$Name,
 
         # The zone name is used to ensure the correct zone is searched for records. This avoids the need for tricks to discover the authority for record types such as CNAME.
@@ -20,6 +21,9 @@ function Search-Dns {
         # The record type to search for.
         [Parameter(Position = 3, ValueFromPipelineByPropertyName)]
         [RecordType]$RecordType = 'ANY',
+
+        # Advertise support for DNSSEC when executing a query.
+        [Switch]$DnsSec,
 
         # Recursive, or version, queries can be forced to use TCP by setting the TCP switch parameter.
         [Alias('vc')]
@@ -41,17 +45,23 @@ function Search-Dns {
     )
 
     process {
-        $psboundparameters.Remove('Name')
-        $psboundparameters.Remove('ZoneName')
-        $psboundparameters.Remove('RecordType')
+        $null = $psboundparameters.Remove('Name')
+        $null = $psboundparameters.Remove('ZoneName')
+        $null = $psboundparameters.Remove('RecordType')
 
         $params = @{
-            Name       = $ZoneName
+            Name       = $ZoneName = '{0}.' -f $ZoneName.TrimEnd('.')
             RecordType = 'NS'
         }
         $dnsResponse = Get-Dns @params @psboundparameters
 
-        foreach ($nameServer in $dnsResponse.Answer) {
+        $Name = '{0}.' -f $Name.TrimEnd('.')
+        if (-not $Name.EndsWith($ZoneName, 'InvariantCultureIgnoreCase')) {
+            $Name = '{0}{1}' -f $Name, $ZoneName
+        }
+        $Name = $Name.TrimStart('.')
+
+        foreach ($answer in $dnsResponse.Answer) {
             $nameServer = $answer.HostName
 
             $params = @{

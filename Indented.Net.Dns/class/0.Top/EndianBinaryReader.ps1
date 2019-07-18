@@ -29,6 +29,31 @@ class EndianBinaryReader : BinaryReader {
         }
     }
 
+    [UInt64] ReadUInt48() {
+        return $this.ReadUInt48($false)
+    }
+
+    [UInt64] ReadUInt48(
+        [Boolean] $isBigEndian
+    ) {
+        if ($isBigEndian) {
+            return [UInt64](
+                ([UInt64]$this.ReadByte() -shl 40) -bor
+                ([UInt64]$this.ReadByte() -shl 32) -bor
+                ([UInt64]$this.ReadByte() -shl 24) -bor
+                ([UInt64]$this.ReadByte() -shl 16) -bor
+                ([UInt64]$this.ReadByte() -shl 8) -bor
+                $this.ReadByte())
+        } else {
+            return [UInt64]($this.ReadByte() -bor
+                ([UInt64]$this.ReadByte() -shl 8) -bor
+                ([UInt64]$this.ReadByte() -shl 16) -bor
+                ([UInt64]$this.ReadByte() -shl 24) -bor
+                ([UInt64]$this.ReadByte() -shl 32) -bor
+                ([UInt64]$this.ReadByte() -shl 40))
+        }
+    }
+
     [UInt64] ReadUInt64(
         [Boolean] $isBigEndian
     ) {

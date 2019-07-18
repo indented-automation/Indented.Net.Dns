@@ -5,72 +5,67 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-InternalDnsCacheRecord
+# Clear-InternalDnsCache
 
 ## SYNOPSIS
-Get the content of the internal DNS cache used by Get-Dns.
+Clears expired entries from the internal DNS cache.
 
 ## SYNTAX
 
 ```
-Get-InternalDnsCacheRecord [[-Name] <String>] [[-RecordType] <String>] [-ResourceType <String>]
- [<CommonParameters>]
+Clear-InternalDnsCache [-ExpiredOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Get-InternalDnsCacheRecord displays records held in the cache.
+Clear expired entries from the internal DNS cache.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-InternalDnsCacheRecord
-```
-
-### EXAMPLE 2
-```
-Get-InternalDnsCacheRecord a.root-servers.net A
+Clear-InternalDnsCacheRecord
 ```
 
 ## PARAMETERS
 
-### -Name
-The name of the record to retrieve.
+### -ExpiredOnly
+{{ Fill ExpiredOnly Description }}
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
-Default value: None
-Accept pipeline input: True (ByPropertyName)
+Position: Named
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -RecordType
-The record type to retrieve.
+### -WhatIf
+Shows what would happen if the cmdlet runs.
+The cmdlet is not run.
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: wi
 
 Required: False
-Position: 3
+Position: Named
 Default value: None
-Accept pipeline input: True (ByPropertyName)
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ResourceType
-The resource type to retrieve.
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: cf
 
 Required: False
 Position: Named
@@ -84,10 +79,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### Indented.Net.Dns.CacheRecord
 ## OUTPUTS
 
-### DnsCacheRecord
 ## NOTES
 
 ## RELATED LINKS

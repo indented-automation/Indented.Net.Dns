@@ -54,6 +54,34 @@ InModuleScope Indented.Net.Dns {
             }
         }
 
+        Context ReadUInt48 {
+            BeforeEach {
+                $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Byte[]](1, 2, 3, 4, 5, 6)
+            }
+
+            It 'Reads a big-endian unsigned 48-bit integer' {
+                $binaryReader.ReadUInt48($true) | Should -Be (
+                    ([UInt64]1 -shl 40) -bor
+                    ([UInt64]2 -shl 32) -bor
+                    ([UInt64]3 -shl 24) -bor
+                    ([UInt64]4 -shl 16) -bor
+                    ([UInt64]5 -shl 8) -bor
+                    6
+                )
+            }
+
+            It 'Reads a little-endian unsigned 48-bit integer' {
+                $binaryReader.ReadUInt48() | Should -Be (
+                    1 -bor
+                    ([UInt64]2 -shl 8) -bor
+                    ([UInt64]3 -shl 16) -bor
+                    ([UInt64]4 -shl 24) -bor
+                    ([UInt64]5 -shl 32) -bor
+                    ([UInt64]6 -shl 40)
+                )
+            }
+        }
+
         Context ReadUInt64 {
             BeforeEach {
                 $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Byte[]](1, 2, 3, 4, 5, 6, 7, 8)
@@ -133,8 +161,31 @@ InModuleScope Indented.Net.Dns {
                 $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Byte[]](5, 97, 98, 99, 100, 101)
             }
 
-            It 'Reads a lenght-prefixed string' {
+            It 'Reads a length-prefixed string' {
                 $binaryReader.ReadDnsCharacterString() | Should -Be 'abcde'
+            }
+        }
+
+        Context ReadBitMap {
+            It 'Reads a bitmap field describing record types starting from window 0' {
+                [Byte[]]$bytes = 0, 1, 80
+                $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$bytes
+
+                $binaryReader.ReadBitMap($bytes.Count) | Should -Be (1, 3)
+            }
+
+            It 'Reads a bitmap field describing record types starting from window 0 to window 1' {
+                [Byte[]]$bytes = 0, 2, 80, 80
+                $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$bytes
+
+                $binaryReader.ReadBitMap($bytes.Count) | Should -Be (1, 3, 9, 11)
+            }
+
+            It 'Reads a bitmap field describing record types starting from window 1' {
+                [Byte[]]$bytes = 1, 1, 80
+                $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$bytes
+
+                $binaryReader.ReadBitMap($bytes.Count) | Should -Be (257, 259)
             }
         }
 

@@ -34,16 +34,20 @@ test_script:
 
 on_success:
   - ps: |
-      $buildInfo = Get-BuildInfo
-      [Version]$tagVersion = (git describe --tags --abbrev=0 2>$null) -replace "^v"
+      $shouldPublish = $env:APPVEYOR_REPO_BRANCH -eq 'master' -and $env:APPVEYOR_REPO_TAG -and -not $env:APPVEYOR_PULL_REQUEST_NUMBER
 
-      if ($tagVersion -eq $buildInfo.Version) {
-          $galleryVersion = [Version](Find-Module $buildInfo.ModuleName).Version
-          if ($buildInfo.Version -gt $galleryVersion) {
-              Start-Build -BuildType Setup, Publish
+      if ($shouldPublish) {
+          $buildInfo = Get-BuildInfo
+          [Version]$tagVersion = $env:APPVEYOR_REPO_TAG_NAME -replace "^v"
+
+          if ($tagVersion -eq $buildInfo.Version) {
+              $galleryModule = Find-Module $buildInfo.ModuleName -ErrorAction SilentlyContinue
+              if (-not $galleryVersion -or $buildInfo.Version -gt $galleryModule.Version) {
+                  Start-Build -BuildType Setup, Publish
+              } else {
+                  Write-Host ('Skipping publish: {0} is already published' -f $env:APPVEYOR_REPO_TAG_NAME) -ForegroundColor Green
+              }
           } else {
-              Write-Host "Skipping publish: Already published" -ForegroundColor Green
+              throw 'Tag does not match build version'
           }
-      } else {
-          Write-Host "Skipping publish: Last tag does not match build version" -ForegroundColor Yellow
       }

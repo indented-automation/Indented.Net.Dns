@@ -36,7 +36,7 @@ Get-DnsServerList -IPv6
 ## PARAMETERS
 
 ### -IPv6
-{{ Fill IPv6 Description }}
+Find DNS servers which support IPv6.
 
 ```yaml
 Type: SwitchParameter

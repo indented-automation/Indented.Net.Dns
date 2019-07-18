@@ -169,7 +169,12 @@ Describe 'Record parser test suite self test' {
                 )
 
                 $instance = ($ClassName -as [Type])::new()
-                $instance.RecordType.ToString() | Should -Be $RecordType
+
+                if ($ClassName -eq 'DnsNSAPPTRRecord') {
+                    $instance.RecordType.ToString() | Should -Be 'NSAP-PTR'
+                } else {
+                    $instance.RecordType.ToString() | Should -Be $RecordType
+                }
             }
         }
     }

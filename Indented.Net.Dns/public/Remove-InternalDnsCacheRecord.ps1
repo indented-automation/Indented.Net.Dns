@@ -1,49 +1,37 @@
 function Remove-InternalDnsCacheRecord {
     <#
     .SYNOPSIS
-        Remove an entry from the DNS cache object.
+        Remove a single entry from the internal DNS cache.
     .DESCRIPTION
-        Remove-InternalDnsCacheRecord allows the removal of individual records from the cache, or removal of all records which expired.
-    .INPUTS
-      Indented.DnsResolver.RecordType
+        Remove a single entry from the internal DNS cache.
     .EXAMPLE
-      Get-InternalDnsCacheRecord a.root-servers.net | Remove-InternalDnsCacheRecord
-    .EXAMPLE
-      Remove-InternalDnsCacheRecord -AllExpired
+        Remove-InternalDnsCacheRecord someName -RecordType A
     #>
 
-    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'CacheRecord')]
-    param(
-        # A record to add to the cache.
-        [Parameter(Mandatory, ValueFromPipeline, ParameterSetName = 'CacheRecord')]
-        [PSTypeName('DnsCacheRecord')]
-        $CacheRecord,
+    [CmdletBinding(SupportsShouldProcess)]
+    param (
+        # The name of the record to retrieve.
+        [Parameter(Position = 1, ValueFromPipelineByPropertyName)]
+        [String]$Name,
 
-        # A time property is used to age entries out of the cache. If permanent is set the time is not, the value will not be purged based on the TTL.
-        [Parameter(Mandatory, ParameterSetName = 'AllExpired')]
-        [Switch]$AllExpired
+        # The record type to retrieve.
+        [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
+        [ValidateSet('A', 'AAAA')]
+        [RecordType]$RecordType
     )
 
-    begin {
-        if ($AllExpired) {
-            $expiredRecords = Get-InternalDnsCacheRecord | Where-Object Status -eq 'Expired'
-            $expiredRecords | Remove-InternalDnsCacheRecord
-        }
-    }
-
     process {
-        if (-not $AllExpired) {
-            if ($Script:dnsCacheReverse.Contains($CacheRecord.IPAddress)) {
-                $Script:dnsCacheReverse.Remove($CacheRecord.IPAddress)
-            }
-            if ($Script:dnsCache.Contains($CacheRecord.Name)) {
-                $Script:dnsCache[$CacheRecord.Name] = $Script:dnsCache[$CacheRecord.Name] |
-                    Where-Object { $_.IPAddress -ne $CacheRecord.IPAddress -and $_.RecordType -ne $CacheRecord.RecordType }
+        if (-not $Name.EndsWith('.')) {
+            $Name += '.'
+        }
 
-                if ($Script:dnsCache[$CacheRecord.Name].Count -eq 0) {
-                    if ($pscmdlet.ShouldProcess('Removing {0} from cache' -f $CacheRecord.Name)) {
-                        $Script:dnsCache.Remove($CacheRecord.Name)
-                    }
+        if ($Script:dnsCache.Contains($Name)) {
+            if ($pscmdlet.ShouldProcess('Removing {0} from cache' -f $Name)) {
+                $Script:dnsCache[$Name] = $Script:dnsCache[$Name] | Where-Object {
+                    -not $RecordType -or $_.RecordType -ne $RecordType
+                }
+                if ($Script:dnsCache[$Name].Count -eq 0) {
+                    $Script:dnsCache.Remove($Name)
                 }
             }
         }

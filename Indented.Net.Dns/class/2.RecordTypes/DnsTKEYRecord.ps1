@@ -51,22 +51,22 @@ class DnsTKEYRecord : DnsResourceRecord {
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Algorithm = $binaryReader.ReadDnsDomainName()
-        $this.Inception = (Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadUInt32($true))
-        $this.Expiration = (Get-Date "01/01/1970").AddSeconds($BinaryReader.ReadUInt32($true))
+        $this.Inception = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
+        $this.Expiration = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
         $this.Mode = $binaryReader.ReadUInt16($true)
         $this.TKEYError = $binaryReader.ReadUInt16($true)
 
         $keySize = $binaryReader.ReadUInt16($true)
-        $this.KeyData = [BitConverter]::ToString($binaryReader.ReadBytes($keySize))
+        $this.KeyData = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($keySize))
 
         $otherSize = $binaryReader.ReadUInt16($true)
         if ($otherSize -gt 0) {
-            $this.OtherData = [BitConverter]::ToString($BinaryReader.ReadBytes($otherSize))
+            $this.OtherData = [EndianBitConverter]::ToHexadecimal($BinaryReader.ReadBytes($otherSize))
         }
     }
 
     hidden [String] RecordDataToString() {
-        return '{0} {1:yyyyMMddHHmmss} {2:yyyyMMddHHmmss} {3} {4} {5}' -f @(
+        return '{0} {1:yyyyMMddHHmmss} {2:yyyyMMddHHmmss} {3:D} {4} {5}' -f @(
             $this.Algorithm
             $this.Inception
             $this.Expiration

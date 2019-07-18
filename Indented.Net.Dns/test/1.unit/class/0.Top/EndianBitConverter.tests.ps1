@@ -65,5 +65,11 @@ InModuleScope Indented.Net.Dns {
                 [EndianBitConverter]::ToHexadecimal($Bytes) | Should -Be $String
             }
         }
+
+        Context ToBase32String {
+            It 'Converts a byte sequence to a base32 encoded string' {
+                [EndianBitConverter]::ToBase32String([Byte[]][Char[]]'hello world') | Should -Be 'D1IMOR3F41RMUSJCC4'
+            }
+        }
     }
 }

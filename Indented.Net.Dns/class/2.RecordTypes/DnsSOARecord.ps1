@@ -108,13 +108,13 @@ class DnsSOARecord : DnsResourceRecord {
             $this.ResponsiblePerson
             $this.Serial
             $this.Refresh
-            (ConvertTo-TimeSpanString -Seconds $this.Refresh)
+            (ConvertToTimeSpanString -Seconds $this.Refresh)
             $this.Retry
-            (ConvertTo-TimeSpanString -Seconds $this.Retry)
+            (ConvertToTimeSpanString -Seconds $this.Retry)
             $this.Expire
-            (ConvertTo-TimeSpanString -Seconds $this.Expire)
+            (ConvertToTimeSpanString -Seconds $this.Expire)
             $this.MinimumTTL
-            (ConvertTo-TimeSpanString -Seconds $this.MinimumTTL)
+            (ConvertToTimeSpanString -Seconds $this.MinimumTTL)
         )
     }
 }

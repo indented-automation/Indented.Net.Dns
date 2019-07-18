@@ -17,6 +17,7 @@ function Get-DnsServerList {
     [CmdletBinding()]
     [OutputType([IPAddress])]
     param (
+        # Find DNS servers which support IPv6.
         [Switch]$IPv6
     )
 

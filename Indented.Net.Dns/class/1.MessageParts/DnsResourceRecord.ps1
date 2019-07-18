@@ -1,7 +1,7 @@
 using namespace System.Collections.Generic
 using namespace System.IO
 
-class DnsResourceRecord {
+class DnsResourceRecord : IEquatable[Object] {
     <#
                                       1  1  1  1  1  1
         0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -81,7 +81,7 @@ class DnsResourceRecord {
                 )
             } else {
                 # Avoids a race condition when loading classes.
-                return ('DnsUnknownRecord' -as [Type])::new(
+                return ('DnsUNKNOWNRecord' -as [Type])::new(
                     $resourceRecord,
                     $binaryReader
                 )
@@ -93,14 +93,14 @@ class DnsResourceRecord {
         return $resourceRecord
     }
 
-    # Child classes should override this method
+    # Child classes must override this method
     hidden [Void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
-    # Child classes should override this method
+    # Child classes must override this method
     hidden [String] RecordDataToString() {
         return ''
     }
@@ -137,6 +137,12 @@ class DnsResourceRecord {
         $bytes.AddRange($recordDataBytes)
 
         return $bytes.ToArray()
+    }
+
+    [Boolean] Equals(
+        [Object] $object
+    ) {
+        return $this.ToString() -eq $object.ToString()
     }
 
     [String] ToString() {
