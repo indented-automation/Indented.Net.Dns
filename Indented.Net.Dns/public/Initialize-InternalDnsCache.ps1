@@ -13,9 +13,6 @@ function Initialize-InternalDnsCache {
     [CmdletBinding()]
     param( )
 
-    # These two variables are consumed by all other -InternalDnsCacheRecord CmdLets.
-
-    # The primary cache variable stores a stub resource record
     $Script:dnsCache = @{}
 
     $path = Join-Path $myinvocation.MyCommand.Module.ModuleBase 'var\named.root'

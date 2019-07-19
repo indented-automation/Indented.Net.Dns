@@ -27,10 +27,15 @@ function Remove-InternalDnsCacheRecord {
 
         if ($Script:dnsCache.Contains($Name)) {
             if ($pscmdlet.ShouldProcess('Removing {0} from cache' -f $Name)) {
-                $Script:dnsCache[$Name] = $Script:dnsCache[$Name] | Where-Object {
-                    -not $RecordType -or $_.RecordType -ne $RecordType
-                }
-                if ($Script:dnsCache[$Name].Count -eq 0) {
+                if ($RecordType) {
+                    $Script:dnsCache[$Name] = $Script:dnsCache[$Name] | Where-Object {
+                        $_.RecordType -ne $RecordType
+                    }
+
+                    if ($Script:dnsCache[$Name].Count -eq 0) {
+                        $Script:dnsCache.Remove($Name)
+                    }
+                } else {
                     $Script:dnsCache.Remove($Name)
                 }
             }

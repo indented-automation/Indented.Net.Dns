@@ -62,6 +62,6 @@ function Trace-Dns {
             }
 
             $dnsResponse
-        } until ($dnsResponse.Header.AnswerCount -gt 0 -or $dnsResponse.Header.RCode -eq 'NXDOMAIN')
+        } until ($dnsResponse.Header.AnswerCount -gt 0 -or $dnsResponse.Header.RCode -ne 'NOERROR')
     }
 }

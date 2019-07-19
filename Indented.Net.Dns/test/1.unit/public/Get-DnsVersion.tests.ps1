@@ -15,9 +15,15 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe Get-DnsServerList {
-        It 'Attempts to get a list of DNS servers which can be used' {
-            Get-DnsServerList | Should -Not -BeNullOrEmpty
+    Describe Get-DnsVersion {
+        BeforeAll {
+            Mock Get-Dns
+        }
+
+        It 'Calls Get-Dns to execute the query' {
+            Get-DnsVersion
+
+            Assert-MockCalled Get-Dns
         }
     }
 }

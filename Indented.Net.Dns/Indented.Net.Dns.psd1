@@ -14,6 +14,9 @@ RootModule = 'Indented.Net.Dns.psm1'
 # Version number of this module.
 ModuleVersion = '6.0.0'
 
+# Supported PSEditions
+CompatiblePSEditions = @('Core', 'Desktop')
+
 # ID used to uniquely identify this module
 GUID = '3571e61d-687b-4bda-bcad-4152cff91bda'
 
@@ -30,7 +33,7 @@ Copyright = '(c) 2017 Chris Dent. All rights reserved.'
 Description = 'DNS debugging tools.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '5.0'
+PowerShellVersion = '5.1'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''

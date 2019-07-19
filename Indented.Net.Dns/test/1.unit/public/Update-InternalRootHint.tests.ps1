@@ -15,9 +15,17 @@ if (-not $UseExisting) {
 #endregion
 
 InModuleScope Indented.Net.Dns {
-    Describe Get-DnsServerList {
-        It 'Attempts to get a list of DNS servers which can be used' {
-            Get-DnsServerList | Should -Not -BeNullOrEmpty
+    Describe Update-InternalRootHint {
+        BeforeAll {
+            Mock Invoke-WebRequest
+            Mock Initialize-InternalDnsCache
+        }
+
+        It 'Downloads and updates named.root from internic' {
+            Update-InternalRootHint
+
+            Assert-MockCalled Invoke-WebRequest
+            Assert-MockCalled Initialize-InternalDnsCache
         }
     }
 }
