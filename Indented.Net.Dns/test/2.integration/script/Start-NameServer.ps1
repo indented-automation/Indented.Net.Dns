@@ -29,7 +29,7 @@ $argumentList = @(
     '-f', 'KSK'
     'signed.indented.co.uk'
 )
-& 'bin\dnssec-keygen.exe' @argumentList
+& 'bin\dnssec-keygen.exe' @argumentList 2>$null
 
 $argumentList = @(
     '-K', 'data'
@@ -38,7 +38,7 @@ $argumentList = @(
     '-3'
     'signed.indented.co.uk'
 )
-& 'bin\dnssec-keygen.exe' @argumentList
+& 'bin\dnssec-keygen.exe' @argumentList 2>$null
 
 $params = @{
     FilePath     = 'bin\named.exe'
