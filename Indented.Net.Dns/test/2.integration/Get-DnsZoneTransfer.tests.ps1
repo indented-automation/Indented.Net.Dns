@@ -22,16 +22,13 @@ Describe Get-DnsZoneTransfer -Tag Integration {
 
         @(
             'server 127.0.0.1 1053'
-            'update add a98.signed.indented.co.uk. 3600 A 1.2.3.4'
-            'update add a99.signed.indented.co.uk. 3600 A 1.2.3.4'
+            'update add a100.insecure.indented.co.uk. 3600 A 1.2.3.4'
+            'update add a101.insecure.indented.co.uk. 3600 A 1.2.3.4'
             'send'
-            'update add a97.signed.indented.co.uk. 3600 A 1.2.3.4'
-            'update add a96.signed.indented.co.uk. 3600 A 1.2.3.4'
-            'send'
-        ) | & $nsupdate -y hmac-sha256:ddns-key:5mJtXnJvb/1FDQQ/5jiB+WellbkBLazVEdIssxAsg1Q= -L 9 2>$null
+        ) | & $nsupdate
 
         $defaultParams = @{
-            ZoneName     = 'signed.indented.co.uk.'
+            ZoneName     = 'insecure.indented.co.uk.'
             ComputerName = '127.0.0.1'
             Port         = 1053
         }
@@ -46,13 +43,26 @@ Describe Get-DnsZoneTransfer -Tag Integration {
     }
 
     It 'When given a serial number, performs an incremental zone transfer' {
-        $dnsResponse = Get-DnsZoneTransfer @defaultParams -SerialNumber 1
+        $getParams = $defaultParams.Clone()
+        $getParams.Name = $getParams.ZoneName
+        $getParams.RecordType = 'SOA'
+        $getParams.Remove('ZoneName')
+        $serial = (Get-Dns @getParams).Answer[0].Serial
+
+        @(
+            'server 127.0.0.1 1053'
+            'update add a102.insecure.indented.co.uk. 3600 A 1.2.3.4'
+            'update add a103.insecure.indented.co.uk. 3600 A 1.2.3.4'
+            'send'
+        ) | & $nsupdate
+
+        $dnsResponse = Get-DnsZoneTransfer @defaultParams -SerialNumber $serial
 
         $dnsResponse.Question[0].RecordType | Should -Be 'IXFR'
         $dnsResponse.Header.RCode | Should -Be 'NoError'
         $dnsResponse.Header.AnswerCount | Should -BeGreaterThan 0
 
         $soaRecords = $dnsResponse.Answer | Where-Object RecordType -eq 'SOA'
-        $soaRecords.Count | Should -BeGreaterOrEqual 2
+        $soaRecords.Count | Should -BeGreaterThan 2
     }
 }
