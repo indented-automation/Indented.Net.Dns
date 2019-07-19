@@ -1,0 +1,14 @@
+$TTL 86400	; 1 day
+@	IN SOA	ns1 hostmaster (
+				1397051954 ; serial
+				5          ; refresh (5 seconds)
+				5          ; retry (5 seconds)
+				1814400    ; expire (3 weeks)
+				3600       ; minimum (1 hour)
+				)
+$TTL 3600	; 1 hour
+			NS	ns1
+
+a01			A	0.0.0.0
+a02			A	255.255.255.255
+ns1			A	127.0.0.1

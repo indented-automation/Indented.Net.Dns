@@ -14,21 +14,18 @@ Add a new CacheRecord to the DNS cache object.
 
 ### CacheRecord (Default)
 ```
-Add-InternalDnsCacheRecord -CacheRecord <Object> [-ResourceType <String>] [-Permanent] [<CommonParameters>]
+Add-InternalDnsCacheRecord -CacheRecord <DnsCacheRecord> [-ResourceType <CacheResourceType>] [-Permanent]
+ [<CommonParameters>]
 ```
 
 ### ResourceRecord
 ```
-Add-InternalDnsCacheRecord -ResourceRecord <Object> [-ResourceType <String>] [-Permanent] [<CommonParameters>]
+Add-InternalDnsCacheRecord -ResourceRecord <DnsResourceRecord> [-ResourceType <CacheResourceType>] [-Permanent]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Cache records must expose the following property members:
-
-  - Name
-  - TTL
-  - RecordType
-  - IPAddress
+The DNS cache is used to reduce the effort required to resolve DNS server names used with the ComputerName parameter.
 
 ## EXAMPLES
 
@@ -43,7 +40,7 @@ $CacheRecord | Add-InternalDnsCacheRecord
 A record to add to the cache.
 
 ```yaml
-Type: Object
+Type: DnsCacheRecord
 Parameter Sets: CacheRecord
 Aliases:
 
@@ -58,14 +55,14 @@ Accept wildcard characters: False
 A resource record to add to the cache.
 
 ```yaml
-Type: Object
+Type: DnsResourceRecord
 Parameter Sets: ResourceRecord
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -73,9 +70,10 @@ Accept wildcard characters: False
 The cache object type.
 
 ```yaml
-Type: String
+Type: CacheResourceType
 Parameter Sets: (All)
 Aliases:
+Accepted values: Hint, Address
 
 Required: False
 Position: Named
@@ -101,15 +99,15 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-### Indented.Net.Dns.CacheRecord
+### DnsCacheRecord
+### DnsResourceRecord
 ## OUTPUTS
 
-### Indented.Net.Dns.CacheRecord
+### DnsCacheRecord
 ## NOTES
 
 ## RELATED LINKS

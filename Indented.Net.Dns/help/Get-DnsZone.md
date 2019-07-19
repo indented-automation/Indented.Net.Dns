@@ -10,7 +10,7 @@ schema: 2.0.0
 # Get-DnsZone
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+{{ Fill in the Synopsis }}
 
 ## SYNTAX
 
@@ -27,7 +27,7 @@ Get-DnsZone [[-Name] <String>] [-ZoneType <ZoneType>] [-Filter <String>] [-Rever
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+{{ Fill in the Description }}
 
 ## EXAMPLES
 
@@ -41,7 +41,7 @@ PS C:\> {{ Add example code here }}
 ## PARAMETERS
 
 ### -CimSession
-{{Fill CimSession Description}}
+{{ Fill CimSession Description }}
 
 ```yaml
 Type: CimSession[]
@@ -56,7 +56,7 @@ Accept wildcard characters: False
 ```
 
 ### -ComputerName
-{{Fill ComputerName Description}}
+{{ Fill ComputerName Description }}
 
 ```yaml
 Type: String[]
@@ -71,7 +71,7 @@ Accept wildcard characters: False
 ```
 
 ### -Filter
-{{Fill Filter Description}}
+{{ Fill Filter Description }}
 
 ```yaml
 Type: String
@@ -86,7 +86,7 @@ Accept wildcard characters: False
 ```
 
 ### -Forward
-{{Fill Forward Description}}
+{{ Fill Forward Description }}
 
 ```yaml
 Type: SwitchParameter
@@ -101,7 +101,7 @@ Accept wildcard characters: False
 ```
 
 ### -Name
-{{Fill Name Description}}
+{{ Fill Name Description }}
 
 ```yaml
 Type: String
@@ -116,7 +116,7 @@ Accept wildcard characters: False
 ```
 
 ### -Reverse
-{{Fill Reverse Description}}
+{{ Fill Reverse Description }}
 
 ```yaml
 Type: SwitchParameter
@@ -131,7 +131,7 @@ Accept wildcard characters: False
 ```
 
 ### -ZoneType
-{{Fill ZoneType Description}}
+{{ Fill ZoneType Description }}
 
 ```yaml
 Type: ZoneType
@@ -147,8 +147,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

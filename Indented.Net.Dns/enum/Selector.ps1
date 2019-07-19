@@ -1,0 +1,4 @@
+enum Selector {
+    FullCertificate
+    SubjectPublicKeyInfo
+}

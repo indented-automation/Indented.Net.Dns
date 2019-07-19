@@ -1,74 +1,62 @@
 ---
 external help file: Indented.Net.Dns-help.xml
 Module Name: Indented.Net.Dns
-online version: http://www.ietf.org/rfc/rfc1034.txt
-http://www.ietf.org/rfc/rfc1035.txt
-http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
+online version:
 schema: 2.0.0
 ---
 
 # Remove-InternalDnsCacheRecord
 
 ## SYNOPSIS
-Remove an entry from the DNS cache object.
+Remove a single entry from the internal DNS cache.
 
 ## SYNTAX
 
-### CacheRecord (Default)
 ```
-Remove-InternalDnsCacheRecord -CacheRecord <Object> [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-### AllExpired
-```
-Remove-InternalDnsCacheRecord [-AllExpired] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-InternalDnsCacheRecord [[-Name] <String>] [[-RecordType] <RecordType>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Remove-InternalDnsCacheRecord allows the removal of individual records from the cache, or removal of all records which expired.
+Remove a single entry from the internal DNS cache.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Get-InternalDnsCacheRecord a.root-servers.net | Remove-InternalDnsCacheRecord
-```
-
-### EXAMPLE 2
-```
-Remove-InternalDnsCacheRecord -AllExpired
+Remove-InternalDnsCacheRecord someName -RecordType A
 ```
 
 ## PARAMETERS
 
-### -CacheRecord
-A record to add to the cache.
+### -Name
+The name of the record to retrieve.
 
 ```yaml
-Type: Object
-Parameter Sets: CacheRecord
+Type: String
+Parameter Sets: (All)
 Aliases:
 
-Required: True
-Position: Named
+Required: False
+Position: 2
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
-### -AllExpired
-A time property is used to age entries out of the cache.
-If permanent is set the time is not, the value will not be purged based on the TTL.
+### -RecordType
+The record type to retrieve.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: AllExpired
+Type: RecordType
+Parameter Sets: (All)
 Aliases:
+Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, TLSA, SMIMEA, HIP, NINFO, RKEY, TALINK, CDS, CDNSKEY, OPENPGPKEY, CSYNC, ZONEMD, SPF, UINFO, UID, GID, UNSPEC, NID, L32, L64, LP, EUI48, EUI64, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, URI, CAA, AVC, DOA, AMTRELAY, TA, DLV, WINS, WINSR, UNKNOWN
 
-Required: True
-Position: Named
-Default value: False
-Accept pipeline input: False
+Required: False
+Position: 3
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -104,12 +92,10 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-### Indented.DnsResolver.RecordType
 ## OUTPUTS
 
 ## NOTES

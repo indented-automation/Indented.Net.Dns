@@ -1,11 +1,204 @@
-# Development mode importer
+$enumeration = @(
+    'AFSDBSubType'
+    'AMTRelayType'
+    'ATMAFormat'
+    'CAAFlag'
+    'CacheResourceType'
+    'CertificateType'
+    'CertificateUsage'
+    'CSYNCFlags'
+    'DigestType'
+    'DistanceType'
+    'DOALocation'
+    'DOAType'
+    'EDnsDNSSECOK'
+    'EDnsOptionCode'
+    'EncryptionAlgorithm'
+    'HeaderFlags'
+    'IanaAddressFamily'
+    'IPSECAlgorithm'
+    'IPSECGatewayType'
+    'KEYAC'
+    'KEYNameType'
+    'KEYProtocol'
+    'LLQErrorCode'
+    'LLQOpCode'
+    'MatchingType'
+    'MessageCompression'
+    'MSDNSOption'
+    'NSEC3Flags'
+    'NSEC3HashAlgorithm'
+    'OpCode'
+    'QR'
+    'RCode'
+    'RecordClass'
+    'RecordType'
+    'Selector'
+    'SINKCoding'
+    'SINKMIMESubCoding'
+    'SINKPrivateAbstractSubCoding'
+    'SINKTextSubCoding'
+    'SSHAlgorithm'
+    'SSHFPType'
+    'TKEYMode'
+    'WINSMappingFlag'
+    'ZONEMDDigestType'
+)
 
-$paths = 'enum', 'class', 'private', 'public' | ForEach-Object {
-    Join-Path $psscriptroot $_
+foreach ($file in $enumeration) {
+    . ("{0}\enum\{1}.ps1" -f $psscriptroot, $file)
 }
-Get-ChildItem $paths -Recurse -Filter *.ps1 | ForEach-Object {
-    . $_.FullName
-}
-. $psscriptroot\InitializeModule.ps1
 
+$class = @(
+    '0.Top\AngularDistance'
+    '0.Top\DnsRecordType'
+    '0.Top\EndianBinaryReader'
+    '0.Top\EndianBitConverter'
+    '1.MessageParts\DnsHeader'
+    '1.MessageParts\DnsQuestion'
+    '1.MessageParts\DnsResourceRecord'
+    '2.RecordTypes\DnsA6Record'
+    '2.RecordTypes\DnsAAAARecord'
+    '2.RecordTypes\DnsAFSDBRecord'
+    '2.RecordTypes\DnsAMTRelayRecord'
+    '2.RecordTypes\DnsAPLRecord'
+    '2.RecordTypes\DnsARecord'
+    '2.RecordTypes\DnsATMARecord'
+    '2.RecordTypes\DnsAVCRecord'
+    '2.RecordTypes\DnsCAARecord'
+    '2.RecordTypes\DnsCDNSKEYRecord'
+    '2.RecordTypes\DnsCDSRecord'
+    '2.RecordTypes\DnsCERTRecord'
+    '2.RecordTypes\DnsCNAMERecord'
+    '2.RecordTypes\DnsCSYNCRecord'
+    '2.RecordTypes\DnsDHCIDRecord'
+    '2.RecordTypes\DnsDLVRecord'
+    '2.RecordTypes\DnsDNAMERecord'
+    '2.RecordTypes\DnsDNSKEYRecord'
+    '2.RecordTypes\DnsDOARecord'
+    '2.RecordTypes\DnsDSRecord'
+    '2.RecordTypes\DnsEIDRecord'
+    '2.RecordTypes\DnsEUI48Record'
+    '2.RecordTypes\DnsEUI64Record'
+    '2.RecordTypes\DnsGIDRecord'
+    '2.RecordTypes\DnsGPOSRecord'
+    '2.RecordTypes\DnsHINFORecord'
+    '2.RecordTypes\DnsHIPRecord'
+    '2.RecordTypes\DnsIPSECKEYRecord'
+    '2.RecordTypes\DnsISDNRecord'
+    '2.RecordTypes\DnsKEYRecord'
+    '2.RecordTypes\DnsKXRecord'
+    '2.RecordTypes\DnsL32Record'
+    '2.RecordTypes\DnsL64Record'
+    '2.RecordTypes\DnsLOCRecord'
+    '2.RecordTypes\DnsLPRecord'
+    '2.RecordTypes\DnsMBRecord'
+    '2.RecordTypes\DnsMDRecord'
+    '2.RecordTypes\DnsMFRecord'
+    '2.RecordTypes\DnsMGRecord'
+    '2.RecordTypes\DnsMINFORecord'
+    '2.RecordTypes\DnsMRRecord'
+    '2.RecordTypes\DnsMXRecord'
+    '2.RecordTypes\DnsNAPTRRecord'
+    '2.RecordTypes\DnsNIDRecord'
+    '2.RecordTypes\DnsNIMLOCRecord'
+    '2.RecordTypes\DnsNINFORecord'
+    '2.RecordTypes\DnsNSAPPTRRecord'
+    '2.RecordTypes\DnsNSAPRecord'
+    '2.RecordTypes\DnsNSEC3PARAMRecord'
+    '2.RecordTypes\DnsNSEC3Record'
+    '2.RecordTypes\DnsNSECRecord'
+    '2.RecordTypes\DnsNSRecord'
+    '2.RecordTypes\DnsNULLRecord'
+    '2.RecordTypes\DnsNXTRecord'
+    '2.RecordTypes\DnsOPENPGPKEYRecord'
+    '2.RecordTypes\DnsOPTRecord'
+    '2.RecordTypes\DnsPTRRecord'
+    '2.RecordTypes\DnsPXRecord'
+    '2.RecordTypes\DnsRKEYRecord'
+    '2.RecordTypes\DnsRPRecord'
+    '2.RecordTypes\DnsRRSIGRecord'
+    '2.RecordTypes\DnsRTRecord'
+    '2.RecordTypes\DnsSIGRecord'
+    '2.RecordTypes\DnsSINKRecord'
+    '2.RecordTypes\DnsSMIMEARecord'
+    '2.RecordTypes\DnsSOARecord'
+    '2.RecordTypes\DnsSPFRecord'
+    '2.RecordTypes\DnsSRVRecord'
+    '2.RecordTypes\DnsSSHFPRecord'
+    '2.RecordTypes\DnsTALINKRecord'
+    '2.RecordTypes\DnsTARecord'
+    '2.RecordTypes\DnsTKEYRecord'
+    '2.RecordTypes\DnsTLSARecord'
+    '2.RecordTypes\DnsTSIGRecord'
+    '2.RecordTypes\DnsTXTRecord'
+    '2.RecordTypes\DnsUIDRecord'
+    '2.RecordTypes\DnsUINFORecord'
+    '2.RecordTypes\DnsUNKNOWNRecord'
+    '2.RecordTypes\DnsUNSPECRecord'
+    '2.RecordTypes\DnsUriRecord'
+    '2.RecordTypes\DnsWINSRecord'
+    '2.RecordTypes\DnsWINSRRecord'
+    '2.RecordTypes\DnsWKSRecord'
+    '2.RecordTypes\DnsX25Record'
+    '2.RecordTypes\DnsZONEMDRecord'
+    '3.Message\DnsMessage'
+    '4.Client\DnsClient'
+    '5.Cache\DnsCacheRecord'
+    'ValidateDnsName'
+)
+
+foreach ($file in $class) {
+    . ("{0}\class\{1}.ps1" -f $psscriptroot, $file)
+}
+
+$private = @(
+    'ConvertToTimeSpanString'
+    'GetDnsSuffixSearchList'
+    'ResolveDnsServer'
+)
+
+foreach ($file in $private) {
+    . ("{0}\private\{1}.ps1" -f $psscriptroot, $file)
+}
+
+$public = @(
+    'Add-InternalDnsCacheRecord'
+    'Clear-InternalDnsCacheRecord'
+    'Format-DnsResponse'
+    'Get-Dns'
+    'Get-DnsServerList'
+    'Get-DnsVersion'
+    'Get-DnsZoneTransfer'
+    'Get-InternalDnsCacheRecord'
+    'Initialize-InternalDnsCache'
+    'Remove-InternalDnsCacheRecord'
+    'Search-Dns'
+    'Trace-Dns'
+    'Update-InternalRootHint'
+)
+
+foreach ($file in $public) {
+    . ("{0}\public\{1}.ps1" -f $psscriptroot, $file)
+}
+
+$functionsToExport = @(
+    'Add-InternalDnsCacheRecord'
+    'Clear-InternalDnsCache'
+    'Format-DnsResponse'
+    'Get-Dns'
+    'Get-DnsServerList'
+    'Get-DnsVersion'
+    'Get-DnsZoneTransfer'
+    'Get-InternalDnsCacheRecord'
+    'Initialize-InternalDnsCache'
+    'Remove-InternalDnsCacheRecord'
+    'Search-Dns'
+    'Trace-Dns'
+    'Update-InternalRootHint'
+)
+Export-ModuleMember -Function $functionsToExport
+
+. ("{0}\InitializeModule.ps1" -f $psscriptroot)
 InitializeModule
+

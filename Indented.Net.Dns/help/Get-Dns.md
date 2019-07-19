@@ -1,9 +1,7 @@
 ---
 external help file: Indented.Net.Dns-help.xml
 Module Name: Indented.Net.Dns
-online version: http://www.ietf.org/rfc/rfc1034.txt
-http://www.ietf.org/rfc/rfc1035.txt
-http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01
+online version:
 schema: 2.0.0
 ---
 
@@ -14,36 +12,10 @@ Get a DNS resource record from a DNS server.
 
 ## SYNTAX
 
-### RecursiveQuery (Default)
 ```
 Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-RecordClass <RecordClass>] [-NoRecursion] [-DnsSec]
- [-NoEDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-SearchList <String[]>] [-NoSearchList]
- [-SerialNumber <UInt32>] [-Server <String>] [-Tcp] [-Port <UInt16>] [-Timeout <Byte>] [-IPv6] [-DnsDebug]
- [<CommonParameters>]
-```
-
-### ZoneTransfer
-```
-Get-Dns [[-Name] <String>] [-ZoneTransfer] [-SerialNumber <UInt32>] [-Server <String>] [-Timeout <Byte>]
- [-IPv6] [-DnsDebug] [<CommonParameters>]
-```
-
-### NSSearch
-```
-Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-NSSearch] [-DnsSec] [-NoEDns]
- [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug] [<CommonParameters>]
-```
-
-### IterativeQuery
-```
-Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-Iterative] [-RecordClass <RecordClass>] [-DnsSec]
- [-NoEDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-Timeout <Byte>] [-DnsDebug] [<CommonParameters>]
-```
-
-### Version
-```
-Get-Dns [-Version] [-Server <String>] [-Tcp] [-Port <UInt16>] [-Timeout <Byte>] [-IPv6] [-DnsDebug]
- [<CommonParameters>]
+ [-EDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-SearchList <String[]>] [-Tcp] [-Port <UInt16>]
+ [-Timeout <Byte>] [-IPv6] [-ComputerName <String>] [-DnsDebug] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -74,48 +46,6 @@ The name is fully-qualified (or root terminated), no additional suffixes will be
 
 ### EXAMPLE 4
 ```
-Get-Dns www.domain.example -NoSearchList
-```
-
-No additional suffixes will be appended.
-
-### EXAMPLE 5
-```
-Get-Dns www.domain.example -Iterative
-```
-
-Attempt to perform an iterative lookup of www.domain.example, starting from the root hints.
-
-### EXAMPLE 6
-```
-Get-Dns www.domain.example CNAME -NSSearch
-```
-
-Attempt to return the CNAME record for www.domain.example from all authoritative servers for the parent zone.
-
-### EXAMPLE 7
-```
-Get-Dns -Version -Server 10.0.0.1
-```
-
-Request a version string from the server 10.0.0.1.
-
-### EXAMPLE 8
-```
-Get-Dns domain.example -ZoneTransfer -Server 10.0.0.1
-```
-
-Request a zone transfer, using AXFR, for domain.example from the server 10.0.0.1.
-
-### EXAMPLE 9
-```
-Get-Dns domain.example -ZoneTransfer -SerialNumber 2 -Server 10.0.0.1
-```
-
-Request a zone transfer, using IXFR and the serial number 2, for domain.example from the server 10.0.0.1.
-
-### EXAMPLE 10
-```
 Get-Dns example. -DnsSec
 ```
 
@@ -129,13 +59,13 @@ IP addresses (IPv4 and IPv6) are automatically converted into an appropriate for
 
 ```yaml
 Type: String
-Parameter Sets: RecursiveQuery, ZoneTransfer, NSSearch, IterativeQuery
+Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: 2
 Default value: .
-Accept pipeline input: True (ByValue)
+Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 
@@ -144,82 +74,14 @@ Any resource record type, by default a query for ANY will be sent.
 
 ```yaml
 Type: RecordType
-Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
+Parameter Sets: (All)
 Aliases: Type
-Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, HIP, NINFO, RKEY, SPF, UINFO, UID, GID, UNSPEC, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, TA, DLV, WINS, WINSR
+Accepted values: EMPTY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, IPSECKEY, RRSIG, NSEC, DNSKEY, DHCID, NSEC3, NSEC3PARAM, TLSA, SMIMEA, HIP, NINFO, RKEY, TALINK, CDS, CDNSKEY, OPENPGPKEY, CSYNC, ZONEMD, SPF, UINFO, UID, GID, UNSPEC, NID, L32, L64, LP, EUI48, EUI64, TKEY, TSIG, IXFR, AXFR, MAILB, MAILA, ANY, URI, CAA, AVC, DOA, AMTRELAY, TA, DLV, WINS, WINSR, UNKNOWN
 
 Required: False
 Position: 3
 Default value: ANY
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Iterative
-Perform a full iterative search for a name starting with the root servers.
-Intermediate queries are resolved using the locally configured name server to reduce the work-load as Get-Dns does not implement response caching.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: IterativeQuery
-Aliases: Trace
-
-Required: True
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -NSSearch
-Locate the authoritative servers for a zone (using Server as a starting point), then execute a the query against each authoritative server.
-Aids the testing of replication failure between authoritative servers.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: NSSearch
-Aliases:
-
-Required: True
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Version
-Generates and sends a query for version.bind.
-using TXT as the RecordType and CH (Chaos) as the RecordClass.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Version
-Aliases:
-
-Required: True
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ZoneTransfer
-Constructs and executes a zone transfer request.
-If SerialNumber is also set an IXFR request will be generated using the algorithm discussed in draft-ietf-dnsind-ixfr-01.
-If SerialNumber is not set an AXFR request will be sent.
-
-The use of TCP or UDP for zone transfer requests is fixed, AXFR will always use TCP.
-IXFR will attempt UDP and switch to TCP if a stub response is returned.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: ZoneTransfer
-Aliases: Transfer
-
-Required: True
-Position: Named
-Default value: False
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -230,7 +92,7 @@ HS (Hesoid) may be used if the name server supports it.
 
 ```yaml
 Type: RecordClass
-Parameter Sets: RecursiveQuery, IterativeQuery
+Parameter Sets: (All)
 Aliases:
 Accepted values: IN, CH, HS, NONE, ANY
 
@@ -247,7 +109,7 @@ Recursion is requested by default.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: RecursiveQuery
+Parameter Sets: (All)
 Aliases: NoRecurse
 
 Required: False
@@ -262,7 +124,7 @@ Advertise support for DNSSEC when executing a query.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -272,12 +134,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -NoEDns
-Disable EDNS support, suppresses OPT RR advertising client support in DNS question.
+### -EDns
+Enable EDNS support, suppresses OPT RR advertising client support in DNS question.
+Automatically enabled if DNSSEC is requested.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -289,11 +152,10 @@ Accept wildcard characters: False
 
 ### -EDnsBufferSize
 By default the EDns buffer size is set to 4096 bytes.
-If NoEDns is used this value is ignored.
 
 ```yaml
 Type: UInt16
-Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -308,8 +170,8 @@ Disable the use of TCP if a truncated response (TC flag) is seen when using UDP.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: RecursiveQuery, NSSearch, IterativeQuery
-Aliases:
+Parameter Sets: (All)
+Aliases: Ignore
 
 Required: False
 Position: Named
@@ -322,70 +184,16 @@ Accept wildcard characters: False
 If a name is not root terminated (does not end with '.') a SearchList will be used for recursive queries.
 If this parameter is not defined Get-Dns will attempt to retrieve a SearchList from the hosts network configuration.
 
-SearchLists are explicitly dropped for Iterative, NSSearch, Zone Transfer and Version queries.
+An empty search list by be specified by providing an empty array for this parameter.
 
 ```yaml
 Type: String[]
-Parameter Sets: RecursiveQuery
+Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -NoSearchList
-The use of a SearchList can be explicitly suppressed using the NoSearchList parameter.
-
-SearchLists are explicitly dropped for Iterative, NSSearch, Zone Transfer and Version queries.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: RecursiveQuery
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -SerialNumber
-The SerialNumber is used only if the RecordType is set to IXFR (either directly, or by using the ZoneTransfer parameter).
-
-```yaml
-Type: UInt32
-Parameter Sets: RecursiveQuery, ZoneTransfer
-Aliases:
-
-Required: False
-Position: Named
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Server
-A server name or IP address to execute a query against.
-If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
-
-If a name is used another lookup will be required to resolve the name to an IP.
-Get-Dns caches responses for queries performed involving the Server parameter.
-The cache may be viewed and maintained using the *-InternalDnsCache CmdLets.
-
-If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
-
-```yaml
-Type: String
-Parameter Sets: RecursiveQuery, ZoneTransfer, Version
-Aliases: ComputerName
-
-Required: False
-Position: Named
-Default value: (Get-DnsServerList -IPv6:$IPv6 | Select-Object -First 1)
+Default value: (GetDnsSuffixSearchList)
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -395,8 +203,8 @@ Recursive, or version, queries can be forced to use TCP by setting the TCP switc
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: RecursiveQuery, Version
-Aliases:
+Parameter Sets: (All)
+Aliases: vc
 
 Required: False
 Position: Named
@@ -411,7 +219,7 @@ The port used to send queries may be changed if a server is listening on a diffe
 
 ```yaml
 Type: UInt16
-Parameter Sets: RecursiveQuery, Version
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -438,17 +246,39 @@ Accept wildcard characters: False
 ```
 
 ### -IPv6
-Force the use of IPv6 for queries, if this parameter is set and the Server is set to a name (e.g.
+Force the use of IPv6 for queries, if this parameter is set and the ComputerName is set to a name (e.g.
 ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: RecursiveQuery, ZoneTransfer, Version
+Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ComputerName
+A server name or IP address to execute a query against.
+If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
+
+If a name is used another lookup will be required to resolve the name to an IP.
+Get-Dns caches responses for queries performed involving the Server parameter.
+The cache may be viewed and maintained using the *-InternalDnsCache CmdLets.
+
+If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases: Server
+
+Required: False
+Position: Named
+Default value: (Get-DnsServerList -IPv6:$IPv6 | Select-Object -First 1)
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -469,21 +299,13 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ## OUTPUTS
 
-### Indented.DnsResolver.Message
+### DnsMessage
 ## NOTES
 
 ## RELATED LINKS
-
-[http://www.ietf.org/rfc/rfc1034.txt
-http://www.ietf.org/rfc/rfc1035.txt
-http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01](http://www.ietf.org/rfc/rfc1034.txt
-http://www.ietf.org/rfc/rfc1035.txt
-http://tools.ietf.org/html/draft-ietf-dnsind-ixfr-01)
-
