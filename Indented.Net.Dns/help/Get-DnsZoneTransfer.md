@@ -13,7 +13,7 @@ Get the content of a DNS zone using zone transfer.
 ## SYNTAX
 
 ```
-Get-DnsZoneTransfer [-ZoneName] <String> [-SerialNumber <UInt32>] [-Port <UInt16>] [-IPv6]
+Get-DnsZoneTransfer [-ZoneName] <String> [-SerialNumber <UInt32>] [-Port <UInt16>] [-Timeout <Byte>] [-IPv6]
  [-ComputerName <String>] [<CommonParameters>]
 ```
 
@@ -73,6 +73,22 @@ Aliases:
 Required: False
 Position: Named
 Default value: 53
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Timeout
+By default, queries will timeout after 5 seconds.
+The value may be set between 1 and 30 seconds.
+
+```yaml
+Type: Byte
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 5
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

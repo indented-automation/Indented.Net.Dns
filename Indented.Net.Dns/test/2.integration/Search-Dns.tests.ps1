@@ -26,6 +26,6 @@ Describe Search-Dns -Tag Integration {
     It 'Returns results from each name server' {
         $nsRecords = Get-Dns -Name $defaultParams.ZoneName -RecordType NS
 
-        @(Search-Dns @defaultParams).Count | Should -Be $nsRecords.Header.AnswerCount
+        @(Search-Dns @defaultParams -Timeout 10).Count | Should -Be $nsRecords.Header.AnswerCount
     }
 }

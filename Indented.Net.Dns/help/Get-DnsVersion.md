@@ -13,7 +13,8 @@ Get the DNS server version.
 ## SYNTAX
 
 ```
-Get-DnsVersion [-Tcp] [[-Port] <UInt16>] [-IPv6] [[-ComputerName] <String>] [<CommonParameters>]
+Get-DnsVersion [-Tcp] [[-Port] <UInt16>] [[-Timeout] <Byte>] [-IPv6] [[-ComputerName] <String>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -71,6 +72,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Timeout
+By default, queries will timeout after 5 seconds.
+The value may be set between 1 and 30 seconds.
+
+```yaml
+Type: Byte
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
+Default value: 5
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -IPv6
 Force the use of IPv6 for queries, if this parameter is set and the ComputerName is set to a name (e.g.
 ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
@@ -103,7 +120,7 @@ Parameter Sets: (All)
 Aliases: Server
 
 Required: False
-Position: 2
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

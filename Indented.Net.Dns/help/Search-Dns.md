@@ -14,7 +14,7 @@ Search all name servers for a specific record.
 
 ```
 Search-Dns [-Name] <String> [-ZoneName] <String> [[-RecordType] <RecordType>] [-DnsSec] [-Tcp] [-Port <UInt16>]
- [-IPv6] [-ComputerName <String>] [<CommonParameters>]
+ [-Timeout <Byte>] [-IPv6] [-ComputerName <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -121,6 +121,22 @@ Aliases:
 Required: False
 Position: Named
 Default value: 53
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Timeout
+By default, queries will timeout after 5 seconds.
+The value may be set between 1 and 30 seconds.
+
+```yaml
+Type: Byte
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 5
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
