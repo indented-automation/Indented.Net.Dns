@@ -36,7 +36,7 @@ test_script:
 
 on_success:
   - ps: |
-      $shouldPublish = $env:APPVEYOR_REPO_BRANCH -eq 'master' -and $env:APPVEYOR_REPO_TAG -and -not $env:APPVEYOR_PULL_REQUEST_NUMBER
+      $shouldPublish = $env:APPVEYOR_REPO_BRANCH -eq 'master' -and $env:APPVEYOR_REPO_TAG -eq 'True' -and -not $env:APPVEYOR_PULL_REQUEST_NUMBER
 
       if ($shouldPublish) {
           $buildInfo = Get-BuildInfo
