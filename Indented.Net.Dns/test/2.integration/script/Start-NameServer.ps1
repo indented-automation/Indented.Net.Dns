@@ -21,25 +21,6 @@ if (-not (Test-Path 'bin\named.exe')) {
     Expand-Archive @params
 }
 
-$argumentList = @(
-    '-K', 'data'
-    '-a', 'RSASHA512'
-    '-b', '2048'
-    '-3'
-    '-f', 'KSK'
-    'signed.indented.co.uk'
-)
-& 'bin\dnssec-keygen.exe' @argumentList 2>$null
-
-$argumentList = @(
-    '-K', 'data'
-    '-a', 'RSASHA512'
-    '-b', '2048'
-    '-3'
-    'signed.indented.co.uk'
-)
-& 'bin\dnssec-keygen.exe' @argumentList 2>$null
-
 $params = @{
     FilePath     = 'bin\named.exe'
     ArgumentList = @(
