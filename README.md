@@ -14,6 +14,8 @@ Indented.Net.Dns can be installed from the PowerShell gallery.
 Install-Module Indented.Net.Dns
 ```
 
+Indented.Net.Dns is compatible with PowerShell 5, 6 and 7 and has been tested on Windows and CentOS.
+
 ## Commands
 
 Indented.Net.Dns provides a number of commands to execute DNS queries against name servers.
