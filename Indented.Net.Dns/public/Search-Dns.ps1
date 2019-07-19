@@ -16,6 +16,7 @@ function Search-Dns {
 
         # The zone name is used to ensure the correct zone is searched for records. This avoids the need for tricks to discover the authority for record types such as CNAME.
         [Parameter(Mandatory, Position = 2, ValueFromPipelineByPropertyName)]
+        [ValidateDnsName()]
         [String]$ZoneName,
 
         # The record type to search for.
