@@ -53,6 +53,8 @@ Start-Process @params
 Start-Sleep -Seconds 5
 
 $argumentList = @(
+    '-c'
+    '"{0}"' -f (Join-Path $pwd -ChildPath 'data\rndc.conf')
     'signing'
     '-nsec3param', '1', '0', '10'
     '5053851B'
