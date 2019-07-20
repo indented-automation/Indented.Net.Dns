@@ -93,12 +93,18 @@ class DnsClient {
     }
 
     [DnsMessage] ReceiveAnswer() {
+        return $this.ReceiveAnswer($true)
+    }
+
+    [DnsMessage] ReceiveAnswer(
+        [Boolean] $convertIdnToUnicode
+    ) {
         try {
             $stopWatch = [StopWatch]::StartNew()
 
             $messageBytes = $this.ReceiveBytes()
 
-            return [DnsMessage]::new($messageBytes)
+            return [DnsMessage]::new($messageBytes, $convertIdnToUnicode)
         } catch {
             throw
         } finally {

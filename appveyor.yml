@@ -1,6 +1,6 @@
 image: Visual Studio 2017
 
-version: 6.0.1.{build}
+version: 6.1.0.{build}
 
 branches:
   only:
@@ -36,11 +36,14 @@ test_script:
 
 on_success:
   - ps: |
-      $shouldPublish = $env:APPVEYOR_REPO_BRANCH -eq 'master' -and $env:APPVEYOR_REPO_TAG -eq 'True' -and -not $env:APPVEYOR_PULL_REQUEST_NUMBER
+      [Version]$tagVersion = (git describe --tags --abbrev=0 2>$null) -replace "^v"
+
+      $shouldPublish = $env:APPVEYOR_REPO_BRANCH -eq 'master' -and
+                       $tagVersion -and
+                       -not $env:APPVEYOR_PULL_REQUEST_NUMBER
 
       if ($shouldPublish) {
           $buildInfo = Get-BuildInfo
-          [Version]$tagVersion = $env:APPVEYOR_REPO_TAG_NAME -replace "^v"
 
           if ($tagVersion -eq $buildInfo.Version) {
               $galleryModule = Find-Module $buildInfo.ModuleName -ErrorAction SilentlyContinue
@@ -50,6 +53,6 @@ on_success:
                   Write-Host ('Skipping publish: {0} is already published' -f $env:APPVEYOR_REPO_TAG_NAME) -ForegroundColor Green
               }
           } else {
-              throw 'Tag does not match build version'
+              Write-Host ('Skipping publish: Tag {0} does not match build version {1}' -f $tagVersion, $buildInfo.Version)
           }
       }

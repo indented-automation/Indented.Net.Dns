@@ -14,8 +14,8 @@ Get a DNS resource record from a DNS server.
 
 ```
 Get-Dns [[-Name] <String>] [[-RecordType] <RecordType>] [-RecordClass <RecordClass>] [-NoRecursion] [-DnsSec]
- [-EDns] [-EDnsBufferSize <UInt16>] [-NoTcpFallback] [-SearchList <String[]>] [-Tcp] [-Port <UInt16>]
- [-Timeout <Byte>] [-IPv6] [-ComputerName <String>] [-DnsDebug] [<CommonParameters>]
+ [-EDns] [-EDnsBufferSize <UInt16>] [-DisableIdnConversion] [-NoTcpFallback] [-SearchList <String[]>] [-Tcp]
+ [-Port <UInt16>] [-Timeout <Byte>] [-IPv6] [-ComputerName <String>] [-DnsDebug] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -161,6 +161,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: 4096
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -DisableIdnConversion
+Disables conversion of international domain names to unicode in responses.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

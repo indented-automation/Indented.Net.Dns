@@ -10,6 +10,7 @@ function Get-DnsZoneTransfer {
     param (
         # The name of the zone to transfer.
         [Parameter(Mandatory, Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [TransformDnsName()]
         [ValidateDnsName()]
         [String]$ZoneName,
 

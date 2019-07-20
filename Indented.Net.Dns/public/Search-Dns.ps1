@@ -12,10 +12,12 @@ function Search-Dns {
         # The name of the record to search for. The name can either be fully-qualified or relative to the zone name.
         [Parameter(Mandatory, Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [AllowEmptyString()]
+        [TransformDnsName()]
         [String]$Name,
 
         # The zone name is used to ensure the correct zone is searched for records. This avoids the need for tricks to discover the authority for record types such as CNAME.
         [Parameter(Mandatory, Position = 2, ValueFromPipelineByPropertyName)]
+        [TransformDnsName()]
         [ValidateDnsName()]
         [String]$ZoneName,
 
