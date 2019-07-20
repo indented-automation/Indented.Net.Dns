@@ -145,6 +145,7 @@ $class = @(
     '3.Message\DnsMessage'
     '4.Client\DnsClient'
     '5.Cache\DnsCacheRecord'
+    'TransformDnsName'
     'ValidateDnsName'
 )
 

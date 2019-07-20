@@ -1,8 +1,13 @@
 using namespace System.Collections.Generic
+using namespace System.Globalization
 using namespace System.IO
 using namespace System.Text
 
 class EndianBinaryReader : BinaryReader {
+    [Boolean] $ConvertIdnToUnicode = $true
+
+    hidden [IdnMapping] $idnMapping = [IdnMapping]::new()
+
     EndianBinaryReader([Stream]$BaseStream) : base($BaseStream) { }
 
     [UInt16] ReadUInt16(
@@ -92,7 +97,9 @@ class EndianBinaryReader : BinaryReader {
         return $this.ReadDnsCharacterString([Ref]$length)
     }
 
-    [String] ReadDnsCharacterString([Ref]$Length) {
+    [String] ReadDnsCharacterString(
+        [Ref] $Length
+    ) {
         [Char[]]$escapeChars = @(
             92
             34
@@ -117,7 +124,9 @@ class EndianBinaryReader : BinaryReader {
         return $string
     }
 
-    [UInt16[]] ReadBitMap([Int32]$length) {
+    [UInt16[]] ReadBitMap(
+        [Int32] $length
+    ) {
         [UInt16[]]$bits = while ($length -gt 0) {
             $windowNumber = $this.ReadByte()
             $bitMapLength = $this.ReadByte()
@@ -141,7 +150,6 @@ class EndianBinaryReader : BinaryReader {
 
         return $bits
     }
-
 
     #   DNS messages implement compression to avoid bloat by repeated use of labels.
     #
@@ -186,10 +194,28 @@ class EndianBinaryReader : BinaryReader {
             $null = $name.Append('.')
         }
 
-        return $name.ToString()
+        $name = $name.ToString()
+        if ($this.ConvertIdnToUnicode) {
+            if ($name -eq '.') {
+                return $name
+            }
+            if ($name -match 'xn--') {
+                try {
+                    return $this.idnMapping.GetUnicode($name)
+                } catch {
+                    return $name
+                }
+            } else {
+                return $name
+            }
+        } else {
+            return $name
+        }
     }
 
-    [String] ReadDnsDomainName([Ref]$Length) {
+    [String] ReadDnsDomainName(
+        [Ref] $Length
+    ) {
         $start = $this.BaseStream.Position
         $value = $this.ReadDnsDomainName()
         $end = $this.BaseStream.Position

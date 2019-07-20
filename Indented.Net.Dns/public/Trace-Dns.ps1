@@ -13,6 +13,7 @@ function Trace-Dns {
     param (
         # The name of the record to search for. The name can either be fully-qualified or relative to the zone name.
         [Parameter(Mandatory, Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [TransformDnsName()]
         [ValidateDnsName()]
         [String]$Name,
 

@@ -32,6 +32,7 @@ function Get-Dns {
     param (
         # A resource name to query, by default Get-Dns will use '.' as the name. IP addresses (IPv4 and IPv6) are automatically converted into an appropriate format to aid PTR queries.
         [Parameter(Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [TransformDnsName()]
         [ValidateDnsName()]
         [String]$Name = ".",
 
@@ -55,6 +56,9 @@ function Get-Dns {
 
         # By default the EDns buffer size is set to 4096 bytes.
         [UInt16]$EDnsBufferSize = 4096,
+
+        # Disables conversion of international domain names to unicode in responses.
+        [Switch]$DisableIdnConversion,
 
         # Disable the use of TCP if a truncated response (TC flag) is seen when using UDP.
         [Alias('Ignore')]
@@ -155,7 +159,7 @@ function Get-Dns {
                     $Port
                 )
 
-                $dnsResponse = $dnsClient.ReceiveAnswer()
+                $dnsResponse = $dnsClient.ReceiveAnswer(-not $DisableIdnConversion)
                 $dnsResponse.ComputerName = $dnsClient.RemoteEndPoint
                 $dnsResponse.TimeTaken = $dnsClient.TimeTaken.TotalMilliseconds
                 $dnsClient.Close()

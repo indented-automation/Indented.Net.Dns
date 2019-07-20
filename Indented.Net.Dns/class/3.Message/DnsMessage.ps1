@@ -72,9 +72,25 @@ class DnsMessage {
     }
 
     DnsMessage(
-        [Byte[]]$message
+        [Byte[]] $message
+    ) {
+        $this.ReadDnsMessage($message, $true)
+    }
+
+    DnsMessage(
+        [Byte[]]  $message,
+        [Boolean] $convertIdnToUnicode
+    ) {
+        $this.ReadDnsMessage($message, $convertIdnToUnicode)
+    }
+
+    hidden [Void] ReadDnsMessage(
+        [Byte[]]  $message,
+        [Boolean] $convertIdnToUnicode
     ) {
         $binaryReader = [EndianBinaryReader][MemoryStream]$message
+        $binaryReader.ConvertIdnToUnicode = $convertIdnToUnicode
+
         $this.Size = $message.Length
 
         $this.Header = [DnsHeader]$binaryReader
