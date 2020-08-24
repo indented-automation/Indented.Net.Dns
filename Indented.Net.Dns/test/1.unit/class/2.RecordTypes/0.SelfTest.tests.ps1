@@ -1,28 +1,30 @@
-#region:TestFileHeader
-param (
-    [Boolean]$UseExisting
-)
-
-$moduleBase = $psscriptroot.Substring(0, $psscriptroot.IndexOf("\test"))
-if (-not $UseExisting) {
-    $stubBase = Resolve-Path (Join-Path $moduleBase "test*\stub\*")
-    if ($null -ne $stubBase) {
-        $stubBase | Import-Module -Force
+New-Module PesterEx -ScriptBlock {
+    function BeforeDiscovery ([ScriptBlock] $ScriptBlock) {
+        . $ScriptBlock
     }
-
-    Import-Module $moduleBase -Force
-}
-#endregion
+} -PassThru | Import-Module -Force
 
 Describe 'Record parser test suite self test' {
-    Context 'Test files' {
-        BeforeAll {
-            $testCases = Get-ChildItem $moduleBase\class\*RecordTypes\Dns*Record.ps1 | ForEach-Object {
-                @{ ClassName = $_.BaseName }
+    BeforeDiscovery {
+        $moduleBase = $psscriptroot.Substring(0, $psscriptroot.IndexOf("\test"))
+        $dnsRecordTypes = Get-ChildItem $moduleBase\class\*RecordTypes\Dns*Record.ps1 | ForEach-Object {
+            @{
+                ClassName  = $_.BaseName
+                RecordType = $_.BaseName -replace '^Dns|Record$'
             }
         }
 
-        It 'The class <ClassName> has a test suite' -TestCases $testCases {
+        $dnsRecordTypeTests = Get-ChildItem $psscriptroot -Filter Dns*.tests.ps1 | ForEach-Object {
+            @{
+                Name      = $_.Name
+                ClassName = $_.BaseName -replace '\.tests$'
+                Path      = $_.FullName
+            }
+        }
+    }
+
+    Context 'Test files' {
+        It 'The class <ClassName> has a test suite' -TestCases $dnsRecordTypes {
             param (
                 [String]$ClassName
             )
@@ -32,13 +34,7 @@ Describe 'Record parser test suite self test' {
     }
 
     Context 'Test file content' {
-        BeforeAll {
-            $testCases = Get-ChildItem $psscriptroot -Filter Dns*.tests.ps1 | ForEach-Object {
-                @{ Name = $_.Name; ClassName = $_.BaseName -replace '\.tests$'; Path = $_.FullName }
-            }
-        }
-
-        It 'The test file <Name> has content' -TestCases $testCases {
+        It 'The test file <Name> has content' -TestCases $dnsRecordTypeTests {
             param (
                 [String]$Name,
 
@@ -52,7 +48,7 @@ Describe 'Record parser test suite self test' {
             ) | Should -Not -BeNullOrEmpty
         }
 
-        It 'The test file <Name> has describe named <ClassName>' -TestCases $testCases {
+        It 'The test file <Name> has describe named <ClassName>' -TestCases $dnsRecordTypeTests {
             param (
                 [String]$Name,
 
@@ -80,7 +76,7 @@ Describe 'Record parser test suite self test' {
             }
         }
 
-        It 'The test file <Name> includes Parser tests' -TestCases $testCases {
+        It 'The test file <Name> includes Parser tests' -TestCases $dnsRecordTypeTests {
             param (
                 [String]$Name,
 
@@ -105,7 +101,7 @@ Describe 'Record parser test suite self test' {
             ) | Should -Not -BeNullOrEmpty
         }
 
-        It 'The test file <Name> tests the parser for <ClassName>' -TestCases $testCases {
+        It 'The test file <Name> tests the parser for <ClassName>' -TestCases $dnsRecordTypeTests {
             param (
                 [String]$Name,
 
@@ -143,38 +139,40 @@ Describe 'Record parser test suite self test' {
         }
     }
 
-    InModuleScope Indented.Net.Dns {
-        Context 'RecordType' {
-            BeforeAll {
-                $moduleBase = $psscriptroot.Substring(0, $psscriptroot.IndexOf("\test"))
-                $testCases = Get-ChildItem $moduleBase\class\*RecordTypes\Dns*Record.ps1 | ForEach-Object {
-                    @{ ClassName = $_.BaseName; RecordType = $_.BaseName -replace '^Dns|Record$' }
-                }
-            }
+    Context 'RecordType' {
+        It 'The RecordType <RecordType> is valid' -TestCases $dnsRecordTypes {
+            param (
+                [String]$RecordType
+            )
 
-            It 'The RecordType <RecordType> is valid' -TestCases $testCases {
+            InModuleScope -ModuleName Indented.Net.Dns -Parameters @{ RecordType = $RecordType } {
                 param (
-                    [String]$RecordType
+                    $RecordType
                 )
-
                 $value = [RecordType]::Unknown
-                [RecordType]::TryParse($RecordType.ToUpper(), [Ref]$value) | Should -BeTrue
-            }
+                [RecordType]::TryParse($RecordType.ToUpper(), [Ref]$value)
+            } | Should -BeTrue
+        }
 
-            It 'The class <ClassName> has RecordType set to <RecordType>' -TestCases $testCases {
+        It 'The class <ClassName> has RecordType set to <RecordType>' -TestCases $dnsRecordTypes {
+            param (
+                [String]$ClassName,
+
+                [String]$RecordType
+            )
+
+            $instance = InModuleScope -ModuleName Indented.Net.Dns -Parameters @{ ClassName = $ClassName } {
                 param (
-                    [String]$ClassName,
-
-                    [String]$RecordType
+                    $ClassName
                 )
 
-                $instance = ($ClassName -as [Type])::new()
+                ($ClassName -as [Type])::new()
+            }
 
-                if ($ClassName -eq 'DnsNSAPPTRRecord') {
-                    $instance.RecordType.ToString() | Should -Be 'NSAP-PTR'
-                } else {
-                    $instance.RecordType.ToString() | Should -Be $RecordType
-                }
+            if ($ClassName -eq 'DnsNSAPPTRRecord') {
+                $instance.RecordType.ToString() | Should -Be 'NSAP-PTR'
+            } else {
+                $instance.RecordType.ToString() | Should -Be $RecordType
             }
         }
     }
