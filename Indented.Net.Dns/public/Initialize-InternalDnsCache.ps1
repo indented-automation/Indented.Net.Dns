@@ -15,7 +15,7 @@ function Initialize-InternalDnsCache {
 
     $Script:dnsCache = @{}
 
-    $path = Join-Path $myinvocation.MyCommand.Module.ModuleBase 'var\named.root'
+    $path = Join-Path $MyInvocation.MyCommand.Module.ModuleBase 'var\named.root'
     if (Test-Path $path) {
         Get-Content $path |
             Where-Object { -not $_.StartsWith(';') -and $_ -cmatch '\d+\s+A' } |

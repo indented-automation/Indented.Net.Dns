@@ -16,9 +16,9 @@ class DnsGPOSRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1712.txt
     #>
 
-    [String] $Longitude
-    [String] $Latitude
-    [String] $Altitude
+    [string] $Longitude
+    [string] $Latitude
+    [string] $Altitude
 
     DnsGPOSRecord() : base() { }
     DnsGPOSRecord(
@@ -29,7 +29,7 @@ class DnsGPOSRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Longitude = $binaryReader.ReadDnsCharacterString()
@@ -37,7 +37,7 @@ class DnsGPOSRecord : DnsResourceRecord {
         $this.Altitude = $binaryReader.ReadDnsCharacterString()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '"{0}" "{1}" "{2}"' -f @(
             $this.Longitude
             $this.Latitude

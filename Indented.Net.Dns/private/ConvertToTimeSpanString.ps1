@@ -21,7 +21,7 @@ function ConvertToTimeSpanString {
     #>
 
     [CmdletBinding()]
-    [OutputType([String])]
+    [OutputType([string])]
     param (
         # A number of seconds as an unsigned 32-bit integer.
         [Parameter(Mandatory, ValueFromPipeline)]

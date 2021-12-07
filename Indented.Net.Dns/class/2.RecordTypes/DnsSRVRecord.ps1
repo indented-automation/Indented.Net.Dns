@@ -17,10 +17,10 @@ class DnsSRVRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2782.txt
     #>
 
-    [UInt16] $Priority
-    [UInt16] $Weight
-    [UInt16] $Port
-    [String] $Hostname
+    [ushort] $Priority
+    [ushort] $Weight
+    [ushort] $Port
+    [string] $Hostname
 
     DnsSRVRecord() : base() { }
     DnsSRVRecord(
@@ -31,7 +31,7 @@ class DnsSRVRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Priority = $binaryReader.ReadUInt16($true)
@@ -40,7 +40,7 @@ class DnsSRVRecord : DnsResourceRecord {
         $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1} {2} {3}' -f @(
             $this.Priority
             $this.Weight

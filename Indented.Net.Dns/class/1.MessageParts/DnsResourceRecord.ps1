@@ -23,14 +23,14 @@ class DnsResourceRecord : IEquatable[Object] {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String]        $Name
+    [string]        $Name
     [UInt32]        $TTL
     [RecordClass]   $RecordClass      = [RecordClass]::IN
     [DnsRecordType] $RecordType       = 'EMPTY'
-    [String]        $RecordData
-    [UInt16]        $RecordDataLength
+    [string]        $RecordData
+    [ushort]        $RecordDataLength
 
-    hidden [Boolean] $IsTruncated
+    hidden [bool] $IsTruncated
 
     DnsResourceRecord() {
         $thisTypeName = $this.GetType().Name
@@ -57,7 +57,7 @@ class DnsResourceRecord : IEquatable[Object] {
     }
 
     static [DnsResourceRecord] Parse(
-        [Byte[]] $bytes
+        [byte[]] $bytes
     ) {
         $binaryReader = [EndianBinaryReader][MemoryStream]$bytes
 
@@ -71,7 +71,7 @@ class DnsResourceRecord : IEquatable[Object] {
         $resourceRecord.Name = $binaryReader.ReadDnsDomainName()
 
         if ($binaryReader.BaseStream.Capacity -ge ($binaryReader.BaseStream.Position + 10)) {
-            $resourceRecord.RecordType = [Int32]$binaryReader.ReadUInt16($true)
+            $resourceRecord.RecordType = [int]$binaryReader.ReadUInt16($true)
             $typeName = 'Dns{0}Record' -f $resourceRecord.RecordType
 
             if ($typeName -as [Type]) {
@@ -94,58 +94,58 @@ class DnsResourceRecord : IEquatable[Object] {
     }
 
     # Child classes must override this method
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
     # Child classes must override this method
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return ''
     }
 
     # Child classes should override this method if appropriate
-    hidden [Byte[]] RecordDataToByteArray(
-        [Boolean] $useCompressedNames
+    hidden [byte[]] RecordDataToByteArray(
+        [bool] $useCompressedNames
     ) {
-        return [Byte[]]::new($this.RecordDataLength)
+        return [byte[]]::new($this.RecordDataLength)
     }
 
-    [Byte[]] ToByteArray() {
+    [byte[]] ToByteArray() {
         return $this.ToByteArray($true)
     }
 
-    [Byte[]] ToByteArray(
-        [Boolean] $useCompressedNames
+    [byte[]] ToByteArray(
+        [bool] $useCompressedNames
     ) {
-        $bytes = [List[Byte]]::new()
+        $bytes = [List[byte]]::new()
 
         if ($useCompressedNames) {
-            $bytes.AddRange([Byte[]](0xC0, 0x0C))
+            $bytes.AddRange([byte[]](0xC0, 0x0C))
         } else {
             $bytes.AddRange([EndianBinaryReader]::GetDnsDomainNameBytes($this.Name))
         }
 
-        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordType, $true))
-        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordClass, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$this.RecordType, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$this.RecordClass, $true))
         $bytes.AddRange([EndianBitConverter]::GetBytes([UInt32]$this.TTL, $true))
 
         $recordDataBytes = $this.RecordDataToByteArray($useCompressedNames)
 
-        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$recordDataBytes.Count, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$recordDataBytes.Count, $true))
         $bytes.AddRange($recordDataBytes)
 
         return $bytes.ToArray()
     }
 
-    [Boolean] Equals(
+    [bool] Equals(
         [Object] $object
     ) {
         return $this.ToString() -eq $object.ToString()
     }
 
-    [String] ToString() {
+    [string] ToString() {
         return '{0,-29} {1,-10} {2,-5} {3,-10} {4}' -f @(
             $this.Name
             $this.TTL

@@ -14,8 +14,8 @@ class DnsMINFORecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [String] $ResponsibleMailbox
-    [String] $ErrorMailbox
+    [string] $ResponsibleMailbox
+    [string] $ErrorMailbox
 
     DnsMINFORecord() : base() { }
     DnsMINFORecord(
@@ -26,14 +26,14 @@ class DnsMINFORecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.ResponsibleMailbox = $binaryReader.ReadDnsDomainName()
         $this.ErrorMailbox = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.ResponsibleMailbox
             $this.ErrorMailbox

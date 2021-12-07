@@ -21,9 +21,9 @@ class DnsHIPRecord : DnsResourceRecord {
     #>
 
     [IPSECAlgorithm] $PublicKeyAlgorithm
-    [String]         $HIT
-    [String]         $PublicKey
-    [String[]]       $RendezvousServers
+    [string]         $HIT
+    [string]         $PublicKey
+    [string[]]       $RendezvousServers
 
 
     DnsHIPRecord() : base() { }
@@ -35,7 +35,7 @@ class DnsHIPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $hitLength = $binaryReader.ReadByte()
@@ -52,14 +52,14 @@ class DnsHIPRecord : DnsResourceRecord {
             $this.RendezvousServers = do {
                 $entryLength = 0
 
-                $binaryReader.ReadDnsDomainName([Ref]$entryLength)
+                $binaryReader.ReadDnsDomainName([ref]$entryLength)
 
                 $length -= $entryLength
             } until ($length -le 0)
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0:D} {1} {2} {3}' -f @(
             $this.PublicKeyAlgorithm
             $this.HIT

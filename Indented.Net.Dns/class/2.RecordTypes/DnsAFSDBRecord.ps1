@@ -13,8 +13,8 @@ class DnsAFSDBRecord : DnsResourceRecord {
     #>
 
     [AFSDBSubType] $SubType
-    [UInt16]       $SubTypeValue
-    [String]       $Hostname
+    [ushort]       $SubTypeValue
+    [string]       $Hostname
 
     DnsAFSDBRecord() : base() { }
     DnsAFSDBRecord(
@@ -25,17 +25,17 @@ class DnsAFSDBRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.SubTypeValue = $binaryReader.ReadUInt16($true)
-        if ([Enum]::IsDefined([AFSDBSubType], [Int32]$this.SubTypeValue)) {
-            $this.SubType = [Int32]$this.SubTypeValue
+        if ([Enum]::IsDefined([AFSDBSubType], [int]$this.SubTypeValue)) {
+            $this.SubType = [int]$this.SubTypeValue
         }
         $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.SubTypeValue
             $this.Hostname

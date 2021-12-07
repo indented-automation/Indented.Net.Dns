@@ -5,14 +5,14 @@ function ResolveDnsServer {
     [OutputType([IPAddress])]
     param (
         # The name or IP address of a DNS server to use.
-        [String]$ComputerName,
+        [string]$ComputerName,
 
         # Whether or not IPv6 will be used.
-        [Switch]$IPv6
+        [switch]$IPv6
     )
 
     $ipAddress = [IPAddress]::Any
-    if ([IPAddress]::TryParse($ComputerName, [Ref]$ipAddress)) {
+    if ([IPAddress]::TryParse($ComputerName, [ref]$ipAddress)) {
         return $ipAddress
     } else {
         if ($IPv6) {
@@ -45,5 +45,5 @@ function ResolveDnsServer {
         [ErrorCategory]::InvalidArgument,
         $ComputerName
     )
-    $pscmdlet.ThrowTerminatingError($errorRecord)
+    $PSCmdlet.ThrowTerminatingError($errorRecord)
 }

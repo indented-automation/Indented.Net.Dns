@@ -1,6 +1,6 @@
 class DnsRecordType : IComparable, IEquatable[Object] {
-    [String] $Name
-    [UInt16] $TypeID
+    [string] $Name
+    [ushort] $TypeID
 
     DnsRecordType(
         [RecordType] $value
@@ -15,7 +15,7 @@ class DnsRecordType : IComparable, IEquatable[Object] {
     }
 
     DnsRecordType(
-        [String] $value
+        [string] $value
     ) {
         if ($value -eq 'NSAPPTR') {
             $this.Name = 'NSAP-PTR'
@@ -36,7 +36,7 @@ class DnsRecordType : IComparable, IEquatable[Object] {
     }
 
     DnsRecordType(
-        [Int32] $value
+        [int] $value
     ) {
         $this.TypeID = $value
         if ([RecordType].IsEnumDefined($value)) {
@@ -50,8 +50,8 @@ class DnsRecordType : IComparable, IEquatable[Object] {
         }
     }
 
-    hidden static [UInt16] op_Implicit([DnsRecordType] $dnsRecordType) {
-        return [Int32]$dnsRecordType.TypeID
+    hidden static [ushort] op_Implicit([DnsRecordType] $dnsRecordType) {
+        return [int]$dnsRecordType.TypeID
     }
 
     # Hack to support more than one cast
@@ -59,17 +59,17 @@ class DnsRecordType : IComparable, IEquatable[Object] {
         return [RecordType]$dnsRecordType.TypeID
     }
 
-    [Int32] CompareTo(
+    [int] CompareTo(
         [Object] $object
     ) {
-        [UInt16]$uint16 = 0
+        [ushort]$uint16 = 0
         if ($object -is [DnsRecordType]) {
             return $this.TypeID.CompareTo($object.TypeID)
         } elseif ($object -is [RecordType]) {
-            return $this.TypeID.CompareTo([UInt16]$object)
-        } elseif ([Int32]::TryParse($object, [Ref]$uint16)) {
+            return $this.TypeID.CompareTo([ushort]$object)
+        } elseif ([int]::TryParse($object, [ref]$uint16)) {
             return $this.TypeID.CompareTo($uint16)
-        } elseif ($object -is [String]) {
+        } elseif ($object -is [string]) {
             try {
                 return $this.TypeID.CompareTo(([DnsRecordType]$object).TypeID)
             } catch {
@@ -80,13 +80,13 @@ class DnsRecordType : IComparable, IEquatable[Object] {
         }
     }
 
-    [Boolean] Equals(
+    [bool] Equals(
         [Object] $object
     ) {
         return $this.CompareTo($object) -eq 0
     }
 
-    [String] ToString() {
+    [string] ToString() {
         return $this.Name
     }
 }

@@ -18,13 +18,13 @@ class DnsARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.IPAddress = $binaryReader.ReadIPAddress()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.IPAddress.IPAddressToString
     }
 }

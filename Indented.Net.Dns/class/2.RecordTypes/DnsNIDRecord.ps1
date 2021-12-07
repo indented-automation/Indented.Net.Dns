@@ -14,8 +14,8 @@ class DnsNIDRecord : DnsResourceRecord {
         https://www.ietf.org/rfc/rfc6742.txt
     #>
 
-    [UInt16] $Preference
-    [String] $NodeID
+    [ushort] $Preference
+    [string] $NodeID
 
     DnsNIDRecord() : base() { }
     DnsNIDRecord(
@@ -26,7 +26,7 @@ class DnsNIDRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Preference = $binaryReader.ReadUInt16($true)
@@ -38,7 +38,7 @@ class DnsNIDRecord : DnsResourceRecord {
         $this.NodeID = $address -join ':'
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.Preference
             $this.NodeID

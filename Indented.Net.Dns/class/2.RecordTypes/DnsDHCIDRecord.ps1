@@ -10,7 +10,7 @@ class DnsDHCIDRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4701.txt
     #>
 
-    [Byte[]] $BinaryData
+    [byte[]] $BinaryData
 
     DnsDHCIDRecord() : base() { }
     DnsDHCIDRecord(
@@ -21,13 +21,13 @@ class DnsDHCIDRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return [Convert]::ToBase64String($this.BinaryData)
     }
 }

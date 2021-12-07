@@ -9,7 +9,7 @@ class DnsSPFRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [String[]] $SPF
+    [string[]] $SPF
 
     DnsSPFRecord() : base() { }
     DnsSPFRecord(
@@ -20,7 +20,7 @@ class DnsSPFRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $length = $this.RecordDataLength
@@ -28,14 +28,14 @@ class DnsSPFRecord : DnsResourceRecord {
             $this.SPF = do {
                 $entryLength = 0
 
-                $binaryReader.ReadDnsCharacterString([Ref]$entryLength)
+                $binaryReader.ReadDnsCharacterString([ref]$entryLength)
 
                 $length -= $entryLength
             } until ($length -le 0)
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '"{0}"' -f ($this.SPF -join '" "')
     }
 }

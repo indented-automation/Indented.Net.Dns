@@ -17,10 +17,10 @@ class DnsRKEYRecord : DnsResourceRecord {
         http://tools.ietf.org/html/draft-reid-dnsext-rkey-00
     #>
 
-    [UInt16]              $Flags
+    [ushort]              $Flags
     [KEYProtocol]         $Protocol
     [EncryptionAlgorithm] $Algorithm
-    [String]              $PublicKey
+    [string]              $PublicKey
 
     DnsRKEYRecord() : base() { }
     DnsRKEYRecord(
@@ -31,7 +31,7 @@ class DnsRKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Flags = $binaryReader.ReadUInt16($true)
@@ -42,7 +42,7 @@ class DnsRKEYRecord : DnsResourceRecord {
         $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($keyLength))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2:D} {3}' -f @(
             $this.Flags
             $this.Protocol

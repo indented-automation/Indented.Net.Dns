@@ -16,9 +16,9 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
     #>
 
     [NSEC3HashAlgorithm] $HashAlgorithm
-    [Byte]               $Flags
-    [UInt16]             $Iterations
-    [String]             $Salt = '-'
+    [byte]               $Flags
+    [ushort]             $Iterations
+    [string]             $Salt = '-'
 
     DnsNSEC3PARAMRecord() : base() { }
     DnsNSEC3PARAMRecord(
@@ -29,7 +29,7 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.HashAlgorithm = $binaryReader.ReadByte()
@@ -42,7 +42,7 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0:D} {1} {2} {3}' -f @(
             $this.HashAlgorithm
             $this.Flags

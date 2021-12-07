@@ -9,7 +9,7 @@ class DnsNIMLOCRecord : DnsResourceRecord {
         http://ana-3.lcs.mit.edu/~jnc/nimrod/dns.txt
     #>
 
-    [Byte[]] $BinaryData
+    [byte[]] $BinaryData
 
     DnsNIMLOCRecord() : base() { }
     DnsNIMLOCRecord(
@@ -20,13 +20,13 @@ class DnsNIMLOCRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return [EndianBitConverter]::ToHexadecimal($this.BinaryData)
     }
 }

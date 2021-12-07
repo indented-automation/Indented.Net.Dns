@@ -17,15 +17,15 @@ class DnsHeader {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [UInt16]      $ID
+    [ushort]      $ID
     [QR]          $QR
     [OpCode]      $OpCode
     [HeaderFlags] $Flags
     [RCode]       $RCode
-    [UInt16]      $QuestionCount
-    [UInt16]      $AnswerCount
-    [UInt16]      $AuthorityCount
-    [UInt16]      $AdditionalCount
+    [ushort]      $QuestionCount
+    [ushort]      $AnswerCount
+    [ushort]      $AuthorityCount
+    [ushort]      $AdditionalCount
 
     DnsHeader() { }
 
@@ -47,10 +47,10 @@ class DnsHeader {
     }
 
     DnsHeader(
-        [Boolean] $recursionDesired,
-        [UInt16]  $questionCount
+        [bool] $recursionDesired,
+        [ushort]  $questionCount
     ) {
-        $this.ID = Get-Random -Minimum 0 -Maximum ([UInt16]::MaxValue + 1)
+        $this.ID = Get-Random -Minimum 0 -Maximum ([ushort]::MaxValue + 1)
 
         if ($recursionDesired) {
             $this.Flags = [HeaderFlags]::RD
@@ -58,14 +58,14 @@ class DnsHeader {
         $this.QuestionCount = $questionCount
     }
 
-    [Byte[]] ToByteArray() {
-        $bytes = [Byte[]]::new(12)
+    [byte[]] ToByteArray() {
+        $bytes = [byte[]]::new(12)
 
         $bytes[0], $bytes[1] = [EndianBitConverter]::GetBytes($this.ID, $true)
 
         # QR, Flags, OpCode and RCode
-        [UInt16]$value = $this.QR -bor
-            ([UInt16]$this.OpCode -shl 11) -bor
+        [ushort]$value = $this.QR -bor
+            ([ushort]$this.OpCode -shl 11) -bor
             $this.Flags -bor
             $this.RCode
         $bytes[2], $bytes[3] = [EndianBitConverter]::GetBytes($value, $true)
@@ -78,7 +78,7 @@ class DnsHeader {
         return $bytes
     }
 
-    [String] ToString() {
+    [string] ToString() {
         return 'ID: {0} OpCode: {1} RCode: {2} Flags: {3} Query: {4} Answer: {5} Authority: {6} Additional: {7}' -f @(
             $this.ID
             $this.OpCode.ToString().ToUpper()

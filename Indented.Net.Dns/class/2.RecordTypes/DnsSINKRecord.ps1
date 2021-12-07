@@ -14,10 +14,10 @@ class DnsSINKRecord : DnsResourceRecord {
         The structure above is modified to match dig. Adding a meaning byte.
     #>
 
-    [Byte]   $Meaning
-    [Byte]   $Coding
-    [Byte]   $Subcoding
-    [String] $Data
+    [byte]   $Meaning
+    [byte]   $Coding
+    [byte]   $Subcoding
+    [string] $Data
 
     DnsSINKRecord() : base() { }
     DnsSINKRecord(
@@ -28,7 +28,7 @@ class DnsSINKRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Meaning = $binaryReader.ReadByte()
@@ -41,7 +41,7 @@ class DnsSINKRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         if ($this.Data) {
             return '{0:D} {1:D} {2:D} {3}' -f @(
                 $this.Meaning

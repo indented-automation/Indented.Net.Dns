@@ -13,34 +13,34 @@ function Search-Dns {
         [Parameter(Mandatory, Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [AllowEmptyString()]
         [TransformDnsName()]
-        [String]$Name,
+        [string]$Name,
 
         # The zone name is used to ensure the correct zone is searched for records. This avoids the need for tricks to discover the authority for record types such as CNAME.
         [Parameter(Mandatory, Position = 2, ValueFromPipelineByPropertyName)]
         [TransformDnsName()]
         [ValidateDnsName()]
-        [String]$ZoneName,
+        [string]$ZoneName,
 
         # The record type to search for.
         [Parameter(Position = 3, ValueFromPipelineByPropertyName)]
         [RecordType]$RecordType = 'ANY',
 
         # Advertise support for DNSSEC when executing a query.
-        [Switch]$DnsSec,
+        [switch]$DnsSec,
 
         # Recursive, or version, queries can be forced to use TCP by setting the TCP switch parameter.
         [Alias('vc')]
-        [Switch]$Tcp,
+        [switch]$Tcp,
 
         # By default, DNS uses TCP or UDP port 53. The port used to send queries may be changed if a server is listening on a different port.
-        [UInt16]$Port = 53,
+        [ushort]$Port = 53,
 
         # By default, queries will timeout after 5 seconds. The value may be set between 1 and 30 seconds.
         [ValidateRange(1, 30)]
-        [Byte]$Timeout = 5,
+        [byte]$Timeout = 5,
 
         # Force the use of IPv6 for queries, if this parameter is set and the ComputerName is set to a name (e.g. ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
-        [Switch]$IPv6,
+        [switch]$IPv6,
 
         # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
         #
@@ -48,13 +48,13 @@ function Search-Dns {
         #
         # If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
         [Alias('Server')]
-        [String]$ComputerName
+        [string]$ComputerName
     )
 
     process {
-        $null = $psboundparameters.Remove('Name')
-        $null = $psboundparameters.Remove('ZoneName')
-        $null = $psboundparameters.Remove('RecordType')
+        $null = $PSBoundParameters.Remove('Name')
+        $null = $PSBoundParameters.Remove('ZoneName')
+        $null = $PSBoundParameters.Remove('RecordType')
 
         $params = @{
             Name       = $ZoneName = '{0}.' -f $ZoneName.TrimEnd('.')

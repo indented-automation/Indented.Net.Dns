@@ -14,10 +14,10 @@ class DnsTARecord : DnsResourceRecord {
         http://tools.ietf.org/html/draft-lewis-dns-undocumented-types-01
     #>
 
-    [UInt16]              $KeyTag
+    [ushort]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [DigestType]          $DigestType
-    [String]              $Digest
+    [string]              $Digest
 
     DnsTARecord() : base() { }
     DnsTARecord(
@@ -28,7 +28,7 @@ class DnsTARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.KeyTag = $binaryReader.ReadUInt16($true)
@@ -37,7 +37,7 @@ class DnsTARecord : DnsResourceRecord {
         $this.Digest = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($this.RecordDataLength - 4))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2:D} {3}' -f @(
             $this.KeyTag
             $this.Algorithm

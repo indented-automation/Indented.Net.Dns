@@ -16,8 +16,8 @@ class DnsCAARecord : DnsResourceRecord {
     #>
 
     [CAAFlag] $CAAFlag
-    [String]  $Tag
-    [String]  $Value
+    [string]  $Tag
+    [string]  $Value
 
     DnsCAARecord() : base() { }
     DnsCAARecord(
@@ -28,20 +28,20 @@ class DnsCAARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.CAAFlag = $binaryReader.ReadByte()
 
         $length = 0
-        $this.Tag = $binaryReader.ReadDnsCharacterString([Ref]$length)
+        $this.Tag = $binaryReader.ReadDnsCharacterString([ref]$length)
 
-        $this.Value = [String]::new($binaryReader.ReadChars(
+        $this.Value = [string]::new($binaryReader.ReadChars(
             $this.RecordDataLength - $length - 1
         ))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0:D} {1} "{2}"' -f @(
             $this.CAAFlag
             $this.Tag

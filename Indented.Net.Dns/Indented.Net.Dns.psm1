@@ -46,7 +46,7 @@ $enumeration = @(
 )
 
 foreach ($file in $enumeration) {
-    . ("{0}\enum\{1}.ps1" -f $psscriptroot, $file)
+    . ("{0}\enum\{1}.ps1" -f $PSScriptRoot, $file)
 }
 
 $class = @(
@@ -150,7 +150,7 @@ $class = @(
 )
 
 foreach ($file in $class) {
-    . ("{0}\class\{1}.ps1" -f $psscriptroot, $file)
+    . ("{0}\class\{1}.ps1" -f $PSScriptRoot, $file)
 }
 
 $private = @(
@@ -160,7 +160,7 @@ $private = @(
 )
 
 foreach ($file in $private) {
-    . ("{0}\private\{1}.ps1" -f $psscriptroot, $file)
+    . ("{0}\private\{1}.ps1" -f $PSScriptRoot, $file)
 }
 
 $public = @(
@@ -180,7 +180,7 @@ $public = @(
 )
 
 foreach ($file in $public) {
-    . ("{0}\public\{1}.ps1" -f $psscriptroot, $file)
+    . ("{0}\public\{1}.ps1" -f $PSScriptRoot, $file)
 }
 
 $functionsToExport = @(
@@ -200,6 +200,6 @@ $functionsToExport = @(
 )
 Export-ModuleMember -Function $functionsToExport
 
-. ("{0}\InitializeModule.ps1" -f $psscriptroot)
+. ("{0}\InitializeModule.ps1" -f $PSScriptRoot)
 InitializeModule
 

@@ -18,7 +18,7 @@ function Get-DnsServerList {
     [OutputType([IPAddress])]
     param (
         # Find DNS servers which support IPv6.
-        [Switch]$IPv6
+        [switch]$IPv6
     )
 
     if ($IPv6) {
@@ -39,6 +39,6 @@ function Get-DnsServerList {
             'InvalidOperation',
             $null
         )
-        $pscmdlet.ThrowTerminatingError($errorRecord)
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 }

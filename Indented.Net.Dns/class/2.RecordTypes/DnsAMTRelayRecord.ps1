@@ -12,10 +12,10 @@ class DnsAMTRELAYRecord : DnsResourceRecord {
         https://tools.ietf.org/html/draft-ietf-mboned-driad-amt-discovery-06
     #>
 
-    [Byte]         $Precedence
-    [Boolean]      $DiscoveryOptional
+    [byte]         $Precedence
+    [bool]      $DiscoveryOptional
     [AMTRelayType] $Type
-    [String]       $Relay
+    [string]       $Relay
 
     DnsAMTRELAYRecord() : base() { }
     DnsAMTRELAYRecord(
@@ -26,7 +26,7 @@ class DnsAMTRELAYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Precedence = $binaryReader.ReadByte()
@@ -54,10 +54,10 @@ class DnsAMTRELAYRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2:D} {3}' -f @(
             $this.Precedence
-            [Byte]$this.DiscoveryOptional
+            [byte]$this.DiscoveryOptional
             $this.Type
             $this.Relay
         )

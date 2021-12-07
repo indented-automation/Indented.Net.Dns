@@ -25,7 +25,7 @@ class DnsWINSRRecord : DnsResourceRecord {
     [WINSMappingFlag] $MappingFlag
     [UInt32]          $LookupTimeout
     [UInt32]          $CacheTimeout
-    [String]          $DomainToAppend
+    [string]          $DomainToAppend
 
     DnsWINSRRecord() : base() { }
     DnsWINSRRecord(
@@ -36,7 +36,7 @@ class DnsWINSRRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.MappingFlag = $binaryReader.ReadUInt32($true)
@@ -46,7 +46,7 @@ class DnsWINSRRecord : DnsResourceRecord {
         $this.DomainToAppend = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         $value = 'L{0} C{1} ( {2} )' -f @(
             $this.LookupTimeout
             $this.CacheTimeout

@@ -11,8 +11,8 @@ class DnsISDNRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [String]     $ISDNAddress
-    [String]     $SubAddress
+    [string]     $ISDNAddress
+    [string]     $SubAddress
 
     DnsISDNRecord() : base() { }
     DnsISDNRecord(
@@ -23,18 +23,18 @@ class DnsISDNRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $length = 0
-        $this.ISDNAddress = $binaryReader.ReadDnsCharacterString([Ref]$length)
+        $this.ISDNAddress = $binaryReader.ReadDnsCharacterString([ref]$length)
 
         if ($this.RecordDataLength - $length -gt 0) {
             $this.SubAddress = $binaryReader.ReadDnsCharacterString()
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         if ($this.SubAddress) {
             return '"{0}" "{1}"' -f @(
                 $this.ISDNAddress

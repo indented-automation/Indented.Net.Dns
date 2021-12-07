@@ -20,12 +20,12 @@ class DnsNAPTRRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2915.txt
     #>
 
-    [UInt16] $Order
-    [UInt16] $Preference
-    [String] $Flags
-    [String] $Service
-    [String] $RegularExpression
-    [String] $Replacement
+    [ushort] $Order
+    [ushort] $Preference
+    [string] $Flags
+    [string] $Service
+    [string] $RegularExpression
+    [string] $Replacement
 
     DnsNAPTRRecord() : base() { }
     DnsNAPTRRecord(
@@ -36,7 +36,7 @@ class DnsNAPTRRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Order = $binaryReader.ReadUInt16($true)
@@ -47,7 +47,7 @@ class DnsNAPTRRecord : DnsResourceRecord {
         $this.Replacement = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1} "{2}" "{3}" "{4}" {5}' -f @(
             $this.Order
             $this.Preference

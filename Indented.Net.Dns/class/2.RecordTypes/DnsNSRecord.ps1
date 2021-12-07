@@ -8,7 +8,7 @@ class DnsNSRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String] $Hostname
+    [string] $Hostname
 
     DnsNSRecord() : base() { }
     DnsNSRecord(
@@ -19,13 +19,13 @@ class DnsNSRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.Hostname
     }
 }

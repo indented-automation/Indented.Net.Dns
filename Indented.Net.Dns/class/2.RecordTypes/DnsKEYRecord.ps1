@@ -20,14 +20,14 @@ class DnsKEYRecord : DnsResourceRecord {
         +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
     #>
 
-    [UInt16]              $Flags
+    [ushort]              $Flags
     [KEYAC]               $AuthenticationConfidentiality
-    [UInt16]              $FlagsExtension
+    [ushort]              $FlagsExtension
     [KEYNameType]         $NameType
-    [Boolean]             $SignatoryField
+    [bool]             $SignatoryField
     [KEYProtocol]         $Protocol
     [EncryptionAlgorithm] $Algorithm
-    [String]              $PublicKey
+    [string]              $PublicKey
 
     DnsKEYRecord() : base() { }
     DnsKEYRecord(
@@ -38,11 +38,11 @@ class DnsKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Flags = $binaryReader.ReadUInt16($true)
-        $this.AuthenticationConfidentiality = [Byte]($this.Flags -shr 14)
+        $this.AuthenticationConfidentiality = [byte]($this.Flags -shr 14)
 
         if (($this.Flags -band 0x1000) -eq 0x1000) {
             $this.FlagsExtension = $binaryReader.ReadUInt16($true)
@@ -59,7 +59,7 @@ class DnsKEYRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2:D} {3}' -f @(
             $this.Flags
             $this.Protocol

@@ -9,7 +9,7 @@ class DnsX25Record : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [String] $PSDNAddress
+    [string] $PSDNAddress
 
     DnsX25Record() : base() { }
     DnsX25Record(
@@ -20,13 +20,13 @@ class DnsX25Record : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.PSDNAddress = $binaryReader.ReadDnsCharacterString()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '"{0}"' -f $this.PSDNAddress
     }
 }

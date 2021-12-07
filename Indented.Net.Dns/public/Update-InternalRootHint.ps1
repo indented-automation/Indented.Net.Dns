@@ -12,11 +12,11 @@ function Update-InternalRootHint {
 
     [CmdletBinding(SupportsShouldProcess)]
     param (
-        [URI]$Source = "http://www.internic.net/domain/named.root"
+        [Uri]$Source = "http://www.internic.net/domain/named.root"
     )
 
-    $path = Join-Path $myinvocation.MyCommand.Module.ModuleBase 'var\named.root'
-    if ($pscmdlet.ShouldProcess('Updating {0}' -f $path)) {
+    $path = Join-Path $MyInvocation.MyCommand.Module.ModuleBase 'var\named.root'
+    if ($PSCmdlet.ShouldProcess('Updating {0}' -f $path)) {
         Invoke-WebRequest -Uri $Source -OutFile $path
         Initialize-InternalDnsCache
     }

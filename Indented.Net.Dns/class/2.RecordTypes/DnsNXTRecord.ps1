@@ -16,7 +16,7 @@ class DnsNXTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc3755.txt
     #>
 
-    [String]          $DomainName
+    [string]          $DomainName
     [DnsRecordType[]] $RRType
 
     DnsNXTRecord() : base() { }
@@ -28,11 +28,11 @@ class DnsNXTRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $length = 0
-        $this.DomainName = $binaryReader.ReadDnsDomainName([Ref]$length)
+        $this.DomainName = $binaryReader.ReadDnsDomainName([ref]$length)
 
         $bitMapLength = $this.RecordDataLength - $length
         $bitMap = $binaryReader.ReadBytes($bitMapLength)
@@ -46,7 +46,7 @@ class DnsNXTRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.DomainName
             $this.RRType -join ' '

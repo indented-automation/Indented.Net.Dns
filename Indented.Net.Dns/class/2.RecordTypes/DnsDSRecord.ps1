@@ -15,10 +15,10 @@ class DnsDSRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4034.txt
     #>
 
-    [UInt16]              $KeyTag
+    [ushort]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [DigestType]          $DigestType
-    [String]              $Digest
+    [string]              $Digest
 
     DnsDSRecord() : base() { }
     DnsDSRecord(
@@ -29,7 +29,7 @@ class DnsDSRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.KeyTag = $binaryReader.ReadUInt16($true)
@@ -40,7 +40,7 @@ class DnsDSRecord : DnsResourceRecord {
         $this.Digest = [EndianBitConverter]::ToHexadecimal($bytes)
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2:D} {3}' -f @(
             $this.KeyTag
             $this.Algorithm

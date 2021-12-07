@@ -5,7 +5,7 @@ function Format-DnsResponse {
         [DnsMessage]$DnsMessage,
 
         [Parameter(Mandatory)]
-        [String]$Section
+        [string]$Section
     )
 
     $maximumLength = $host.UI.RawUI.BufferSize.Width - 15

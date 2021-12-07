@@ -36,13 +36,13 @@ class DnsSIGRecord : DnsResourceRecord {
 
     [DnsRecordType]       $TypeCovered
     [EncryptionAlgorithm] $Algorithm
-    [Byte]                $Labels
+    [byte]                $Labels
     [UInt32]              $OriginalTTL
     [DateTime]            $SignatureExpiration
     [DateTime]            $SignatureInception
-    [UInt16]              $KeyTag
-    [String]              $SignersName
-    [String]              $Signature
+    [ushort]              $KeyTag
+    [string]              $SignersName
+    [string]              $Signature
 
     DnsSIGRecord() : base() { }
     DnsSIGRecord(
@@ -53,7 +53,7 @@ class DnsSIGRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.TypeCovered = $binaryReader.ReadUInt16($true)
@@ -65,11 +65,11 @@ class DnsSIGRecord : DnsResourceRecord {
         $this.KeyTag = $binaryReader.ReadUInt16($true)
 
         $length = 0
-        $this.SignersName = $binaryReader.ReadDnsDomainName([Ref]$length)
+        $this.SignersName = $binaryReader.ReadDnsDomainName([ref]$length)
         $this.Signature = [Convert]::ToBase64String($binaryReader.ReadBytes($this.RecordDataLength - 18 - $length))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2} {3} {4:yyyyMMddHHmmss} {5:yyyyMMddHHmmss} {6} {7} {8}' -f @(
             $this.TypeCovered
             $this.Algorithm
@@ -83,7 +83,7 @@ class DnsSIGRecord : DnsResourceRecord {
          )
     }
 
-    [String] ToLongString() {
+    [string] ToLongString() {
         return (@(
             '{0} {1:D} {2} ( ; type-cov={0}, alg={1}, labels={2}'
             '    {3,-16} ; OriginalTTL'

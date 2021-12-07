@@ -10,14 +10,14 @@ function Clear-InternalDnsCache {
 
     [CmdletBinding(SupportsShouldProcess)]
     param (
-        [Switch]$ExpiredOnly
+        [switch]$ExpiredOnly
     )
 
     if ($ExpiredOnly) {
         (Get-InternalDnsCacheRecord | Where-Object { $_.HasExpired() }) |
             Remove-InternalDnsCacheRecord
     } else {
-        if ($pscmdlet.ShouldProcess('Clearing DNS cache')) {
+        if ($PSCmdlet.ShouldProcess('Clearing DNS cache')) {
             $Script:dnsCache.Clear()
         }
     }

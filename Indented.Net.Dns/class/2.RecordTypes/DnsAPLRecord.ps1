@@ -25,7 +25,7 @@ class DnsAPLRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         if ($this.RecordDataLength -gt 0) {
@@ -39,13 +39,13 @@ class DnsAPLRecord : DnsResourceRecord {
                 $item = [PSCustomObject]@{
                     AddressFamily = $addressFamily
                     Prefix        = $prefix
-                    Negation      = [Boolean]($negationAndLength -band 0x80)
+                    Negation      = [bool]($negationAndLength -band 0x80)
                     AddressLength = $negationAndLength -band 0x7F
                     Address       = $null
                 }
                 $addressBytes = switch ($item.AddressFamily) {
-                    'IPv4' { [Byte[]]::new(4) }
-                    'IPv6' { [Byte[]]::new(16) }
+                    'IPv4' { [byte[]]::new(4) }
+                    'IPv6' { [byte[]]::new(16) }
                 }
 
                 [Array]::Copy(
@@ -64,7 +64,7 @@ class DnsAPLRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         $values = foreach ($item in $this.List) {
             '{0}{1:D}:{2}/{3}' -f @(
                 ('', '!')[$item.Negation]

@@ -12,8 +12,8 @@ class DnsLPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2230.txt
     #>
 
-    [UInt16] $Preference
-    [String] $FQDN
+    [ushort] $Preference
+    [string] $FQDN
 
     DnsLPRecord() : base() { }
     DnsLPRecord(
@@ -24,14 +24,14 @@ class DnsLPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Preference = $binaryReader.ReadUInt16($true)
         $this.FQDN = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.Preference
             $this.FQDN

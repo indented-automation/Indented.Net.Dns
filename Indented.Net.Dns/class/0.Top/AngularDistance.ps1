@@ -2,7 +2,7 @@ class AngularDistance {
     [Int64]   $Degrees
     [Int64]   $Minutes
     [Decimal] $Seconds
-    [String]  $Direction
+    [string]  $Direction
 
     hidden static [Int64] $Equator = 2147483648
     hidden static [Int64] $PrimeMeridian = 2147483648
@@ -46,7 +46,7 @@ class AngularDistance {
         return $value
     }
 
-    [String] ToString() {
+    [string] ToString() {
         return '{0} {1} {2:N3} {3}' -f @(
             $this.Degrees
             $this.Minutes
@@ -55,7 +55,7 @@ class AngularDistance {
         )
     }
 
-    [String] ToLongString() {
+    [string] ToLongString() {
         return '{0} degrees {1} minutes {2:N3} seconds {3}' -f @(
             $this.Degrees
             $this.Minutes

@@ -5,10 +5,10 @@ class ValidateDnsName : ValidateEnumeratedArgumentsAttribute {
 
     ValidateDnsName() { }
 
-    [Void] ValidateElement(
+    [void] ValidateElement(
         [Object]$element
     ) {
-        if (-not ([IPAddress]::TryParse($element, [Ref]$null)) -and $element -notmatch $this.nameRegex) {
+        if (-not ([IPAddress]::TryParse($element, [ref]$null)) -and $element -notmatch $this.nameRegex) {
             $errorRecord = [ErrorRecord]::new(
                 [ArgumentException]::new('Invalid name format'),
                 'InvalidDnsName',

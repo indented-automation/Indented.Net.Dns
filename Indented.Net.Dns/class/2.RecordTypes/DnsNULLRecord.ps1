@@ -10,7 +10,7 @@ class DnsNULLRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [Byte[]] $BinaryData
+    [byte[]] $BinaryData
 
     DnsNULLRecord() : base() { }
     DnsNULLRecord(
@@ -21,13 +21,13 @@ class DnsNULLRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return [Convert]::ToBase64String($this.BinaryData)
     }
 }

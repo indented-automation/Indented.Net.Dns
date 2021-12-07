@@ -17,11 +17,11 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4025.txt
     #>
 
-    [Byte]             $Precedence
+    [byte]             $Precedence
     [IPSECGatewayType] $GatewayType
     [IPSECAlgorithm]   $Algorithm
-    [String]           $Gateway
-    [String]           $PublicKey
+    [string]           $Gateway
+    [string]           $PublicKey
 
     DnsIPSECKEYRecord() : base() { }
     DnsIPSECKEYRecord(
@@ -32,7 +32,7 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Precedence = $binaryReader.ReadByte()
@@ -52,7 +52,7 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
                 break
             }
             DomainName {
-                $binaryReader.ReadDnsDomainName([Ref]$length)
+                $binaryReader.ReadDnsDomainName([ref]$length)
                 break
             }
         }
@@ -64,7 +64,7 @@ class DnsIPSECKEYRecord : DnsResourceRecord {
         $this.PublicKey = [Convert]::ToBase64String($binaryReader.ReadBytes($publicKeyLength))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2:D} {3} {4}' -f @(
             $this.Precedence
             $this.GatewayType

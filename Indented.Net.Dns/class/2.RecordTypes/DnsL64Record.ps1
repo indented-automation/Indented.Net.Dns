@@ -14,8 +14,8 @@ class DnsL64Record : DnsResourceRecord {
         https://www.ietf.org/rfc/rfc6742.txt
     #>
 
-    [UInt16] $Preference
-    [String] $Locator
+    [ushort] $Preference
+    [string] $Locator
 
     DnsL64Record() : base() { }
     DnsL64Record(
@@ -26,7 +26,7 @@ class DnsL64Record : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Preference = $binaryReader.ReadUInt16($true)
@@ -38,7 +38,7 @@ class DnsL64Record : DnsResourceRecord {
         $this.Locator = $address -join ':'
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.Preference
             $this.Locator

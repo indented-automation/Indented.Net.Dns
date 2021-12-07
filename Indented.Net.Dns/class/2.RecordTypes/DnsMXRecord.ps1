@@ -12,8 +12,8 @@ class DnsMXRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [UInt16] $Preference
-    [String] $Exchange
+    [ushort] $Preference
+    [string] $Exchange
 
     DnsMXRecord() : base() { }
     DnsMXRecord(
@@ -24,14 +24,14 @@ class DnsMXRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Preference = $binaryReader.ReadUInt16($true)
         $this.Exchange = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.Preference
             $this.Exchange

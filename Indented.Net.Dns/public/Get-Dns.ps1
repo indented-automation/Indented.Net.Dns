@@ -34,7 +34,7 @@ function Get-Dns {
         [Parameter(Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [TransformDnsName()]
         [ValidateDnsName()]
-        [String]$Name = ".",
+        [string]$Name = ".",
 
         # Any resource record type, by default a query for ANY will be sent.
         [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
@@ -46,43 +46,43 @@ function Get-Dns {
 
         # Remove the Recursion Desired (RD) flag from a query. Recursion is requested by default.
         [Alias('NoRecurse')]
-        [Switch]$NoRecursion,
+        [switch]$NoRecursion,
 
         # Advertise support for DNSSEC when executing a query.
-        [Switch]$DnsSec,
+        [switch]$DnsSec,
 
         # Enable EDNS support, suppresses OPT RR advertising client support in DNS question. Automatically enabled if DNSSEC is requested.
-        [Switch]$EDns,
+        [switch]$EDns,
 
         # By default the EDns buffer size is set to 4096 bytes.
-        [UInt16]$EDnsBufferSize = 4096,
+        [ushort]$EDnsBufferSize = 4096,
 
         # Disables conversion of international domain names to unicode in responses.
-        [Switch]$DisableIdnConversion,
+        [switch]$DisableIdnConversion,
 
         # Disable the use of TCP if a truncated response (TC flag) is seen when using UDP.
         [Alias('Ignore')]
-        [Switch]$NoTcpFallback,
+        [switch]$NoTcpFallback,
 
         # If a name is not root terminated (does not end with '.') a SearchList will be used for recursive queries. If this parameter is not defined Get-Dns will attempt to retrieve a SearchList from the hosts network configuration.
         #
         # An empty search list by be specified by providing an empty array for this parameter.
         [AllowEmptyCollection()]
-        [String[]]$SearchList = (GetDnsSuffixSearchList),
+        [string[]]$SearchList = (GetDnsSuffixSearchList),
 
         # Recursive, or version, queries can be forced to use TCP by setting the TCP switch parameter.
         [Alias('vc')]
-        [Switch]$Tcp,
+        [switch]$Tcp,
 
         # By default, DNS uses TCP or UDP port 53. The port used to send queries may be changed if a server is listening on a different port.
-        [UInt16]$Port = 53,
+        [ushort]$Port = 53,
 
         # By default, queries will timeout after 5 seconds. The value may be set between 1 and 30 seconds.
         [ValidateRange(1, 30)]
-        [Byte]$Timeout = 5,
+        [byte]$Timeout = 5,
 
         # Force the use of IPv6 for queries, if this parameter is set and the ComputerName is set to a name (e.g. ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
-        [Switch]$IPv6,
+        [switch]$IPv6,
 
         # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
         #
@@ -90,10 +90,10 @@ function Get-Dns {
         #
         # If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
         [Alias('Server')]
-        [String]$ComputerName = (Get-DnsServerList -IPv6:$IPv6 | Select-Object -First 1),
+        [string]$ComputerName = (Get-DnsServerList -IPv6:$IPv6 | Select-Object -First 1),
 
         # Forces Get-Dns to output intermediate requests which would normally be hidden, such as NXDomain replies when using a SearchList.
-        [Switch]$DnsDebug
+        [switch]$DnsDebug
     )
 
     begin {
@@ -109,7 +109,7 @@ function Get-Dns {
             }
             $ComputerName = $serverIPAddress
         } catch {
-            $pscmdlet.ThrowTerminatingError($_)
+            $PSCmdlet.ThrowTerminatingError($_)
         }
 
         $querySearchList = $SearchList
@@ -189,9 +189,9 @@ function Get-Dns {
                     [ErrorCategory]::ConnectionError,
                     $Socket
                 )
-                $pscmdlet.ThrowTerminatingError($errorRecord)
+                $PSCmdlet.ThrowTerminatingError($errorRecord)
             } catch {
-                $pscmdlet.ThrowTerminatingError($_)
+                $PSCmdlet.ThrowTerminatingError($_)
             }
         }
     }
