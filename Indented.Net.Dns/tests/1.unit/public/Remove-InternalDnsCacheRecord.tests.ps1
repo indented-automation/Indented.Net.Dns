@@ -1,12 +1,12 @@
-InModuleScope Indented.Net.Dns {
-    Describe Remnove-InternalDnsCacheRecord {
-        BeforeAll {
-            $module = @{
-                ModuleName = 'Indented.Net.Dns'
-            }
+Describe Remnove-InternalDnsCacheRecord {
+    BeforeAll {
+        $module = @{
+            ModuleName = 'Indented.Net.Dns'
+        }
 
-            Initialize-InternalDnsCache
+        Initialize-InternalDnsCache
 
+        InModuleScope @module {
             $Script:dnsCache.Add(
                 'recordtoremove1.',
                 @(
@@ -47,28 +47,28 @@ InModuleScope Indented.Net.Dns {
                 )
             )
         }
+    }
 
-        AfterAll {
-            Initialize-InternalDnsCache
-        }
+    AfterAll {
+        Initialize-InternalDnsCache
+    }
 
-        It 'Removes a single name from the cache' {
-            Remove-InternalDnsCacheRecord -Name recordtoremove1.
+    It 'Removes a single name from the cache' {
+        Remove-InternalDnsCacheRecord -Name recordtoremove1.
 
-            $Script:dnsCache.Contains('recordtoremove1.') | Should -BeFalse
-        }
+        InModuleScope @module { $Script:dnsCache.Contains('recordtoremove1.') } | Should -BeFalse
+    }
 
-        It 'Removes a specific name and record type from' {
-            Remove-InternalDnsCacheRecord -Name recordtoremove2. -RecordType A
+    It 'Removes a specific name and record type from' {
+        Remove-InternalDnsCacheRecord -Name recordtoremove2. -RecordType A
 
-            $Script:dnsCache.Contains('recordtoremove2.') | Should -BeTrue
-            $Script:dnsCache['recordtoremove2.'].RecordType | Should -Be 'AAAA'
-        }
+        InModuleScope @module { $Script:dnsCache.Contains('recordtoremove2.') } | Should -BeTrue
+        InModuleScope @module { $Script:dnsCache['recordtoremove2.'].RecordType } | Should -Be 'AAAA'
+    }
 
-        It 'Removes a name from the cache when all records for the name are removed' {
-            Remove-InternalDnsCacheRecord -Name recordtoremove3. -RecordType A
+    It 'Removes a name from the cache when all records for the name are removed' {
+        Remove-InternalDnsCacheRecord -Name recordtoremove3. -RecordType A
 
-            $Script:dnsCache.Contains('recordtoremove3.') | Should -BeFalse
-        }
+        InModuleScope @module { $Script:dnsCache.Contains('recordtoremove3.') } | Should -BeFalse
     }
 }

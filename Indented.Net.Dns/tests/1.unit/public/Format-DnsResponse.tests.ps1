@@ -1,12 +1,12 @@
-InModuleScope Indented.Net.Dns {
-    Describe Format-DnsResponse {
-        BeforeAll {
-            $module = @{
-                ModuleName = 'Indented.Net.Dns'
-            }
+Describe Format-DnsResponse {
+    BeforeAll {
+        $module = @{
+            ModuleName = 'Indented.Net.Dns'
         }
+    }
 
-        It 'Truncates messages to match the buffer width' {
+    It 'Truncates messages to match the buffer width' {
+        $message = InModuleScope @module {
             $message = [DnsMessage]::new()
             $message.Header = [DnsHeader]::new()
             $message.Header.AnswerCount = 1
@@ -18,9 +18,10 @@ InModuleScope Indented.Net.Dns {
                 }
             )
             $message.Answer[0].RecordData = $message.Answer[0].RecordDataToString()
-
-            (Format-DnsResponse $message -Section Answer).Length | Should -BeLessThan $host.UI.RawUI.BufferSize.Width
-            (Format-DnsResponse $message -Section Answer).Length | Should -BeLessThan $message.Answer[0].ToString().Length
+            $message
         }
+
+        (Format-DnsResponse $message -Section Answer).Length | Should -BeLessThan $host.UI.RawUI.BufferSize.Width
+        (Format-DnsResponse $message -Section Answer).Length | Should -BeLessThan $message.Answer[0].ToString().Length
     }
 }

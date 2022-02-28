@@ -51,8 +51,8 @@ class DnsTKEYRecord : DnsResourceRecord {
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Algorithm = $binaryReader.ReadDnsDomainName()
-        $this.Inception = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
-        $this.Expiration = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
+        $this.Inception = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt32($true))
+        $this.Expiration = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt32($true))
         $this.Mode = $binaryReader.ReadUInt16($true)
         $this.TKEYError = $binaryReader.ReadUInt16($true)
 

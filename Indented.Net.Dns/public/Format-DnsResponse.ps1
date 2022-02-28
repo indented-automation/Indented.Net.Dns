@@ -1,9 +1,19 @@
 function Format-DnsResponse {
+    <#
+    .SYNOPSIS
+        Format a DNS message section for display.
+
+    .DESCRIPTION
+        Format a DNS message section for display.
+    #>
+
     [CmdletBinding()]
     param (
+        # The DnsMessage to format.
         [Parameter(Mandatory)]
         [DnsMessage]$DnsMessage,
 
+        # The section to format and return as a string.
         [Parameter(Mandatory)]
         [string]$Section
     )

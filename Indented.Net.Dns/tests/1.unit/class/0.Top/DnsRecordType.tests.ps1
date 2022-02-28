@@ -10,10 +10,18 @@ Describe DnsRecordType {
         @{ Type = 'String';      Value = 'a' }
         @{ Type = 'Int32';       Value = 1 }
         @{ Type = 'UInt16';      Value = [ushort]1 }
-        @{ Type = 'RecordType';  Value = [RecordType]::A }
     ) {
         $dnsRecordType = InModuleScope @module -Parameter @{ Value = $Value } {
             [DnsRecordType]$Value
+        }
+
+        $dnsRecordType.Name | Should -Be 'A'
+        $dnsRecordType.TypeID | Should -Be 1
+    }
+
+    It 'Can cast from a RecordType with value A' {
+        $dnsRecordType = InModuleScope @module {
+            [DnsRecordType][RecordType]::A
         }
 
         $dnsRecordType.Name | Should -Be 'A'
@@ -56,11 +64,10 @@ Describe DnsRecordType {
     }
 
     It 'Can be cast to RecordType' {
-        $dnsRecordType = InModuleScope @module {
-            [DnsRecordType]'A'
-        }
+        $castRecordType = InModuleScope @module { [RecordType][DnsRecordType]'A' }
+        $recordType = InModuleScope @module { [RecordType]::A }
 
-        [RecordType]$dnsRecordType | Should -Be ([RecordType]::A)
+        $castRecordType | Should -Be $recordType
     }
 
     It 'Supports IComparable' {
@@ -85,8 +92,6 @@ Describe DnsRecordType {
     }
 
     It 'Can be compared to a value from the RecordType enum' {
-        $dnsRecordType = InModuleScope @module { [DnsRecordType]'A' }
-
-        $dnsRecordType -eq [RecordType]::A | Should -BeTrue
+        InModuleScope @module { [DnsRecordType]'A' -eq [RecordType]::A } | Should -BeTrue
     }
 }

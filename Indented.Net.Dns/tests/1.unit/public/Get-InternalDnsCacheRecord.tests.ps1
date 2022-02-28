@@ -1,12 +1,12 @@
-InModuleScope Indented.Net.Dns {
-    Describe Get-InternalDnsCacheRecord {
-        BeforeAll {
-            $module = @{
-                ModuleName = 'Indented.Net.Dns'
-            }
+Describe Get-InternalDnsCacheRecord {
+    BeforeAll {
+        $module = @{
+            ModuleName = 'Indented.Net.Dns'
+        }
 
-            Initialize-InternalDnsCache
+        Initialize-InternalDnsCache
 
+        InModuleScope @module {
             $Script:dnsCache.Add(
                 'addressresourcetype.',
                 [DnsCacheRecord]@{
@@ -17,30 +17,32 @@ InModuleScope Indented.Net.Dns {
                 }
             )
         }
+    }
 
-        It 'Gets all cached resources' {
-            Get-InternalDnsCacheRecord | Should -Not -BeNullOrEmpty
+    AfterAll {
+        Initialize-InternalDnsCache
+    }
 
-            $cachedRecords = @($Script:dnsCache.Values | ForEach-Object { $_ })
-            @(Get-InternalDnsCacheRecord).Count | Should -Be $cachedRecords.Count
+    It 'Gets all cached resources' {
+        Get-InternalDnsCacheRecord | Should -Not -BeNullOrEmpty
+
+        $cachedRecords = InModuleScope @module {
+            $Script:dnsCache.Values | Write-Output
         }
+        @(Get-InternalDnsCacheRecord).Count | Should -Be @($cachedRecords).Count
+    }
 
-        It 'Gets records by name' {
-            Get-InternalDnsCacheRecord -Name addressresourcetype. | Should -Not -BeNullOrEmpty
-        }
+    It 'Gets records by name' {
+        Get-InternalDnsCacheRecord -Name addressresourcetype. | Should -Not -BeNullOrEmpty
+    }
 
-        It 'Gets records by ResourceType' {
-            Get-InternalDnsCacheRecord -ResourceType Address | Should -Not -BeNullOrEmpty
-            Get-InternalDnsCacheRecord -ResourceType Hint | Should -Not -BeNullOrEmpty
-        }
+    It 'Gets records by ResourceType' {
+        Get-InternalDnsCacheRecord -ResourceType Address | Should -Not -BeNullOrEmpty
+        Get-InternalDnsCacheRecord -ResourceType Hint | Should -Not -BeNullOrEmpty
+    }
 
-        It 'Gets records by RecordType' {
-            Get-InternalDnsCacheRecord -RecordType A | Should -Not -BeNullOrEmpty
-            Get-InternalDnsCacheRecord -RecordType AAAA | Should -Not -BeNullOrEmpty
-        }
-
-        AfterAll {
-            Initialize-InternalDnsCache
-        }
+    It 'Gets records by RecordType' {
+        Get-InternalDnsCacheRecord -RecordType A | Should -Not -BeNullOrEmpty
+        Get-InternalDnsCacheRecord -RecordType AAAA | Should -Not -BeNullOrEmpty
     }
 }

@@ -5,20 +5,25 @@ function Get-Dns {
     <#
     .SYNOPSIS
         Get a DNS resource record from a DNS server.
+
     .DESCRIPTION
         Get-Dns is a debugging resolver tool similar to dig and nslookup.
+
     .EXAMPLE
         Get-Dns hostname
 
         Attempt to resolve hostname using the system-configured search list.
+
     .EXAMPLE
         Get-Dns www.domain.example
 
         The system-configured search list will be appended to this query before it is executed.
+
     .EXAMPLE
         Get-Dns www.domain.example.
 
         The name is fully-qualified (or root terminated), no additional suffixes will be appended.
+
     .EXAMPLE
         Get-Dns example. -DnsSec
 
@@ -34,12 +39,12 @@ function Get-Dns {
         [Parameter(Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [TransformDnsName()]
         [ValidateDnsName()]
-        [string]$Name = ".",
+        [string]$Name = '.',
 
         # Any resource record type, by default a query for ANY will be sent.
         [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
         [Alias('Type')]
-        [RecordType]$RecordType = [RecordType]::ANY,
+        [RecordType[]]$RecordType = @('A', 'AAAA'),
 
         # By default the class is IN. CH (Chaos) may be used to query for name server information. HS (Hesoid) may be used if the name server supports it.
         [RecordClass]$RecordClass = [RecordClass]::IN,
@@ -104,7 +109,7 @@ function Get-Dns {
         try {
             $serverIPAddress = ResolveDnsServer -ComputerName $ComputerName -IPv6:$IPv6
             if ($serverIPAdddress.AddressFamily -eq [AddressFamily]::InterNetworkv6) {
-                Write-Verbose "Resolve-DnsServer: IPv6 server value used. Using IPv6 transport."
+                Write-Verbose 'Resolve-DnsServer: IPv6 server value used. Using IPv6 transport.'
                 $IPv6 = $true
             }
             $ComputerName = $serverIPAddress
@@ -120,78 +125,79 @@ function Get-Dns {
         }
 
         $querySearchListPosition = 0
-        foreach ($suffix in $querySearchList) {
+        :searchList foreach ($suffix in $querySearchList) {
             $querySearchListPosition++
 
-            if ($suffix) {
-                $fullName = '{0}.{1}' -f $Name, $suffix
-            } else {
-                $fullName = $Name
-            }
-
-            $dnsMessage = [DnsMessage]::new(
-                $fullName,
-                $RecordType,
-                $RecordClass
-            )
-
-            if ($EDns -or $DnsSec) {
-                $dnsMessage.SetEDnsBufferSize($EDnsBufferSize)
-            }
-            if ($DnsSec) {
-                $dnsMessage.SetAcceptDnsSec()
-            }
-            if ($NoRecursion) {
-                $dnsMessage.DisableRecursion()
-            }
-
-            try {
-                $dnsClient = [DnsClient]::new(
-                    $Tcp.IsPresent,
-                    ([IPAddress]$ComputerName).AddressFamily -eq 'InterNetworkV6',
-                    $Timeout,
-                    $Timeout
-                )
-
-                $dnsClient.SendQuestion(
-                    $dnsMessage,
-                    $ComputerName,
-                    $Port
-                )
-
-                $dnsResponse = $dnsClient.ReceiveAnswer(-not $DisableIdnConversion)
-                $dnsResponse.ComputerName = $dnsClient.RemoteEndPoint
-                $dnsResponse.TimeTaken = $dnsClient.TimeTaken.TotalMilliseconds
-                $dnsClient.Close()
-
-                if ($dnsResponse.Header.RCode -ne 'NXDOMAIN' -or
-                    $querySearchListPosition -eq $querySearchList.Count -or
-                    $dnsDebug) {
-
-                    if ($dnsResponse.Header.Flags -band 'TC' -and -not $NoTcpFallback) {
-                        Write-Debug 'Response is truncated. Resending using TCP'
-
-                        Get-Dns @psboundparameters -Tcp
-
-                        break
-                    } else {
-                        $dnsResponse
-                    }
-
-                    if (-not $dnsDebug) {
-                        break
-                    }
+            foreach ($rrType in $RecordType) {
+                if ($suffix) {
+                    $fullName = '{0}.{1}' -f $Name, $suffix
+                } else {
+                    $fullName = $Name
                 }
-            } catch [SocketException] {
-                $errorRecord = [ErrorRecord]::new(
-                    $_.Exception,
-                    'Timeout',
-                    [ErrorCategory]::ConnectionError,
-                    $Socket
+
+                $dnsMessage = [DnsMessage]::new(
+                    $fullName,
+                    $rrType,
+                    $RecordClass
                 )
-                $PSCmdlet.ThrowTerminatingError($errorRecord)
-            } catch {
-                $PSCmdlet.ThrowTerminatingError($_)
+
+                if ($EDns -or $DnsSec) {
+                    $dnsMessage.SetEDnsBufferSize($EDnsBufferSize)
+                }
+                if ($DnsSec) {
+                    $dnsMessage.SetAcceptDnsSec()
+                }
+                if ($NoRecursion) {
+                    $dnsMessage.DisableRecursion()
+                }
+
+                try {
+                    $dnsClient = [DnsClient]::new(
+                        $Tcp.IsPresent,
+                        ([IPAddress]$ComputerName).AddressFamily -eq 'InterNetworkV6',
+                        $Timeout,
+                        $Timeout
+                    )
+
+                    $dnsClient.SendQuestion(
+                        $dnsMessage,
+                        $ComputerName,
+                        $Port
+                    )
+
+                    $dnsResponse = $dnsClient.ReceiveAnswer(-not $DisableIdnConversion)
+                    $dnsResponse.ComputerName = $dnsClient.RemoteEndPoint
+                    $dnsResponse.TimeTaken = $dnsClient.TimeTaken.TotalMilliseconds
+                    $dnsClient.Close()
+
+                    if ($dnsResponse.Header.RCode -ne 'NXDOMAIN' -or
+                        $querySearchListPosition -eq $querySearchList.Count -or
+                        $dnsDebug) {
+
+                        if ($dnsResponse.Header.Flags -band 'TC' -and -not $NoTcpFallback) {
+                            Write-Debug 'Response is truncated. Resending using TCP'
+                            Get-Dns @PSBoundParameters -Tcp
+
+                            break searchList
+                        } else {
+                            $dnsResponse
+                        }
+
+                        if (-not $dnsDebug) {
+                            break searchList
+                        }
+                    }
+                } catch [SocketException] {
+                    $errorRecord = [ErrorRecord]::new(
+                        $_.Exception,
+                        'Timeout',
+                        [ErrorCategory]::ConnectionError,
+                        $Socket
+                    )
+                    $PSCmdlet.ThrowTerminatingError($errorRecord)
+                } catch {
+                    $PSCmdlet.ThrowTerminatingError($_)
+                }
             }
         }
     }

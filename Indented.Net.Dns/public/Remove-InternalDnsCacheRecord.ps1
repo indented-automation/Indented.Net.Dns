@@ -2,10 +2,14 @@ function Remove-InternalDnsCacheRecord {
     <#
     .SYNOPSIS
         Remove a single entry from the internal DNS cache.
+
     .DESCRIPTION
         Remove a single entry from the internal DNS cache.
+
     .EXAMPLE
         Remove-InternalDnsCacheRecord someName -RecordType A
+
+        Remove someName from the cache.
     #>
 
     [CmdletBinding(SupportsShouldProcess)]

@@ -4,6 +4,8 @@ if (Get-Process named -ErrorAction SilentlyContinue) {
 
 Split-Path $PSScriptRoot -Parent | Push-Location
 
+Get-ChildItem 'data\*.dns.src' | Copy-Item -Destination { 'data\{0}' -f $_.BaseName }
+
 if (-not (Test-Path 'bin\named.exe')) {
     if (-not (Test-Path bin)) {
         New-Item bin -ItemType Directory

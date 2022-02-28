@@ -2,8 +2,10 @@ function Clear-InternalDnsCache {
     <#
     .SYNOPSIS
         Clears expired entries from the internal DNS cache.
+
     .DESCRIPTION
         Clear expired entries from the internal DNS cache.
+
     .EXAMPLE
         Clear-InternalDnsCacheRecord
     #>

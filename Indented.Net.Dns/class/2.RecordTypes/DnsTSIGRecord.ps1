@@ -51,7 +51,7 @@ class DnsTSIGRecord : DnsResourceRecord {
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Algorithm = $binaryReader.ReadDnsDomainName()
-        $this.TimeSigned = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt48($true))
+        $this.TimeSigned = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt48($true))
         $this.Fudge = $binaryReader.ReadUInt16($true)
 
         $macSize = $binaryReader.ReadUInt16($true)

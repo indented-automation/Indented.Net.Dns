@@ -38,10 +38,12 @@ class DnsLOCRecord : DnsResourceRecord {
     ) { }
 
     hidden [Double] ConvertFromIntegerPair($byte) {
-        return 0 + ('{0}e{1}' -f @(
-            ($byte -band 0xF0) -shr 4
-            $byte -band 0x0F
-        )) / 100
+        return 0 + (
+            '{0}e{1}' -f @(
+                ($byte -band 0xF0) -shr 4
+                $byte -band 0x0F
+            )
+        ) / 100
     }
 
     hidden [void] ReadRecordData(

@@ -2,6 +2,7 @@ function Get-DnsZoneTransfer {
     <#
     .SYNOPSIS
         Get the content of a DNS zone using zone transfer.
+
     .DESCRIPTION
         Get the content of a DNS zone using zone transfer.
     #>

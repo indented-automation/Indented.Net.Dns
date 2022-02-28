@@ -64,10 +64,12 @@ class DnsHeader {
         $bytes[0], $bytes[1] = [EndianBitConverter]::GetBytes($this.ID, $true)
 
         # QR, Flags, OpCode and RCode
-        [ushort]$value = $this.QR -bor
+        [ushort]$value = (
+            $this.QR -bor
             ([ushort]$this.OpCode -shl 11) -bor
             $this.Flags -bor
             $this.RCode
+        )
         $bytes[2], $bytes[3] = [EndianBitConverter]::GetBytes($value, $true)
 
         $bytes[4], $bytes[5] = [EndianBitConverter]::GetBytes($this.QuestionCount, $true)

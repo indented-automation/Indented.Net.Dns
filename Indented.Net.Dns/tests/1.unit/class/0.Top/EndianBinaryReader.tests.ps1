@@ -173,8 +173,9 @@ Describe EndianBinaryReader {
 
     Context ReadBitMap {
         It 'Reads a bitmap field describing record types starting from window 0' {
-            $binaryReader = InModuleScope @module {
-                [byte[]]$bytes = 0, 1, 80
+            [byte[]]$bytes = 0, 1, 80
+
+            $binaryReader = InModuleScope -Parameter @{ bytes = $bytes } @module {
                 [EndianBinaryReader][System.IO.MemoryStream]$bytes
             }
 
@@ -182,8 +183,9 @@ Describe EndianBinaryReader {
         }
 
         It 'Reads a bitmap field describing record types starting from window 0 to window 1' {
-            $binaryReader = InModuleScope @module {
-                [byte[]]$bytes = 0, 2, 80, 80
+            [byte[]]$bytes = 0, 2, 80, 80
+
+            $binaryReader = InModuleScope -Parameter @{ bytes = $bytes } @module {
                 [EndianBinaryReader][System.IO.MemoryStream]$bytes
             }
 
@@ -191,8 +193,9 @@ Describe EndianBinaryReader {
         }
 
         It 'Reads a bitmap field describing record types starting from window 1' {
-            $binaryReader = InModuleScope @module {
-                [byte[]]$bytes = 1, 1, 80
+            [byte[]]$bytes = 1, 1, 80
+
+            $binaryReader = InModuleScope -Parameter @{ bytes = $bytes } @module {
                 [EndianBinaryReader][System.IO.MemoryStream]$bytes
             }
 

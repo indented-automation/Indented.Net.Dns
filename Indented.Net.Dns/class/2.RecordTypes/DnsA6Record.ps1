@@ -56,10 +56,12 @@ class DnsA6Record : DnsResourceRecord {
             $ipAddress = ''
         }
 
-        return ('{0} {1} {2}' -f @(
-            $this.PrefixLength
-            $ipAddress
-            $this.PrefixName
-        )).Trim()
+        return (
+            '{0} {1} {2}' -f @(
+                $this.PrefixLength
+                $ipAddress
+                $this.PrefixName
+            )
+        ).Trim()
     }
 }

@@ -1,17 +1,15 @@
-InModuleScope Indented.Net.Dns {
-    Describe Get-DnsVersion {
-        BeforeAll {
-            $module = @{
-                ModuleName = 'Indented.Net.Dns'
-            }
-
-            Mock Get-Dns
+Describe Get-DnsVersion {
+    BeforeAll {
+        $module = @{
+            ModuleName = 'Indented.Net.Dns'
         }
 
-        It 'Calls Get-Dns to execute the query' {
-            Get-DnsVersion
+        Mock Get-Dns @module
+    }
 
-            Assert-MockCalled Get-Dns
-        }
+    It 'Calls Get-Dns to execute the query' {
+        Get-DnsVersion
+
+        Should -Invoke Get-Dns @module
     }
 }

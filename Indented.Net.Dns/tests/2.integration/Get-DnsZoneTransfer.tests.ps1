@@ -41,11 +41,9 @@ Describe Get-DnsZoneTransfer -Tag Integration {
         ) | & $nsupdate
 
         $dnsResponse = Get-DnsZoneTransfer @defaultParams -SerialNumber $serial
-
         $dnsResponse.Question[0].RecordType | Should -Be 'IXFR'
         $dnsResponse.Header.RCode | Should -Be 'NoError'
         $dnsResponse.Header.AnswerCount | Should -BeGreaterThan 0
-
         $soaRecords = $dnsResponse.Answer | Where-Object RecordType -eq 'SOA'
         $soaRecords.Count | Should -BeGreaterThan 2
     }

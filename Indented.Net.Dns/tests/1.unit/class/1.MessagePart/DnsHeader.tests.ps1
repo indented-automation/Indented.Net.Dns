@@ -12,10 +12,9 @@ Describe DnsHeader {
             @{ RCode = 'NoError';  Message = 'AAKBgAABAAYAAAAA'; ExpectedFlags = 'RA, RD' }
             @{ RCode = 'NXDomain'; Message = 'AAOBgwABAAAAAQAA'; ExpectedFlags = 'RA, RD' }
         ) {
-            $header = InModuleScope -Parameters { Message = $Message } @module {
+            $header = InModuleScope -Parameters @{ Message = $Message } @module {
                 $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Convert]::FromBase64String($Message)
                 [DnsHeader]::new($binaryReader)
-
             }
 
             $header.Flags | Should -Be $ExpectedFlags

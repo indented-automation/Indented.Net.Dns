@@ -60,8 +60,8 @@ class DnsSIGRecord : DnsResourceRecord {
         $this.Algorithm = $binaryReader.ReadByte()
         $this.Labels = $binaryReader.ReadByte()
         $this.OriginalTTL = $binaryReader.ReadUInt32($true)
-        $this.SignatureExpiration = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
-        $this.SignatureInception = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
+        $this.SignatureExpiration = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt32($true))
+        $this.SignatureInception = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt32($true))
         $this.KeyTag = $binaryReader.ReadUInt16($true)
 
         $length = 0
@@ -80,20 +80,22 @@ class DnsSIGRecord : DnsResourceRecord {
             $this.KeyTag
             $this.SignersName
             $this.Signature -split '(?<=\G.{56})' -join ' '
-         )
+        )
     }
 
     [string] ToLongString() {
-        return (@(
-            '{0} {1:D} {2} ( ; type-cov={0}, alg={1}, labels={2}'
-            '    {3,-16} ; OriginalTTL'
-            '    {4,-16:yyyyMMddHHmmss} ; Signature expiration ({4:u})'
-            '    {5,-16:yyyyMMddHHmmss} ; Signature inception ({5:u})'
-            '    {6,-16} ; Key identifier'
-            '    {7,-16} ; Signer'
-            '    {8,-16} ; Signature'
-            ')'
-         ) -join "`n") -f @(
+        return (
+            @(
+                '{0} {1:D} {2} ( ; type-cov={0}, alg={1}, labels={2}'
+                '    {3,-16} ; OriginalTTL'
+                '    {4,-16:yyyyMMddHHmmss} ; Signature expiration ({4:u})'
+                '    {5,-16:yyyyMMddHHmmss} ; Signature inception ({5:u})'
+                '    {6,-16} ; Key identifier'
+                '    {7,-16} ; Signer'
+                '    {8,-16} ; Signature'
+                ')'
+            ) -join "`n"
+        ) -f @(
             $this.TypeCovered
             $this.Algorithm
             $this.Labels

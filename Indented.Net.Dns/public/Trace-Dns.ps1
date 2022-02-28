@@ -2,10 +2,14 @@ function Trace-Dns {
     <#
     .SYNOPSIS
         Iteratively trace resolution of a name from a root or specified name server.
+
     .DESCRIPTION
         Trace-Dns attempts to resolve a name from a root or specified name server by following authority records.
+
     .EXAMPLE
         Trace-Dns www.google.com.
+
+        Trace resolution of www.googl.com from the root servers down.
     #>
 
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]

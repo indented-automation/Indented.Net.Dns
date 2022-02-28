@@ -81,16 +81,18 @@ class DnsRRSIGRecord : DnsResourceRecord {
     }
 
     [string] ToLongString() {
-        return (@(
-            '{0} {1:D} {2} ( ; type-cov={0}, alg={1}, labels={2}'
-            '    {3,-16} ; OriginalTTL'
-            '    {4,-16:yyyyMMddHHmmss} ; Signature expiration ({4:u})'
-            '    {5,-16:yyyyMMddHHmmss} ; Signature inception ({5:u})'
-            '    {6,-16} ; Key identifier'
-            '    {7,-16} ; Signer'
-            '    {8,-16} ; Signature'
-            ')'
-         ) -join "`n") -f @(
+        return (
+            @(
+                '{0} {1:D} {2} ( ; type-cov={0}, alg={1}, labels={2}'
+                '    {3,-16} ; OriginalTTL'
+                '    {4,-16:yyyyMMddHHmmss} ; Signature expiration ({4:u})'
+                '    {5,-16:yyyyMMddHHmmss} ; Signature inception ({5:u})'
+                '    {6,-16} ; Key identifier'
+                '    {7,-16} ; Signer'
+                '    {8,-16} ; Signature'
+                ')'
+            ) -join "`n"
+        ) -f @(
             $this.TypeCovered
             $this.Algorithm
             $this.Labels

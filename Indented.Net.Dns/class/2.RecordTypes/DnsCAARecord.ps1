@@ -36,9 +36,11 @@ class DnsCAARecord : DnsResourceRecord {
         $length = 0
         $this.Tag = $binaryReader.ReadDnsCharacterString([ref]$length)
 
-        $this.Value = [string]::new($binaryReader.ReadChars(
-            $this.RecordDataLength - $length - 1
-        ))
+        $this.Value = [string]::new(
+            $binaryReader.ReadChars(
+                $this.RecordDataLength - $length - 1
+            )
+        )
     }
 
     hidden [string] RecordDataToString() {

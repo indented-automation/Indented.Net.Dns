@@ -1,30 +1,26 @@
-InModuleScope Indented.Net.Dns {
-    Describe DnsRRSIGRecord {
-        BeforeAll {
-            $module = @{
-                ModuleName = 'Indented.Net.Dns'
-            }
+Describe DnsRRSIGRecord {
+    BeforeAll {
+        $module = @{
+            ModuleName = 'Indented.Net.Dns'
         }
+    }
 
-        It 'Parses <RecordData>' -TestCases @(
-            @{
-                Message    = 'AC8BAwAADhA4bsAlMq6IRAhfA2ZvbwNuaWwAMxFcby9k/yvedMfQgKzhH5er0Mu/vILz45IkskceFGgiWCn/GxHhai6VAuHAoNUz4YoU1tVfSCSqQYn6//11U6Nld80jEeC8aTrO+KKmCaY='
-                RecordData = 'NSEC 1 3 3600 20000102030405 19961211100908 2143 foo.nil. MxFcby9k/yvedMfQgKzhH5er0Mu/vILz45IkskceFGgiWCn/GxHhai6V AuHAoNUz4YoU1tVfSCSqQYn6//11U6Nld80jEeC8aTrO+KKmCaY='
-            }
-        ) {
-            param (
-                $Message,
-                $RecordData
-            )
-
+    It 'Parses <RecordData>' -TestCases @(
+        @{
+            Message    = 'AC8BAwAADhA4bsAlMq6IRAhfA2ZvbwNuaWwAMxFcby9k/yvedMfQgKzhH5er0Mu/vILz45IkskceFGgiWCn/GxHhai6VAuHAoNUz4YoU1tVfSCSqQYn6//11U6Nld80jEeC8aTrO+KKmCaY='
+            RecordData = 'NSEC 1 3 3600 20000102030405 19961211100908 2143 foo.nil. MxFcby9k/yvedMfQgKzhH5er0Mu/vILz45IkskceFGgiWCn/GxHhai6V AuHAoNUz4YoU1tVfSCSqQYn6//11U6Nld80jEeC8aTrO+KKmCaY='
+        }
+    ) {
+        $resourceRecord = InModuleScope -Parameters @{ Message = $Message } @module {
             $recordDataBytes = [Convert]::FromBase64String($Message)
             $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
             $resourceRecord = [DnsRRSIGRecord]::new()
             $resourceRecord.RecordDataLength = $recordDataBytes.Count
             $resourceRecord.ReadRecordData($binaryReader)
-
-            $resourceRecord.RecordDataToString() | Should -Be $RecordData
+            $resourceRecord
         }
+
+        $resourceRecord.RecordDataToString() | Should -Be $RecordData
     }
 
     It 'Can write the RRSIG record <RecordData> string in a long format' -TestCases @(
@@ -42,17 +38,15 @@ InModuleScope Indented.Net.Dns {
             ) -join "`n"
         }
     ) {
-        param (
-            $Message,
-            $RecordData
-        )
-
-        $recordDataBytes = [Convert]::FromBase64String($Message)
-        $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
-        $resourceRecord = [DnsRRSIGRecord]::new()
-        $resourceRecord.RecordDataLength = $recordDataBytes.Count
-        $resourceRecord.ReadRecordData($binaryReader)
+        $resourceRecord = InModuleScope -Parameters @{ Message = $Message } @module {
+            $recordDataBytes = [Convert]::FromBase64String($Message)
+            $binaryReader = [EndianBinaryReader][System.IO.MemoryStream]$recordDataBytes
+            $resourceRecord = [DnsRRSIGRecord]::new()
+            $resourceRecord.RecordDataLength = $recordDataBytes.Count
+            $resourceRecord.ReadRecordData($binaryReader)
+            $resourceRecord
+        }
 
         $resourceRecord.ToLongString() | Should -Be $RecordData
-}
+    }
 }

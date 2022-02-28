@@ -23,9 +23,7 @@ Describe Add-InternalDnsCacheRecord {
 
         $cacheRecord | Add-InternalDnsCacheRecord
 
-        InModuleScope @module {
-            $Script:dnsCache.Contains('cacherecordname.')
-        } | Should -BeTrue
+        InModuleScope @module { $Script:dnsCache.Contains('cacherecordname.') } | Should -BeTrue
     }
 
     It 'Can add a cache record based on a A Record' {
@@ -38,9 +36,7 @@ Describe Add-InternalDnsCacheRecord {
 
         $dnsARecord | Add-InternalDnsCacheRecord
 
-        InModuleScope @module {
-            $Script:dnsCache.Contains('arecordname.')
-        } | Should -BeTrue
+        InModuleScope @module { $Script:dnsCache.Contains('arecordname.') } | Should -BeTrue
     }
 
     It 'Can add a cache record based on an AAAA Record' {
@@ -53,13 +49,11 @@ Describe Add-InternalDnsCacheRecord {
 
         $dnsAAAARecord | Add-InternalDnsCacheRecord
 
-        InModuleScope @module {
-            $Script:dnsCache.Contains('aaaarecordname.')
-        } | Should -BeTrue
+        InModuleScope @module { $Script:dnsCache.Contains('aaaarecordname.') } | Should -BeTrue
     }
 
     It 'Can permanently add a record to the cache' {
-        $dnsARecord = InModuleScope @module
+        $dnsARecord = InModuleScope @module {
             [DnsARecord]@{
                 Name      = 'apermanentrecordname.'
                 IPAddress = '1.2.3.4'
@@ -68,11 +62,7 @@ Describe Add-InternalDnsCacheRecord {
 
         $dnsARecord | Add-InternalDnsCacheRecord -Permanent
 
-        InModuleScope @module {
-            $Script:dnsCache.Contains('apermanentrecordname.')
-        } | Should -BeTrue
-        InModuleScope @module {
-            $Script:dnsCache['apermanentrecordname.'].IsPermanent
-        } | Should -BeTrue
+        InModuleScope @module { $Script:dnsCache.Contains('apermanentrecordname.') } | Should -BeTrue
+        InModuleScope @module { $Script:dnsCache['apermanentrecordname.'].IsPermanent } | Should -BeTrue
     }
 }

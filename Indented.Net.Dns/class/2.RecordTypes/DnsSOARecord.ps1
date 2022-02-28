@@ -95,15 +95,17 @@ class DnsSOARecord : DnsResourceRecord {
     }
 
     [string] ToLongString() {
-        return (@(
-            '{0} {1} ('
-            '    {2,-10} ; serial'
-            '    {3,-10} ; refresh ({4})'
-            '    {5,-10} ; retry ({6})'
-            '    {7,-10} ; expire ({8})'
-            '    {9,-10} ; minimum ttl ({10})'
-            ')'
-        ) -join "`n") -f @(
+        return (
+            @(
+                '{0} {1} ('
+                '    {2,-10} ; serial'
+                '    {3,-10} ; refresh ({4})'
+                '    {5,-10} ; retry ({6})'
+                '    {7,-10} ; expire ({8})'
+                '    {9,-10} ; minimum ttl ({10})'
+                ')'
+            ) -join "`n"
+        ) -f @(
             $this.NameServer
             $this.ResponsiblePerson
             $this.Serial

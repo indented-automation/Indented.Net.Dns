@@ -10,7 +10,7 @@ Describe DnsAAAARecord {
         @{ Message = 'KgAUUEAJCAEAAAAAAAAgBA=='; RecordData = '2a00:1450:4009:801::2004' }
         @{ Message = '/////////////////////w=='; RecordData = 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff' }
     ) {
-        $resourceRecord = InModuleScope -Parameters @{ message = $Message } @module {
+        $resourceRecord = InModuleScope -Parameters @{ Message = $Message } @module {
             $binaryReader = [EndianBinaryReader][System.IO.MemoryStream][Convert]::FromBase64String($Message)
             $resourceRecord = [DnsAAAARecord]::new()
             $resourceRecord.ReadRecordData($binaryReader)

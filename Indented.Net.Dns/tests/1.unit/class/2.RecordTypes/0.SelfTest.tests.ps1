@@ -25,22 +25,12 @@ Describe 'Record parser test suite self test' {
 
     Context 'Test files' {
         It 'The class <ClassName> has a test suite' -TestCases $dnsRecordTypes {
-            param (
-                [string]$ClassName
-            )
-
             Join-Path $PSScriptRoot ('{0}.tests.ps1' -f $ClassName) | Should -Exist
         }
     }
 
     Context 'Test file content' {
         It 'The test file <Name> has content' -TestCases $dnsRecordTypeTests {
-            param (
-                [string]$Name,
-
-                [string]$Path
-            )
-
             [System.Management.Automation.Language.Parser]::ParseFile(
                 $Path,
                 [ref]$null,
@@ -49,14 +39,6 @@ Describe 'Record parser test suite self test' {
         }
 
         It 'The test file <Name> has describe named <ClassName>' -TestCases $dnsRecordTypeTests {
-            param (
-                [string]$Name,
-
-                [string]$ClassName,
-
-                [string]$Path
-            )
-
             try {
                 [System.Management.Automation.Language.Parser]::ParseFile(
                     $Path,
@@ -77,14 +59,6 @@ Describe 'Record parser test suite self test' {
         }
 
         It 'The test file <Name> includes Parser tests' -TestCases $dnsRecordTypeTests {
-            param (
-                [string]$Name,
-
-                [string]$ClassName,
-
-                [string]$Path
-            )
-
             [System.Management.Automation.Language.Parser]::ParseFile(
                 $Path,
                 [ref]$null,
@@ -102,14 +76,6 @@ Describe 'Record parser test suite self test' {
         }
 
         It 'The test file <Name> tests the parser for <ClassName>' -TestCases $dnsRecordTypeTests {
-            param (
-                [string]$Name,
-
-                [string]$ClassName,
-
-                [string]$Path
-            )
-
             try {
                 [System.Management.Automation.Language.Parser]::ParseFile(
                     $Path,
@@ -129,6 +95,7 @@ Describe 'Record parser test suite self test' {
                         param ( $ast )
 
                         $ast -is [System.Management.Automation.Language.AssignmentStatementAst] -and
+                        $ast.Right.Expression.Expression.TypeName -and
                         $ast.Left.VariablePath.UserPath -eq 'resourceRecord'
                     },
                     $true
@@ -141,11 +108,7 @@ Describe 'Record parser test suite self test' {
 
     Context 'RecordType' {
         It 'The RecordType <RecordType> is valid' -TestCases $dnsRecordTypes {
-            param (
-                [string]$RecordType
-            )
-
-            InModuleScope -ModuleName Indented.Net.Dns -Parameters @{ RecordType = $RecordType } {
+            InModuleScope @module -Parameters @{ RecordType = $RecordType } {
                 param (
                     $RecordType
                 )
@@ -155,13 +118,7 @@ Describe 'Record parser test suite self test' {
         }
 
         It 'The class <ClassName> has RecordType set to <RecordType>' -TestCases $dnsRecordTypes {
-            param (
-                [string]$ClassName,
-
-                [string]$RecordType
-            )
-
-            $instance = InModuleScope -ModuleName Indented.Net.Dns -Parameters @{ ClassName = $ClassName } {
+            $instance = InModuleScope @module -Parameters @{ ClassName = $ClassName } {
                 param (
                     $ClassName
                 )

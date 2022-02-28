@@ -2,6 +2,7 @@ function Search-Dns {
     <#
     .SYNOPSIS
         Search all name servers for a specific record.
+
     .DESCRIPTION
         Search-Dns may be used to retrieve a resource record from all name servers for a given domain.
     #>

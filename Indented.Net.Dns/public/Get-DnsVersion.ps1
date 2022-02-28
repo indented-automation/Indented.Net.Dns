@@ -2,18 +2,22 @@ function Get-DnsVersion {
     <#
     .SYNOPSIS
         Get the DNS server version.
+
     .DESCRIPTION
         Attempt to get the DNS server version by sending a request for version.bind. using the CH class.
 
         DNS servers often refuse queries for the version number.
+
     .EXAMPLE
         Get-DnsVersion
 
         Get the version of the default DNS server.
+
     .EXAMPLE
         Get-DnsVersion -ComputerName 127.0.0.1
 
         Get the version of the DNS server running on 127.0.0.1.
+
     #>
 
     [CmdletBinding()]

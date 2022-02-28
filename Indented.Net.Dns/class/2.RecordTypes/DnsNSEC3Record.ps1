@@ -34,7 +34,7 @@ class DnsNSEC3Record : DnsResourceRecord {
 
     [NSEC3HashAlgorithm] $HashAlgorithm
     [byte]               $Flags
-    [bool]            $OptOut
+    [bool]               $OptOut
     [ushort]             $Iterations
     [string]             $Salt
     [string]             $Hash

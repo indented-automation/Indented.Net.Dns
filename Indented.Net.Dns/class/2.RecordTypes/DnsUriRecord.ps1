@@ -33,9 +33,11 @@ class DnsURIRecord : DnsResourceRecord {
         $this.Priority = $binaryReader.ReadUInt16($true)
         $this.Weight = $binaryReader.ReadUInt16($true)
 
-        $this.Target = [string]::new($binaryReader.ReadChars(
-            $this.RecordDataLength - 4
-        ))
+        $this.Target = [string]::new(
+            $binaryReader.ReadChars(
+                $this.RecordDataLength - 4
+            )
+        )
     }
 
     hidden [string] RecordDataToString() {

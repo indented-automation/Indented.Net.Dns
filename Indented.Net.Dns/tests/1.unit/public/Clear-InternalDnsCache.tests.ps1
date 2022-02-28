@@ -1,29 +1,29 @@
-InModuleScope Indented.Net.Dns {
-    Describe Clear-InternalDnsCacheRecord {
-        BeforeAll {
-            $module = @{
-                ModuleName = 'Indented.Net.Dns'
-            }
+Describe Clear-InternalDnsCacheRecord {
+    BeforeAll {
+        $module = @{
+            ModuleName = 'Indented.Net.Dns'
         }
+    }
 
-        BeforeEach {
-            Initialize-InternalDnsCache
-        }
+    BeforeEach {
+        Initialize-InternalDnsCache
+    }
 
-        AfterEach {
-            Initialize-InternalDnsCache
-        }
+    AfterEach {
+        Initialize-InternalDnsCache
+    }
 
-        It 'Can be used to clear all entries from the cache' {
-            $Script:dnsCache.Count | Should -BeGreaterThan 0
+    It 'Can be used to clear all entries from the cache' {
+        InModuleScope @module { $Script:dnsCache.Count } | Should -BeGreaterThan 0
 
-            Clear-InternalDnsCache
+        Clear-InternalDnsCache
 
-            $Script:dnsCache.Count | Should -Be 0
-        }
+        InModuleScope @module { $Script:dnsCache.Count } | Should -Be 0
+    }
 
-        It 'Can be used to remove expired entries only' {
-            $Script:dnsCache.Count | Should -BeGreaterThan 0
+    It 'Can be used to remove expired entries only' {
+        InModuleScope @module { $Script:dnsCache.Count } | Should -BeGreaterThan 0
+        InModuleScope @module {
             $Script:dnsCache.Add(
                 'expiringrecordname.',
                 [DnsCacheRecord]@{
@@ -33,11 +33,11 @@ InModuleScope Indented.Net.Dns {
                     TTL        = 0
                 }
             )
-
-            Clear-InternalDnsCache -ExpiredOnly
-
-            $Script:dnsCache.Count | Should -BeGreaterThan 0
-            $Script:dnsCache.Contains('expiringrecordname.') | Should -BeFalse
         }
+
+        Clear-InternalDnsCache -ExpiredOnly
+
+        InModuleScope @module { $Script:dnsCache.Count } | Should -BeGreaterThan 0
+        InModuleScope @module { $Script:dnsCache.Contains('expiringrecordname.') } | Should -BeFalse
     }
 }

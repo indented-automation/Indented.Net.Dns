@@ -2,12 +2,16 @@ function Get-InternalDnsCacheRecord {
     <#
     .SYNOPSIS
         Get the content of the internal DNS cache used by Get-Dns.
+
     .DESCRIPTION
         Get-InternalDnsCacheRecord displays records held in the cache.
+
     .INPUTS
         Indented.Net.Dns.CacheRecord
+
     .EXAMPLE
         Get-InternalDnsCacheRecord
+
     .EXAMPLE
         Get-InternalDnsCacheRecord a.root-servers.net A
     #>
