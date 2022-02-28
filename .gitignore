@@ -58,3 +58,4 @@ temp
 **/*.jbk
 **/*.signed*
 **/*.jnl
+**/bin

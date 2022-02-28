@@ -1,4 +1,4 @@
-Describe Remnove-InternalDnsCacheRecord {
+Describe Remove-InternalDnsCacheRecord {
     BeforeAll {
         $module = @{
             ModuleName = 'Indented.Net.Dns'
