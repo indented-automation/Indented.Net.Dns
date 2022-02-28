@@ -30,13 +30,13 @@ class DnsTSIGRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2845.txt
     #>
 
-    [String]   $Algorithm
+    [string]   $Algorithm
     [DateTime] $TimeSigned
     [UInt16]   $Fudge
-    [String]   $MAC
+    [string]   $MAC
     [UInt16]   $OriginalID
     [RCode]    $TSIGError
-    [String]   $OtherData
+    [string]   $OtherData
 
     DnsTSIGRecord() : base() { }
     DnsTSIGRecord(
@@ -47,11 +47,11 @@ class DnsTSIGRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Algorithm = $binaryReader.ReadDnsDomainName()
-        $this.TimeSigned = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt48($true))
+        $this.TimeSigned = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt48($true))
         $this.Fudge = $binaryReader.ReadUInt16($true)
 
         $macSize = $binaryReader.ReadUInt16($true)
@@ -67,7 +67,7 @@ class DnsTSIGRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:yyyyMMddHHmmss} {2} {3} {4} {5:D} {6}' -f @(
             $this.Algorithm
             $this.TimeSigned

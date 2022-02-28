@@ -1,22 +1,22 @@
 using namespace System.Text
 
 class EndianBitConverter {
-    static [Byte[]] GetBytes(
+    static [byte[]] GetBytes(
         [UInt16]  $value,
-        [Boolean] $isBigEndian
+        [bool] $isBigEndian
     ) {
         if ([BitConverter]::IsLittleEndian -eq $isBigEndian) {
             return [BitConverter]::GetBytes(
-                [IPAddress]::HostToNetworkOrder([Int32]$value)
+                [IPAddress]::HostToNetworkOrder([int]$value)
             )[2, 3]
         } else {
             return [BitConverter]::GetBytes($value)
         }
     }
 
-    static [Byte[]] GetBytes(
+    static [byte[]] GetBytes(
         [UInt32]  $value,
-        [Boolean] $isBigEndian
+        [bool] $isBigEndian
     ) {
         if ([BitConverter]::IsLittleEndian -eq $isBigEndian) {
             return [BitConverter]::GetBytes(
@@ -27,8 +27,8 @@ class EndianBitConverter {
         }
     }
 
-    static [String] ToBinary(
-        [Byte[]] $bytes
+    static [string] ToBinary(
+        [byte[]] $bytes
     ) {
         $string = [StringBuilder]::new()
         foreach ($byte in $bytes) {
@@ -39,8 +39,8 @@ class EndianBitConverter {
         return $string.ToString()
     }
 
-    static [String] ToHexadecimal(
-        [Byte[]] $bytes
+    static [string] ToHexadecimal(
+        [byte[]] $bytes
     ) {
         $string = [StringBuilder]::new()
         foreach ($byte in $bytes) {
@@ -49,8 +49,8 @@ class EndianBitConverter {
         return $string.ToString()
     }
 
-    static [String] ToBase32String(
-        [Byte[]] $bytes
+    static [string] ToBase32String(
+        [byte[]] $bytes
     ) {
         $base32Characters = '0123456789ABCDEFGHIJKLMNOPQRSTUV'
 
@@ -70,6 +70,6 @@ class EndianBitConverter {
             }
         }
 
-        return [String]::new($chars)
+        return [string]::new($chars)
     }
 }

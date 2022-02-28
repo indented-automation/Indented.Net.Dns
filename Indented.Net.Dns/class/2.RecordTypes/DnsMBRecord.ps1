@@ -10,7 +10,7 @@ class DnsMBRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [String] $Hostname
+    [string] $Hostname
 
     DnsMBRecord() : base() { }
     DnsMBRecord(
@@ -21,13 +21,13 @@ class DnsMBRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Hostname = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.Hostname
     }
 }

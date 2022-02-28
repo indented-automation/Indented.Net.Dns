@@ -16,8 +16,8 @@ class DnsPXRecord : DnsResourceRecord {
     #>
 
     [UInt16] $Preference
-    [String] $MAP822
-    [String] $MAPX400
+    [string] $MAP822
+    [string] $MAPX400
 
     DnsPXRecord() : base() { }
     DnsPXRecord(
@@ -28,7 +28,7 @@ class DnsPXRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Preference = $binaryReader.ReadUInt16($true)
@@ -36,7 +36,7 @@ class DnsPXRecord : DnsResourceRecord {
         $this.MAPX400 = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0,-5} {1} {2}' -f @(
             $this.Preference
             $this.MAP822

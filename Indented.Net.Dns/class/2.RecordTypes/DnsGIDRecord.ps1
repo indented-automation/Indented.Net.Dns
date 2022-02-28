@@ -9,7 +9,7 @@ class DnsGIDRecord : DnsResourceRecord {
         IANA-Reserved
     #>
 
-    [Byte[]] $Data
+    [byte[]] $Data
 
     DnsGIDRecord() : base() { }
     DnsGIDRecord(
@@ -20,13 +20,13 @@ class DnsGIDRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Data = $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '\# {0} {1}' -f @(
             $this.Data.Length
             [EndianBitConverter]::ToHexadecimal($this.Data)

@@ -21,9 +21,9 @@ class DnsWKSRecord : DnsResourceRecord {
     #>
 
     [IPAddress]    $IPAddress
-    [Byte]         $IPProtocolNumber
+    [byte]         $IPProtocolNumber
     [ProtocolType] $IPProtocolType
-    [String]       $BitMap
+    [string]       $BitMap
     [UInt16[]]     $Ports
 
     DnsWKSRecord() : base() { }
@@ -35,7 +35,7 @@ class DnsWKSRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.IPAddress = $binaryReader.ReadIPAddress()
@@ -54,7 +54,7 @@ class DnsWKSRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1} {2}' -f @(
             $this.IPAddress
             $this.IPProtocolNumber

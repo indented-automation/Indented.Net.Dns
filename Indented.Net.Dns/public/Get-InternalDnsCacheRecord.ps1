@@ -2,12 +2,16 @@ function Get-InternalDnsCacheRecord {
     <#
     .SYNOPSIS
         Get the content of the internal DNS cache used by Get-Dns.
+
     .DESCRIPTION
         Get-InternalDnsCacheRecord displays records held in the cache.
+
     .INPUTS
         Indented.Net.Dns.CacheRecord
+
     .EXAMPLE
         Get-InternalDnsCacheRecord
+
     .EXAMPLE
         Get-InternalDnsCacheRecord a.root-servers.net A
     #>
@@ -17,15 +21,15 @@ function Get-InternalDnsCacheRecord {
     param (
         # The name of the record to retrieve.
         [Parameter(Position = 1, ValueFromPipelineByPropertyName)]
-        [String]$Name,
+        [string]$Name,
 
         # The record type to retrieve.
         [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
-        [String]$RecordType,
+        [string]$RecordType,
 
         # The resource type to retrieve.
         [ValidateSet('Address', 'Hint')]
-        [String]$ResourceType
+        [string]$ResourceType
     )
 
     process {

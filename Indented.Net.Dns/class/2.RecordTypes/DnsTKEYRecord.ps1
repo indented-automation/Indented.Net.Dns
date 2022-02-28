@@ -30,13 +30,13 @@ class DnsTKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2930.txt
     #>
 
-    [String]   $Algorithm
+    [string]   $Algorithm
     [DateTime] $Inception
     [DateTime] $Expiration
     [TKEYMode] $Mode
     [RCode]    $TKEYError
-    [String]   $KeyData
-    [String]   $OtherData
+    [string]   $KeyData
+    [string]   $OtherData
 
     DnsTKEYRecord() : base() { }
     DnsTKEYRecord(
@@ -47,12 +47,12 @@ class DnsTKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Algorithm = $binaryReader.ReadDnsDomainName()
-        $this.Inception = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
-        $this.Expiration = (Get-Date "01/01/1970").AddSeconds($binaryReader.ReadUInt32($true))
+        $this.Inception = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt32($true))
+        $this.Expiration = (Get-Date '01/01/1970').AddSeconds($binaryReader.ReadUInt32($true))
         $this.Mode = $binaryReader.ReadUInt16($true)
         $this.TKEYError = $binaryReader.ReadUInt16($true)
 
@@ -65,7 +65,7 @@ class DnsTKEYRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:yyyyMMddHHmmss} {2:yyyyMMddHHmmss} {3:D} {4} {5}' -f @(
             $this.Algorithm
             $this.Inception

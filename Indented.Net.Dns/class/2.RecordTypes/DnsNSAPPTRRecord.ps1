@@ -10,7 +10,7 @@ class DnsNSAPPTRRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1348.txt
     #>
 
-    [String] $Owner
+    [string] $Owner
 
     DnsNSAPPTRRecord() : base() { }
     DnsNSAPPTRRecord(
@@ -21,17 +21,17 @@ class DnsNSAPPTRRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Owner = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.Owner
     }
 
-    [String] ToString() {
+    [string] ToString() {
         return '{0,-29} {1,-10} {2,-5} {3,-10} {4}' -f @(
             $this.Name
             $this.TTL

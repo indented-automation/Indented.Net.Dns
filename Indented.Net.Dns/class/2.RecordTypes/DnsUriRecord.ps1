@@ -16,7 +16,7 @@ class DnsURIRecord : DnsResourceRecord {
 
     [UInt16] $Priority
     [UInt16] $Weight
-    [String] $Target
+    [string] $Target
 
     DnsURIRecord() : base() { }
     DnsURIRecord(
@@ -27,18 +27,20 @@ class DnsURIRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Priority = $binaryReader.ReadUInt16($true)
         $this.Weight = $binaryReader.ReadUInt16($true)
 
-        $this.Target = [String]::new($binaryReader.ReadChars(
-            $this.RecordDataLength - 4
-        ))
+        $this.Target = [string]::new(
+            $binaryReader.ReadChars(
+                $this.RecordDataLength - 4
+            )
+        )
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1} "{2}"' -f @(
             $this.Priority
             $this.Weight

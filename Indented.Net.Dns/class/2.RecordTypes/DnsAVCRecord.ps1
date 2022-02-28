@@ -7,7 +7,7 @@ class DnsAVCRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String[]]   $Data
+    [string[]]   $Data
 
     DnsAVCRecord() : base() { }
     DnsAVCRecord(
@@ -18,7 +18,7 @@ class DnsAVCRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $length = $this.RecordDataLength
@@ -26,14 +26,14 @@ class DnsAVCRecord : DnsResourceRecord {
             $this.Data = do {
                 $entryLength = 0
 
-                $binaryReader.ReadDnsCharacterString([Ref]$entryLength)
+                $binaryReader.ReadDnsCharacterString([ref]$entryLength)
 
                 $length -= $entryLength
             } until ($length -le 0)
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '"{0}"' -f ($this.Data -join '" "')
     }
 }

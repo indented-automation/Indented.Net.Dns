@@ -9,8 +9,8 @@ class DnsNSAPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1706.txt
     #>
 
-    [String] $Text
-    [String] $Data
+    [string] $Text
+    [string] $Data
 
     DnsNSAPRecord() : base() { }
     DnsNSAPRecord(
@@ -21,7 +21,7 @@ class DnsNSAPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Data = '0x{0}' -f @(
@@ -31,7 +31,7 @@ class DnsNSAPRecord : DnsResourceRecord {
         )
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.Data
     }
 }

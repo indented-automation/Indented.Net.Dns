@@ -17,7 +17,7 @@ class DnsTLSARecord : DnsResourceRecord {
     [CertificateUsage] $CertificateUsage
     [Selector]         $Selector
     [MatchingType]     $MatchingType
-    [String]           $CertificateAssociation
+    [string]           $CertificateAssociation
 
     DnsTLSARecord() : base() { }
     DnsTLSARecord(
@@ -28,7 +28,7 @@ class DnsTLSARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.CertificateUsage = $binaryReader.ReadByte()
@@ -37,7 +37,7 @@ class DnsTLSARecord : DnsResourceRecord {
         $this.CertificateAssociation = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($this.RecordDataLength - 3))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0:D} {1:D} {2:D} {3}' -f @(
             $this.CertificateUsage
             $this.Selector

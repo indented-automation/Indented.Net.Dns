@@ -9,7 +9,7 @@ class DnsTXTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [String[]] $Text
+    [string[]] $Text
 
     DnsTXTRecord() : base() { }
     DnsTXTRecord(
@@ -20,7 +20,7 @@ class DnsTXTRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $length = $this.RecordDataLength
@@ -28,14 +28,14 @@ class DnsTXTRecord : DnsResourceRecord {
             $this.Text = do {
                 $entryLength = 0
 
-                $binaryReader.ReadDnsCharacterString([Ref]$entryLength)
+                $binaryReader.ReadDnsCharacterString([ref]$entryLength)
 
                 $length -= $entryLength
             } until ($length -le 0)
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '"{0}"' -f ($this.Text -join '" "')
     }
 }

@@ -2,17 +2,21 @@ function Remove-InternalDnsCacheRecord {
     <#
     .SYNOPSIS
         Remove a single entry from the internal DNS cache.
+
     .DESCRIPTION
         Remove a single entry from the internal DNS cache.
+
     .EXAMPLE
         Remove-InternalDnsCacheRecord someName -RecordType A
+
+        Remove someName from the cache.
     #>
 
     [CmdletBinding(SupportsShouldProcess)]
     param (
         # The name of the record to retrieve.
         [Parameter(Position = 1, ValueFromPipelineByPropertyName)]
-        [String]$Name,
+        [string]$Name,
 
         # The record type to retrieve.
         [Parameter(Position = 2, ValueFromPipelineByPropertyName)]
@@ -26,7 +30,7 @@ function Remove-InternalDnsCacheRecord {
         }
 
         if ($Script:dnsCache.Contains($Name)) {
-            if ($pscmdlet.ShouldProcess('Removing {0} from cache' -f $Name)) {
+            if ($PSCmdlet.ShouldProcess('Removing {0} from cache' -f $Name)) {
                 if ($RecordType) {
                     $Script:dnsCache[$Name] = $Script:dnsCache[$Name] | Where-Object {
                         $_.RecordType -ne $RecordType

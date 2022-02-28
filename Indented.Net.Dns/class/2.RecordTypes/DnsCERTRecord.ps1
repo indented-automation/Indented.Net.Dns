@@ -19,7 +19,7 @@ class DnsCERTRecord : DnsResourceRecord {
     [CertificateType]     $CertificateType
     [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
-    [String]              $Certificate
+    [string]              $Certificate
 
     DnsCERTRecord() : base() { }
     DnsCERTRecord(
@@ -30,7 +30,7 @@ class DnsCERTRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.CertificateType = $binaryReader.ReadUInt16($true)
@@ -41,7 +41,7 @@ class DnsCERTRecord : DnsResourceRecord {
         $this.Certificate = [Convert]::ToBase64String($bytes)
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0:D} {1:D} {2} {3}' -f @(
             $this.CertificateType
             $this.KeyTag

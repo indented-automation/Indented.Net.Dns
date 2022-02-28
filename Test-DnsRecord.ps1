@@ -1,22 +1,22 @@
 using namespace System.IO
 
 param (
-    [String]$Name,
+    [string]$Name,
 
-    [String]$RecordType = 'ANY',
+    [string]$RecordType = 'ANY',
 
-    [Switch]$Tcp,
+    [switch]$Tcp,
 
-    [Switch]$Full
+    [switch]$Full
 )
 
-& (Join-Path $psscriptroot 'indented.net.dns\test\2.integration\script\Start-NameServer.ps1')
+& (Join-Path $PSScriptRoot 'indented.net.dns\test\2.integration\script\Start-NameServer.ps1')
 
 if (-not $Name.EndsWith('.')) {
     $Name = ('{0}.default.indented.co.uk.' -f $Name).TrimStart('.')
 }
 
-$path = Join-Path $psscriptroot 'Indented.Net.Dns'
+$path = Join-Path $PSScriptRoot 'Indented.Net.Dns'
 'enum', 'class' | ForEach-Object {
     Get-ChildItem (Join-Path $path $_) -Filter *.ps1 -Recurse -File | ForEach-Object {
         . $_.FullName
@@ -183,7 +183,7 @@ Write-Host 'Dig Answer'
 Write-Host '=========='
 Write-Host
 
-$response = & (Join-Path $psscriptroot 'Indented.Net.Dns\test\2.integration\bin\dig.exe') @(
+$response = & (Join-Path $PSScriptRoot 'Indented.Net.Dns\test\2.integration\bin\dig.exe') @(
     $Name
     $RecordType
     @('+short', $null)[$Full.IsPresent]

@@ -57,3 +57,5 @@ temp
 **/managed-keys*
 **/*.jbk
 **/*.signed*
+**/*.jnl
+**/bin

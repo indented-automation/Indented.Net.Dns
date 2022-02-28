@@ -10,7 +10,7 @@ class DnsDNAMERecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2672.txt
     #>
 
-    [String] $Target
+    [string] $Target
 
     DnsDNAMERecord() : base() { }
     DnsDNAMERecord(
@@ -21,13 +21,13 @@ class DnsDNAMERecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Target = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.Target
     }
 }

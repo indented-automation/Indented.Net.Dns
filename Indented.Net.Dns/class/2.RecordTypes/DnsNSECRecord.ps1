@@ -11,7 +11,7 @@ class DnsNSECRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String]          $DomainName
+    [string]          $DomainName
     [DnsRecordType[]] $RRType
 
     DnsNSECRecord() : base() { }
@@ -23,18 +23,18 @@ class DnsNSECRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $length = 0
-        $this.DomainName = $binaryReader.ReadDnsDomainName([Ref]$length)
+        $this.DomainName = $binaryReader.ReadDnsDomainName([ref]$length)
 
         $this.RRType = $binaryReader.ReadBitMap(
             $this.RecordDataLength - $length
         )
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.DomainName
             $this.RRType -join ' '

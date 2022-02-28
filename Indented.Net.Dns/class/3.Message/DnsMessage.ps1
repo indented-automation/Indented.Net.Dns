@@ -37,12 +37,12 @@ class DnsMessage {
     [DnsResourceRecord[]] $Additional
     [Int]                 $Size
     [Int64]               $TimeTaken
-    [String]              $ComputerName
+    [string]              $ComputerName
 
     DnsMessage() { }
 
     DnsMessage(
-        [String]      $name,
+        [string]      $name,
         [RecordType]  $recordType
     ) {
         $this.Header = [DnsHeader]::new($true, 1)
@@ -50,7 +50,7 @@ class DnsMessage {
     }
 
     DnsMessage(
-        [String]      $name,
+        [string]      $name,
         [RecordType]  $recordType,
         [RecordClass] $recordClass
     ) {
@@ -59,7 +59,7 @@ class DnsMessage {
     }
 
     DnsMessage(
-        [String]      $name,
+        [string]      $name,
         [RecordType]  $recordType,
         [RecordClass] $recordClass,
         [UInt32]      $Serial
@@ -72,21 +72,21 @@ class DnsMessage {
     }
 
     DnsMessage(
-        [Byte[]] $message
+        [byte[]] $message
     ) {
         $this.ReadDnsMessage($message, $true)
     }
 
     DnsMessage(
-        [Byte[]]  $message,
-        [Boolean] $convertIdnToUnicode
+        [byte[]]  $message,
+        [bool] $convertIdnToUnicode
     ) {
         $this.ReadDnsMessage($message, $convertIdnToUnicode)
     }
 
-    hidden [Void] ReadDnsMessage(
-        [Byte[]]  $message,
-        [Boolean] $convertIdnToUnicode
+    hidden [void] ReadDnsMessage(
+        [byte[]]  $message,
+        [bool] $convertIdnToUnicode
     ) {
         $binaryReader = [EndianBinaryReader][MemoryStream]$message
         $binaryReader.ConvertIdnToUnicode = $convertIdnToUnicode
@@ -109,7 +109,7 @@ class DnsMessage {
         }
     }
 
-    hidden [String] RecordSetToString(
+    hidden [string] RecordSetToString(
         [DnsResourceRecord[]] $resourceRecords
     ) {
         if ($resourceRecords.Count -gt 0) {
@@ -124,7 +124,7 @@ class DnsMessage {
         return ''
     }
 
-    [String] QuestionToString() {
+    [string] QuestionToString() {
         $string = [StringBuilder]::new()
         foreach ($question in $this.Question) {
             $string.AppendLine($question.ToString())
@@ -132,23 +132,23 @@ class DnsMessage {
         return $string.ToString().TrimEnd()
     }
 
-    [String] AnswerToString() {
+    [string] AnswerToString() {
         return $this.RecordSetToString($this.Answer)
     }
 
-    [String] AuthorityToString() {
+    [string] AuthorityToString() {
         return $this.RecordSetToString($this.Authority)
     }
 
-    [String] AdditionalToString() {
+    [string] AdditionalToString() {
         return $this.RecordSetToString($this.Additional)
     }
 
-    [Void] SetEDnsBufferSize() {
+    [void] SetEDnsBufferSize() {
         $this.SetEDnsBufferSize(4096)
     }
 
-    [Void] SetEDnsBufferSize([UInt16]$EDnsBufferSize) {
+    [void] SetEDnsBufferSize([UInt16]$EDnsBufferSize) {
         $this.Header.AdditionalCount = 1
         $this.Additional = [DnsOPTRecord]@{
             MaximumPayloadSize = $EDnsBufferSize
@@ -156,32 +156,32 @@ class DnsMessage {
         }
     }
 
-    [Void] SetAcceptDnsSec() {
+    [void] SetAcceptDnsSec() {
         $this.Header.Flags = $this.Header.Flags -bor [HeaderFlags]::AD
     }
 
-    [Void] DisableRecursion() {
+    [void] DisableRecursion() {
         $this.Header.Flags = [UInt16]$this.Header.Flags -bxor [UInt16][HeaderFlags]::RD
     }
 
-    [Byte[]] ToByteArray() {
+    [byte[]] ToByteArray() {
         return $this.ToByteArray($false, $true)
     }
 
-    [Byte[]] ToByteArray(
-        [Boolean] $useCompressedNames
+    [byte[]] ToByteArray(
+        [bool] $useCompressedNames
     ) {
         return $this.ToByteArray($false, $useCompressedNames)
     }
 
-    [Byte[]] ToByteArray(
-        [Boolean] $tcp,
-        [Boolean] $useCompressedNames
+    [byte[]] ToByteArray(
+        [bool] $tcp,
+        [bool] $useCompressedNames
     ) {
-        $bytes = [List[Byte]]::new()
+        $bytes = [List[byte]]::new()
 
         $bytes.AddRange($this.Header.ToByteArray())
-        $bytes.AddRange([Byte[]]$this.Question.ToByteArray())
+        $bytes.AddRange([byte[]]$this.Question.ToByteArray())
 
         if ($this.Header.AuthorityCount -gt 0) {
             foreach ($resourceRecord in $this.Authority) {

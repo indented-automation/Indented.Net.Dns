@@ -2,11 +2,14 @@ function Add-InternalDnsCacheRecord {
     <#
     .SYNOPSIS
         Add a new CacheRecord to the DNS cache object.
+
     .DESCRIPTION
         The DNS cache is used to reduce the effort required to resolve DNS server names used with the ComputerName parameter.
+
     .INPUTS
         DnsCacheRecord
         DnsResourceRecord
+
     .EXAMPLE
         $CacheRecord | Add-InternalDnsCacheRecord
     #>
@@ -26,7 +29,7 @@ function Add-InternalDnsCacheRecord {
         [CacheResourceType]$ResourceType = 'Address',
 
         # A time property is used to age entries out of the cache. If permanent is set the time is not, the value will not be purged based on the TTL.
-        [Switch]$Permanent
+        [switch]$Permanent
     )
 
     process {

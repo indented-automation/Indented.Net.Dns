@@ -1,11 +1,11 @@
 class DnsCacheRecord {
-    [String]            $Name
+    [string]            $Name
     [UInt32]            $TTL
     [DnsRecordType]     $RecordType
     [IPAddress]         $IPAddress
     [CacheResourceType] $ResourceType = 'Address'
     [DateTime]          $TimeAdded = (Get-Date)
-    [Boolean]           $IsPermanent
+    [bool]           $IsPermanent
 
     DnsCacheRecord() { }
 
@@ -31,7 +31,7 @@ class DnsCacheRecord {
     }
 
     static [DnsCacheRecord] Parse(
-        [String] $recordData
+        [string] $recordData
     ) {
         if ($recordData -match '(?<Name>\S+)\s+(?<TTL>\d+)\s+(IN)?\s*(?<RecordType>A|AAAA)\s+(?<IPAddress>\S+)') {
             $matches.Remove(0)
@@ -41,7 +41,7 @@ class DnsCacheRecord {
         }
     }
 
-    [Boolean] HasExpired() {
+    [bool] HasExpired() {
         if ($this.IsPermanent) {
             return $false
         }

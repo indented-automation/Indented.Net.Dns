@@ -20,7 +20,7 @@ class DnsLOCRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1876.txt
     #>
 
-    [Byte]            $Version
+    [byte]            $Version
     [Decimal]         $Size
     [Decimal]         $HorizontalPrecision
     [Decimal]         $VerticalPrecision
@@ -38,13 +38,15 @@ class DnsLOCRecord : DnsResourceRecord {
     ) { }
 
     hidden [Double] ConvertFromIntegerPair($byte) {
-        return 0 + ('{0}e{1}' -f @(
-            ($byte -band 0xF0) -shr 4
-            $byte -band 0x0F
-        )) / 100
+        return 0 + (
+            '{0}e{1}' -f @(
+                ($byte -band 0xF0) -shr 4
+                $byte -band 0x0F
+            )
+        ) / 100
     }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Version = $binaryReader.ReadByte()
@@ -58,7 +60,7 @@ class DnsLOCRecord : DnsResourceRecord {
         $this.Altitude = (-10000000 + $binaryReader.ReadUInt32($true)) / 100
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1} {2:N2}m {3}m {4}m {5}m' -f @(
             $this.Latitude
             $this.Longitude

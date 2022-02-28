@@ -33,13 +33,13 @@ class DnsRRSIGRecord : DnsResourceRecord {
 
     [DnsRecordType]       $TypeCovered
     [EncryptionAlgorithm] $Algorithm
-    [Byte]                $Labels
+    [byte]                $Labels
     [UInt32]              $OriginalTTL
     [DateTime]            $SignatureExpiration
     [DateTime]            $SignatureInception
     [UInt16]              $KeyTag
-    [String]              $SignersName
-    [String]              $Signature
+    [string]              $SignersName
+    [string]              $Signature
 
     DnsRRSIGRecord() : base() { }
     DnsRRSIGRecord(
@@ -50,7 +50,7 @@ class DnsRRSIGRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.TypeCovered = $binaryReader.ReadUInt16($true)
@@ -62,11 +62,11 @@ class DnsRRSIGRecord : DnsResourceRecord {
         $this.KeyTag = $binaryReader.ReadUInt16($true)
 
         $length = 0
-        $this.SignersName = $binaryReader.ReadDnsDomainName([Ref]$length)
+        $this.SignersName = $binaryReader.ReadDnsDomainName([ref]$length)
         $this.Signature = [Convert]::ToBase64String($binaryReader.ReadBytes($this.RecordDataLength - 18 - $length))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2} {3} {4:yyyyMMddHHmmss} {5:yyyyMMddHHmmss} {6} {7} {8}' -f @(
             $this.TypeCovered
             $this.Algorithm
@@ -80,17 +80,19 @@ class DnsRRSIGRecord : DnsResourceRecord {
         )
     }
 
-    [String] ToLongString() {
-        return (@(
-            '{0} {1:D} {2} ( ; type-cov={0}, alg={1}, labels={2}'
-            '    {3,-16} ; OriginalTTL'
-            '    {4,-16:yyyyMMddHHmmss} ; Signature expiration ({4:u})'
-            '    {5,-16:yyyyMMddHHmmss} ; Signature inception ({5:u})'
-            '    {6,-16} ; Key identifier'
-            '    {7,-16} ; Signer'
-            '    {8,-16} ; Signature'
-            ')'
-         ) -join "`n") -f @(
+    [string] ToLongString() {
+        return (
+            @(
+                '{0} {1:D} {2} ( ; type-cov={0}, alg={1}, labels={2}'
+                '    {3,-16} ; OriginalTTL'
+                '    {4,-16:yyyyMMddHHmmss} ; Signature expiration ({4:u})'
+                '    {5,-16:yyyyMMddHHmmss} ; Signature inception ({5:u})'
+                '    {6,-16} ; Key identifier'
+                '    {7,-16} ; Signer'
+                '    {8,-16} ; Signature'
+                ')'
+            ) -join "`n"
+        ) -f @(
             $this.TypeCovered
             $this.Algorithm
             $this.Labels

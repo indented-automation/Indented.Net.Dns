@@ -11,8 +11,8 @@ class DnsRPRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [String] $ResponsibleMailbox
-    [String] $DomainName
+    [string] $ResponsibleMailbox
+    [string] $DomainName
 
     DnsRPRecord() : base() { }
     DnsRPRecord(
@@ -23,14 +23,14 @@ class DnsRPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.ResponsibleMailbox = $binaryReader.ReadDnsDomainName()
         $this.DomainName = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.ResponsibleMailbox
             $this.DomainName

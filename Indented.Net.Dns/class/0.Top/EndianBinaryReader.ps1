@@ -4,14 +4,14 @@ using namespace System.IO
 using namespace System.Text
 
 class EndianBinaryReader : BinaryReader {
-    [Boolean] $ConvertIdnToUnicode = $true
+    [bool] $ConvertIdnToUnicode = $true
 
     hidden [IdnMapping] $idnMapping = [IdnMapping]::new()
 
     EndianBinaryReader([Stream]$BaseStream) : base($BaseStream) { }
 
     [UInt16] ReadUInt16(
-        [Boolean] $isBigEndian
+        [bool] $isBigEndian
     ) {
         if ($isBigEndian) {
             return [UInt16](([UInt16]$this.ReadByte() -shl 8) -bor $this.ReadByte())
@@ -21,7 +21,7 @@ class EndianBinaryReader : BinaryReader {
     }
 
     [UInt32] ReadUInt32(
-        [Boolean] $isBigEndian
+        [bool] $isBigEndian
     ) {
         if ($isBigEndian) {
             return [UInt32](
@@ -39,7 +39,7 @@ class EndianBinaryReader : BinaryReader {
     }
 
     [UInt64] ReadUInt48(
-        [Boolean] $isBigEndian
+        [bool] $isBigEndian
     ) {
         if ($isBigEndian) {
             return [UInt64](
@@ -60,7 +60,7 @@ class EndianBinaryReader : BinaryReader {
     }
 
     [UInt64] ReadUInt64(
-        [Boolean] $isBigEndian
+        [bool] $isBigEndian
     ) {
         if ($isBigEndian) {
             return [UInt64](
@@ -77,7 +77,7 @@ class EndianBinaryReader : BinaryReader {
         }
     }
 
-    [Byte] PeekByte() {
+    [byte] PeekByte() {
         $value = $this.ReadByte()
         $this.BaseStream.Seek(-1, 'Current')
         return $value
@@ -92,13 +92,13 @@ class EndianBinaryReader : BinaryReader {
     }
 
     # http://www.ietf.org/rfc/rfc1035.txt
-    [String] ReadDnsCharacterString() {
+    [string] ReadDnsCharacterString() {
         $length = 0
-        return $this.ReadDnsCharacterString([Ref]$length)
+        return $this.ReadDnsCharacterString([ref]$length)
     }
 
-    [String] ReadDnsCharacterString(
-        [Ref] $Length
+    [string] ReadDnsCharacterString(
+        [ref] $Length
     ) {
         [Char[]]$escapeChars = @(
             92
@@ -112,20 +112,20 @@ class EndianBinaryReader : BinaryReader {
         $stringLength = $this.ReadByte()
         $Length.Value = $stringLength + 1
 
-        $string = [String]::new($this.ReadChars($stringLength))
+        $string = [string]::new($this.ReadChars($stringLength))
 
         foreach ($escapeChar in $escapeChars) {
-            $string = $string.Replace([String]$escapeChar, ('\{0}' -f $escapeChar))
+            $string = $string.Replace([string]$escapeChar, ('\{0}' -f $escapeChar))
         }
         foreach ($replaceChar in $replaceChars) {
-            $string = $string.Replace([String]$replaceChar, ('\{0:000}' -f [Int]$replaceChar))
+            $string = $string.Replace([string]$replaceChar, ('\{0:000}' -f [Int]$replaceChar))
         }
 
         return $string
     }
 
     [UInt16[]] ReadBitMap(
-        [Int32] $length
+        [int] $length
     ) {
         [UInt16[]]$bits = while ($length -gt 0) {
             $windowNumber = $this.ReadByte()
@@ -161,7 +161,7 @@ class EndianBinaryReader : BinaryReader {
     #
     #   http://www.ietf.org/rfc/rfc1035.txt
     #
-    [String] ReadDnsDomainName() {
+    [string] ReadDnsDomainName() {
         $name = [StringBuilder]::new()
         [UInt64]$CompressionStart = 0
 
@@ -213,8 +213,8 @@ class EndianBinaryReader : BinaryReader {
         }
     }
 
-    [String] ReadDnsDomainName(
-        [Ref] $Length
+    [string] ReadDnsDomainName(
+        [ref] $Length
     ) {
         $start = $this.BaseStream.Position
         $value = $this.ReadDnsDomainName()
@@ -243,17 +243,17 @@ class EndianBinaryReader : BinaryReader {
     #   http://www.ietf.org/rfc/rfc1034.txt
     #   http://www.ietf.org/rfc/rfc1035.txt
     #
-    static [Byte[]] GetDnsDomainNameBytes(
-        [String] $Name
+    static [byte[]] GetDnsDomainNameBytes(
+        [string] $Name
     ) {
         # Drop any trailing . characters from the name. They are no longer necessary all names must be absolute by this point.
         $Name = $Name.TrimEnd('.')
 
-        $bytes = [List[Byte]]::new()
+        $bytes = [List[byte]]::new()
         if ($Name) {
             foreach ($label in $Name.Split('.')) {
                 $bytes.Add($label.Length)
-                $bytes.AddRange([Byte[]][Char[]]$label)
+                $bytes.AddRange([byte[]][Char[]]$label)
             }
         }
         # Add a zero length root label

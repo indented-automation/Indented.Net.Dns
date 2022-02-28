@@ -13,7 +13,7 @@ class DnsATMARecord : DnsResourceRecord {
     #>
 
     [ATMAFormat] $Format
-    [String]     $ATMAAddress
+    [string]     $ATMAAddress
 
     DnsATMARecord() : base() { }
     DnsATMARecord(
@@ -25,7 +25,7 @@ class DnsATMARecord : DnsResourceRecord {
     ) { }
 
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Format = [ATMAFormat]$binaryReader.ReadByte()
@@ -34,7 +34,7 @@ class DnsATMARecord : DnsResourceRecord {
 
         $this.ATMAAddress = switch ($this.Format) {
             'E164' {
-                '+{0}' -f [String]::new($binaryReader.ReadChars($length))
+                '+{0}' -f [string]::new($binaryReader.ReadChars($length))
                 break
             }
             default {
@@ -44,7 +44,7 @@ class DnsATMARecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.ATMAAddress
     }
 }

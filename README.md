@@ -2,7 +2,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/9ux21qj5ehh3ihti?svg=true)](https://ci.appveyor.com/project/indented-automation/indented-net-dns)
 
-PowerShell based DNS client providing similar functionality to Resolve-DnsName, nslookup, and dig.
+PowerShell based DNS client providing similar functionality to `Resolve-DnsName`, `nslookup`, and `dig`.
 
 Supports all known record types.
 

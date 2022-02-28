@@ -9,7 +9,7 @@ class DnsOPENPGPKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [String] $Key
+    [string] $Key
 
     DnsOPENPGPKEYRecord() : base() { }
     DnsOPENPGPKEYRecord(
@@ -20,13 +20,13 @@ class DnsOPENPGPKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Key = [Convert]::ToBase64String($binaryReader.ReadBytes($this.RecordDataLength))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.Key -split '(?<=\G.{56})' -join ' '
     }
 }

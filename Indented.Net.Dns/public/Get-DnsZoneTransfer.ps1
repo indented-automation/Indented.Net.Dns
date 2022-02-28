@@ -2,6 +2,7 @@ function Get-DnsZoneTransfer {
     <#
     .SYNOPSIS
         Get the content of a DNS zone using zone transfer.
+
     .DESCRIPTION
         Get the content of a DNS zone using zone transfer.
     #>
@@ -12,7 +13,7 @@ function Get-DnsZoneTransfer {
         [Parameter(Mandatory, Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [TransformDnsName()]
         [ValidateDnsName()]
-        [String]$ZoneName,
+        [string]$ZoneName,
 
         # If the serial number is set, an incremental zone transfer is performed.
         [UInt32]$SerialNumber,
@@ -22,10 +23,10 @@ function Get-DnsZoneTransfer {
 
         # By default, queries will timeout after 5 seconds. The value may be set between 1 and 30 seconds.
         [ValidateRange(1, 30)]
-        [Byte]$Timeout = 5,
+        [byte]$Timeout = 5,
 
         # Force the use of IPv6 for queries, if this parameter is set and the ComputerName is set to a name (e.g. ns1.domain.example), Get-Dns will attempt to locate an AAAA record for the server.
-        [Switch]$IPv6,
+        [switch]$IPv6,
 
         # A server name or IP address to execute a query against. If an IPv6 address is used Get-Dns will attempt the query using IPv6 (enables the IPv6 parameter).
         #
@@ -33,7 +34,7 @@ function Get-DnsZoneTransfer {
         #
         # If no server name is defined, the Get-DnsServerList command is used to discover locally configured DNS servers.
         [Alias('Server')]
-        [String]$ComputerName
+        [string]$ComputerName
     )
 
     begin {
@@ -45,7 +46,7 @@ function Get-DnsZoneTransfer {
             }
             $ComputerName = $serverIPAddress
         } catch {
-            $pscmdlet.ThrowTerminatingError($_)
+            $PSCmdlet.ThrowTerminatingError($_)
         }
     }
 

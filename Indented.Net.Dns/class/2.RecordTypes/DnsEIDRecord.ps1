@@ -10,7 +10,7 @@ class DnsEIDRecord : DnsResourceRecord {
         http://cpansearch.perl.org/src/MIKER/Net-DNS-Codes-0.11/extra_docs/draft-ietf-nimrod-dns-02.txt
     #>
 
-    [String] $EID
+    [string] $EID
 
     DnsEIDRecord() : base() { }
     DnsEIDRecord(
@@ -21,13 +21,13 @@ class DnsEIDRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.EID = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($this.RecordDataLength))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.EID
     }
 }

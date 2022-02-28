@@ -36,7 +36,7 @@ class DnsWINSRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.MappingFlag = $binaryReader.ReadUInt32($true)
@@ -50,7 +50,7 @@ class DnsWINSRecord : DnsResourceRecord {
         }
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         $value = 'L{0} C{1} ( {2} )' -f @(
             $this.LookupTimeout
             $this.CacheTimeout

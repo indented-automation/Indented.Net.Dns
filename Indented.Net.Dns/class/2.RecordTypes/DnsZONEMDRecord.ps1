@@ -17,8 +17,8 @@ class DnsZONEMDRecord : DnsResourceRecord {
 
     [UInt32]           $Serial
     [ZONEMDDigestType] $DigestType
-    [Byte]             $Reserved
-    [String]           $Digest
+    [byte]             $Reserved
+    [string]           $Digest
 
     DnsZONEMDRecord() : base() { }
     DnsZONEMDRecord(
@@ -29,7 +29,7 @@ class DnsZONEMDRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Serial = $binaryReader.ReadUInt32($true)
@@ -38,7 +38,7 @@ class DnsZONEMDRecord : DnsResourceRecord {
         $this.Digest = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($this.RecordDataLength - 6))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2} {3}' -f @(
             $this.Serial
             $this.DigestType

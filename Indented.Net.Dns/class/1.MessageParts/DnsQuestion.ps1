@@ -14,14 +14,14 @@ class DnsQuestion {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [String]        $Name
+    [string]        $Name
     [DnsRecordType] $RecordType
     [Object]        $RecordClass
 
     DnsQuestion() { }
 
     DnsQuestion(
-        [String]      $recordName,
+        [string]      $recordName,
         [RecordType]  $type,
         [RecordClass] $class
     ) {
@@ -43,8 +43,8 @@ class DnsQuestion {
         }
     }
 
-    hidden [Byte[]] ToByteArray() {
-        $bytes = [List[Byte]]::new()
+    hidden [byte[]] ToByteArray() {
+        $bytes = [List[byte]]::new()
 
         $bytes.AddRange([EndianBinaryReader]::GetDnsDomainNameBytes($this.Name))
         $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordType, $true))
@@ -53,7 +53,7 @@ class DnsQuestion {
         return $bytes.ToArray()
     }
 
-    [String] ToString() {
+    [string] ToString() {
         return '{0,-29}            {1,-5} {2,-5}' -f @(
             $this.Name
             $this.RecordClass

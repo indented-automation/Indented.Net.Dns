@@ -139,7 +139,7 @@ class DnsOPTRecord : DnsResourceRecord {
         }
     }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $optionsLength = $this.RecordDataLength
@@ -199,7 +199,7 @@ class DnsOPTRecord : DnsResourceRecord {
                     }
                     if ($length) {
                         while ($addressBytes.Length -lt $length) {
-                            $addressBytes = @([Byte]0) + $addressBytes
+                            $addressBytes = @([byte]0) + $addressBytes
                         }
                         $option.Address = [IPAddress]::new($addressBytes)
                     } else {
@@ -229,14 +229,14 @@ class DnsOPTRecord : DnsResourceRecord {
         }
     }
 
-    hidden [IEnumerable[Byte]] RecordDataToByteArray() {
-        return [Byte[]]::new(0)
+    hidden [IEnumerable[byte]] RecordDataToByteArray() {
+        return [byte[]]::new(0)
     }
 
-    [Byte[]] ToByteArray(
-        [Boolean] $useCompressedNames
+    [byte[]] ToByteArray(
+        [bool] $useCompressedNames
     ) {
-        $bytes = [List[Byte]]::new()
+        $bytes = [List[byte]]::new()
 
         $bytes.Add(0)
         $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordType, $true))

@@ -13,7 +13,7 @@ class DnsEUI64Record : DnsResourceRecord {
         http://cpansearch.perl.org/src/MIKER/Net-DNS-Codes-0.11/extra_docs/draft-ietf-nimrod-dns-02.txt
     #>
 
-    [String] $Address
+    [string] $Address
 
     DnsEUI64Record() : base() { }
     DnsEUI64Record(
@@ -24,13 +24,13 @@ class DnsEUI64Record : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Address = [BitConverter]::ToString($binaryReader.ReadBytes(8)).ToLower()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return $this.Address
     }
 }

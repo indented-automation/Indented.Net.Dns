@@ -28,8 +28,8 @@ class DnsDOARecord : DnsResourceRecord {
     [UInt32]      $Enterprise
     [UInt32]      $Type
     [DOALocation] $Location
-    [String]      $MediaType
-    [String]      $Data
+    [string]      $MediaType
+    [string]      $Data
 
     DnsDOARecord() : base() { }
     DnsDOARecord(
@@ -40,7 +40,7 @@ class DnsDOARecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Enterprise = $binaryReader.ReadUInt32($true)
@@ -48,13 +48,13 @@ class DnsDOARecord : DnsResourceRecord {
         $this.Location = $binaryReader.ReadByte()
 
         $length = 0
-        $this.MediaType = $binaryReader.ReadDnsCharacterString([Ref]$length)
+        $this.MediaType = $binaryReader.ReadDnsCharacterString([ref]$length)
 
         $length = $this.RecordDataLength - 9 - $length
         $this.Data = [Convert]::ToBase64String($binaryReader.ReadBytes($length))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1} {2:D} "{3}" {4}' -f @(
             $this.Enterprise
             $this.Type

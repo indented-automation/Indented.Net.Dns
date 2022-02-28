@@ -27,11 +27,11 @@ class DnsDNSKEYRecord : DnsResourceRecord {
     #>
 
     [UInt16]              $Flags
-    [Boolean]             $ZoneKey
-    [Boolean]             $SecureEntryPoint
+    [bool]             $ZoneKey
+    [bool]             $SecureEntryPoint
     [KEYProtocol]         $Protocol
     [EncryptionAlgorithm] $Algorithm
-    [String]              $PublicKey
+    [string]              $PublicKey
 
     DnsDNSKEYRecord() : base() { }
     DnsDNSKEYRecord(
@@ -42,7 +42,7 @@ class DnsDNSKEYRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Flags = $binaryReader.ReadUInt16($true)
@@ -56,7 +56,7 @@ class DnsDNSKEYRecord : DnsResourceRecord {
 
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1:D} {2:D} {3}' -f @(
             $this.Flags
             $this.Protocol

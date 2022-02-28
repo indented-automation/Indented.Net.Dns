@@ -8,7 +8,7 @@ class DnsUNKNOWNRecord : DnsResourceRecord {
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [Byte[]] $BinaryData
+    [byte[]] $BinaryData
 
     DnsUNKNOWNRecord() : base() { }
     DnsUNKNOWNRecord(
@@ -19,13 +19,13 @@ class DnsUNKNOWNRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.BinaryData = $binaryReader.ReadBytes($this.RecordDataLength)
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return [Convert]::ToBase64String($this.BinaryData)
     }
 }

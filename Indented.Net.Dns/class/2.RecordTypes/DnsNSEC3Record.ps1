@@ -33,11 +33,11 @@ class DnsNSEC3Record : DnsResourceRecord {
     #>
 
     [NSEC3HashAlgorithm] $HashAlgorithm
-    [Byte]               $Flags
-    [Boolean]            $OptOut
+    [byte]               $Flags
+    [bool]               $OptOut
     [UInt16]             $Iterations
-    [String]             $Salt
-    [String]             $Hash
+    [string]             $Salt
+    [string]             $Hash
     [DnsRecordType[]]    $RRType
 
     DnsNSEC3Record() : base() { }
@@ -49,7 +49,7 @@ class DnsNSEC3Record : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.HashAlgorithm = $binaryReader.ReadByte()
@@ -70,7 +70,7 @@ class DnsNSEC3Record : DnsResourceRecord {
         )
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0:D} {1} {2} {3} {4} {5}' -f @(
             $this.HashAlgorithm
             $this.Flags

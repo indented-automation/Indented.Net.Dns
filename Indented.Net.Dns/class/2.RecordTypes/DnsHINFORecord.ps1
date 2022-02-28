@@ -11,8 +11,8 @@ class DnsHINFORecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [String] $CPU
-    [String] $OS
+    [string] $CPU
+    [string] $OS
 
     DnsHINFORecord() : base() { }
     DnsHINFORecord(
@@ -23,14 +23,14 @@ class DnsHINFORecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.CPU = $binaryReader.ReadDnsCharacterString()
         $this.OS = $binaryReader.ReadDnsCharacterString()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '"{0}" "{1}"' -f @(
             $this.CPU
             $this.OS

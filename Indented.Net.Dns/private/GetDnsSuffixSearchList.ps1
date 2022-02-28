@@ -8,7 +8,7 @@ function GetDnsSuffixSearchList {
 
     [CmdletBinding()]
     param (
-        [String]$Name
+        [string]$Name
     )
 
     if (-not $Name.EndsWith('.')) {

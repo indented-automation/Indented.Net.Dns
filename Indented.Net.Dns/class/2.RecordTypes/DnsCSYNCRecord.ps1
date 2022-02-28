@@ -29,7 +29,7 @@ class DnsCSYNCRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Serial = $binaryReader.ReadUInt32($true)
@@ -38,7 +38,7 @@ class DnsCSYNCRecord : DnsResourceRecord {
         $this.TypesToProcess = $binaryReader.ReadBitMap($this.RecordDataLength - 6)
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         if ($this.TypesToProcess.Count -gt 0) {
             return '{0} {1:D} {2}' -f @(
                 $this.Serial

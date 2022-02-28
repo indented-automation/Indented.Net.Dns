@@ -13,8 +13,8 @@ class DnsTALINKRecord : DnsResourceRecord {
         https://www.iana.org/assignments/dns-parameters/TALINK/talink-completed-template
     #>
 
-    [String] $Previous
-    [String] $Next
+    [string] $Previous
+    [string] $Next
 
     DnsTALINKRecord() : base() { }
     DnsTALINKRecord(
@@ -25,14 +25,14 @@ class DnsTALINKRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Previous = $binaryReader.ReadDnsDomainName()
         $this.Next = $binaryReader.ReadDnsDomainName()
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0} {1}' -f @(
             $this.Previous
             $this.Next

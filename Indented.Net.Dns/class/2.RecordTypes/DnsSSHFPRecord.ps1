@@ -14,7 +14,7 @@ class DnsSSHFPRecord : DnsResourceRecord {
 
     [SSHAlgorithm] $Algorithm
     [SSHFPType]    $FPType
-    [String]       $Fingerprint
+    [string]       $Fingerprint
 
     DnsSSHFPRecord() : base() { }
     DnsSSHFPRecord(
@@ -25,7 +25,7 @@ class DnsSSHFPRecord : DnsResourceRecord {
         $binaryReader
     ) { }
 
-    hidden [Void] ReadRecordData(
+    hidden [void] ReadRecordData(
         [EndianBinaryReader] $binaryReader
     ) {
         $this.Algorithm = $binaryReader.ReadByte()
@@ -33,7 +33,7 @@ class DnsSSHFPRecord : DnsResourceRecord {
         $this.FingerPrint = [EndianBitConverter]::ToHexadecimal($binaryReader.ReadBytes($this.RecordDataLength - 2))
     }
 
-    hidden [String] RecordDataToString() {
+    hidden [string] RecordDataToString() {
         return '{0:D} {1:D} {2}' -f @(
             $this.Algorithm
             $this.FPType
