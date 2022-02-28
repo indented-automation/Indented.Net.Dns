@@ -12,7 +12,7 @@ class DnsKXRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2230.txt
     #>
 
-    [ushort] $Preference
+    [UInt16] $Preference
     [string] $Exchanger
 
     DnsKXRecord() : base() { }

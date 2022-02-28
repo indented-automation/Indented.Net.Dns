@@ -13,7 +13,7 @@ class DnsRTRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1183.txt
     #>
 
-    [ushort] $Preference
+    [UInt16] $Preference
     [string] $IntermediateHost
 
     DnsRTRecord() : base() { }

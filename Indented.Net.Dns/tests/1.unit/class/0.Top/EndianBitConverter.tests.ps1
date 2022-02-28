@@ -8,13 +8,13 @@ Describe EndianBitConverter {
     Context GetBytes {
         It 'When the value is big-endian 16-bit integer' {
             InModuleScope @module {
-                [EndianBitConverter]::GetBytes([ushort]258, $true)
+                [EndianBitConverter]::GetBytes([UInt16]258, $true)
             } | Should -Be @(1, 2)
         }
 
         It 'When the value is little-endian 16-bit integer' {
             InModuleScope @module {
-                [EndianBitConverter]::GetBytes([ushort]513, $false)
+                [EndianBitConverter]::GetBytes([UInt16]513, $false)
             } | Should -Be @(1, 2)
         }
 

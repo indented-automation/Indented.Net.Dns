@@ -9,7 +9,7 @@ Describe DnsRecordType {
         @{ Type = 'String';      Value = 'A' }
         @{ Type = 'String';      Value = 'a' }
         @{ Type = 'Int32';       Value = 1 }
-        @{ Type = 'UInt16';      Value = [ushort]1 }
+        @{ Type = 'UInt16';      Value = [UInt16]1 }
     ) {
         $dnsRecordType = InModuleScope @module -Parameter @{ Value = $Value } {
             [DnsRecordType]$Value
@@ -60,7 +60,7 @@ Describe DnsRecordType {
             [DnsRecordType]'A'
         }
 
-        [ushort]$dnsRecordType | Should -Be 1
+        [UInt16]$dnsRecordType | Should -Be 1
     }
 
     It 'Can be cast to RecordType' {

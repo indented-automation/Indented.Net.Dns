@@ -28,7 +28,7 @@ class DnsResourceRecord : IEquatable[Object] {
     [RecordClass]   $RecordClass      = [RecordClass]::IN
     [DnsRecordType] $RecordType       = 'EMPTY'
     [string]        $RecordData
-    [ushort]        $RecordDataLength
+    [UInt16]        $RecordDataLength
 
     hidden [bool] $IsTruncated
 
@@ -127,13 +127,13 @@ class DnsResourceRecord : IEquatable[Object] {
             $bytes.AddRange([EndianBinaryReader]::GetDnsDomainNameBytes($this.Name))
         }
 
-        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$this.RecordType, $true))
-        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$this.RecordClass, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordType, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordClass, $true))
         $bytes.AddRange([EndianBitConverter]::GetBytes([UInt32]$this.TTL, $true))
 
         $recordDataBytes = $this.RecordDataToByteArray($useCompressedNames)
 
-        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$recordDataBytes.Count, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$recordDataBytes.Count, $true))
         $bytes.AddRange($recordDataBytes)
 
         return $bytes.ToArray()

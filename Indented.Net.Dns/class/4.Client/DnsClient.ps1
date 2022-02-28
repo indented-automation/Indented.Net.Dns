@@ -63,7 +63,7 @@ class DnsClient {
     [void] SendQuestion(
         [DnsMessage] $message,
         [IPAddress]  $ipAddress,
-        [ushort]     $port
+        [UInt16]     $port
     ) {
         try {
             $stopWatch = [StopWatch]::StartNew()

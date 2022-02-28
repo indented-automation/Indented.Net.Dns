@@ -47,8 +47,8 @@ class DnsQuestion {
         $bytes = [List[byte]]::new()
 
         $bytes.AddRange([EndianBinaryReader]::GetDnsDomainNameBytes($this.Name))
-        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$this.RecordType, $true))
-        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$this.RecordClass, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordType, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordClass, $true))
 
         return $bytes.ToArray()
     }

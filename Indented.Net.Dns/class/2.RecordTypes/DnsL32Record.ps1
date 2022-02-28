@@ -12,7 +12,7 @@ class DnsL32Record : DnsResourceRecord {
         https://www.ietf.org/rfc/rfc6742.txt
     #>
 
-    [ushort] $Preference
+    [UInt16] $Preference
     [string] $Locator
 
     DnsL32Record() : base() { }

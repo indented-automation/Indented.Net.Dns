@@ -17,7 +17,7 @@ class DnsNSEC3PARAMRecord : DnsResourceRecord {
 
     [NSEC3HashAlgorithm] $HashAlgorithm
     [byte]               $Flags
-    [ushort]             $Iterations
+    [UInt16]             $Iterations
     [string]             $Salt = '-'
 
     DnsNSEC3PARAMRecord() : base() { }

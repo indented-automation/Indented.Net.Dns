@@ -111,8 +111,8 @@ class DnsOPTRecord : DnsResourceRecord {
         https://tools.ietf.org/html/rfc7871
     #>
 
-    [ushort]       $MaximumPayloadSize
-    [ushort]       $ExtendedRCode
+    [UInt16]       $MaximumPayloadSize
+    [UInt16]       $ExtendedRCode
     [UInt32]       $Version
     [EDnsDNSSECOK] $Z
     [PSObject[]]   $OptionData
@@ -239,14 +239,14 @@ class DnsOPTRecord : DnsResourceRecord {
         $bytes = [List[byte]]::new()
 
         $bytes.Add(0)
-        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$this.RecordType, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.RecordType, $true))
         $bytes.AddRange([EndianBitConverter]::GetBytes($this.MaximumPayloadSize, $true))
         $bytes.AddRange([EndianBitConverter]::GetBytes($this.ExtendedRCode, $true))
-        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$this.Z, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$this.Z, $true))
 
         $recordDataBytes = $this.RecordDataToByteArray()
 
-        $bytes.AddRange([EndianBitConverter]::GetBytes([ushort]$recordDataBytes.Count, $true))
+        $bytes.AddRange([EndianBitConverter]::GetBytes([UInt16]$recordDataBytes.Count, $true))
         $bytes.AddRange($recordDataBytes)
 
         return $bytes.ToArray()

@@ -32,9 +32,9 @@ class DnsTSIGRecord : DnsResourceRecord {
 
     [string]   $Algorithm
     [DateTime] $TimeSigned
-    [ushort]   $Fudge
+    [UInt16]   $Fudge
     [string]   $MAC
-    [ushort]   $OriginalID
+    [UInt16]   $OriginalID
     [RCode]    $TSIGError
     [string]   $OtherData
 

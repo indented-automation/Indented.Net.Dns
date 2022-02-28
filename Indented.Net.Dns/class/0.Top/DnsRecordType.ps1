@@ -1,6 +1,6 @@
 class DnsRecordType : IComparable, IEquatable[Object] {
     [string] $Name
-    [ushort] $TypeID
+    [UInt16] $TypeID
 
     DnsRecordType(
         [RecordType] $value
@@ -50,7 +50,7 @@ class DnsRecordType : IComparable, IEquatable[Object] {
         }
     }
 
-    hidden static [ushort] op_Implicit([DnsRecordType] $dnsRecordType) {
+    hidden static [UInt16] op_Implicit([DnsRecordType] $dnsRecordType) {
         return [int]$dnsRecordType.TypeID
     }
 
@@ -62,11 +62,11 @@ class DnsRecordType : IComparable, IEquatable[Object] {
     [int] CompareTo(
         [Object] $object
     ) {
-        [ushort]$uint16 = 0
+        [UInt16]$uint16 = 0
         if ($object -is [DnsRecordType]) {
             return $this.TypeID.CompareTo($object.TypeID)
         } elseif ($object -is [RecordType]) {
-            return $this.TypeID.CompareTo([ushort]$object)
+            return $this.TypeID.CompareTo([UInt16]$object)
         } elseif ([int]::TryParse($object, [ref]$uint16)) {
             return $this.TypeID.CompareTo($uint16)
         } elseif ($object -is [string]) {

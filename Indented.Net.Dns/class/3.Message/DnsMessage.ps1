@@ -148,7 +148,7 @@ class DnsMessage {
         $this.SetEDnsBufferSize(4096)
     }
 
-    [void] SetEDnsBufferSize([ushort]$EDnsBufferSize) {
+    [void] SetEDnsBufferSize([UInt16]$EDnsBufferSize) {
         $this.Header.AdditionalCount = 1
         $this.Additional = [DnsOPTRecord]@{
             MaximumPayloadSize = $EDnsBufferSize
@@ -161,7 +161,7 @@ class DnsMessage {
     }
 
     [void] DisableRecursion() {
-        $this.Header.Flags = [ushort]$this.Header.Flags -bxor [ushort][HeaderFlags]::RD
+        $this.Header.Flags = [UInt16]$this.Header.Flags -bxor [UInt16][HeaderFlags]::RD
     }
 
     [byte[]] ToByteArray() {
@@ -195,7 +195,7 @@ class DnsMessage {
         }
 
         if ($tcp) {
-            $length = [BitConverter]::GetBytes([ushort]$bytes.Count)
+            $length = [BitConverter]::GetBytes([UInt16]$bytes.Count)
             [Array]::Reverse($length)
             $bytes.InsertRange(0, $length)
         }

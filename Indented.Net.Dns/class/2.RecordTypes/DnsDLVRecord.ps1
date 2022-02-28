@@ -14,7 +14,7 @@ class DnsDLVRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4431.txt
     #>
 
-    [ushort]              $KeyTag
+    [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [DigestType]          $DigestType
     [string]              $Digest

@@ -19,7 +19,7 @@ function Get-DnsZoneTransfer {
         [UInt32]$SerialNumber,
 
         # By default, DNS uses TCP or UDP port 53. The port used to send queries may be changed if a server is listening on a different port.
-        [ushort]$Port = 53,
+        [UInt16]$Port = 53,
 
         # By default, queries will timeout after 5 seconds. The value may be set between 1 and 30 seconds.
         [ValidateRange(1, 30)]

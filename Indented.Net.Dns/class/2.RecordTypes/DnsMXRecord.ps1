@@ -12,7 +12,7 @@ class DnsMXRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc1035.txt
     #>
 
-    [ushort] $Preference
+    [UInt16] $Preference
     [string] $Exchange
 
     DnsMXRecord() : base() { }

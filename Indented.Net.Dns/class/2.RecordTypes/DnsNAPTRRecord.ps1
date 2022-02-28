@@ -20,8 +20,8 @@ class DnsNAPTRRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2915.txt
     #>
 
-    [ushort] $Order
-    [ushort] $Preference
+    [UInt16] $Order
+    [UInt16] $Preference
     [string] $Flags
     [string] $Service
     [string] $RegularExpression

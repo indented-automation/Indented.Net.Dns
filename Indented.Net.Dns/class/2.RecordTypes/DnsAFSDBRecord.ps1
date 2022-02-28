@@ -13,7 +13,7 @@ class DnsAFSDBRecord : DnsResourceRecord {
     #>
 
     [AFSDBSubType] $SubType
-    [ushort]       $SubTypeValue
+    [UInt16]       $SubTypeValue
     [string]       $Hostname
 
     DnsAFSDBRecord() : base() { }

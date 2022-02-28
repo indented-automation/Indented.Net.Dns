@@ -2,7 +2,7 @@ using namespace System.Text
 
 class EndianBitConverter {
     static [byte[]] GetBytes(
-        [ushort]  $value,
+        [UInt16]  $value,
         [bool] $isBigEndian
     ) {
         if ([BitConverter]::IsLittleEndian -eq $isBigEndian) {

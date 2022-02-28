@@ -60,7 +60,7 @@ function Get-Dns {
         [switch]$EDns,
 
         # By default the EDns buffer size is set to 4096 bytes.
-        [ushort]$EDnsBufferSize = 4096,
+        [UInt16]$EDnsBufferSize = 4096,
 
         # Disables conversion of international domain names to unicode in responses.
         [switch]$DisableIdnConversion,
@@ -80,7 +80,7 @@ function Get-Dns {
         [switch]$Tcp,
 
         # By default, DNS uses TCP or UDP port 53. The port used to send queries may be changed if a server is listening on a different port.
-        [ushort]$Port = 53,
+        [UInt16]$Port = 53,
 
         # By default, queries will timeout after 5 seconds. The value may be set between 1 and 30 seconds.
         [ValidateRange(1, 30)]

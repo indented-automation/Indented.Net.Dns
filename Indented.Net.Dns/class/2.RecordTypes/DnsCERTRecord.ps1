@@ -17,7 +17,7 @@ class DnsCERTRecord : DnsResourceRecord {
     #>
 
     [CertificateType]     $CertificateType
-    [ushort]              $KeyTag
+    [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [string]              $Certificate
 

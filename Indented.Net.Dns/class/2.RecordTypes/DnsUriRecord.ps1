@@ -14,8 +14,8 @@ class DnsURIRecord : DnsResourceRecord {
         https://tools.ietf.org/html/rfc7553
     #>
 
-    [ushort] $Priority
-    [ushort] $Weight
+    [UInt16] $Priority
+    [UInt16] $Weight
     [string] $Target
 
     DnsURIRecord() : base() { }

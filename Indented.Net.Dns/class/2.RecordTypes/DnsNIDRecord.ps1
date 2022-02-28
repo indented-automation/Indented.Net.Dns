@@ -14,7 +14,7 @@ class DnsNIDRecord : DnsResourceRecord {
         https://www.ietf.org/rfc/rfc6742.txt
     #>
 
-    [ushort] $Preference
+    [UInt16] $Preference
     [string] $NodeID
 
     DnsNIDRecord() : base() { }

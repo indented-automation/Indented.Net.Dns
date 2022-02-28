@@ -37,7 +37,7 @@ class DnsRRSIGRecord : DnsResourceRecord {
     [UInt32]              $OriginalTTL
     [DateTime]            $SignatureExpiration
     [DateTime]            $SignatureInception
-    [ushort]              $KeyTag
+    [UInt16]              $KeyTag
     [string]              $SignersName
     [string]              $Signature
 

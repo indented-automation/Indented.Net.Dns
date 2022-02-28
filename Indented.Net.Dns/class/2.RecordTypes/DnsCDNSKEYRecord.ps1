@@ -25,7 +25,7 @@ class DnsCDNSKEYRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc7344.txt
     #>
 
-    [ushort]              $Flags
+    [UInt16]              $Flags
     [bool]             $ZoneKey
     [bool]             $SecureEntryPoint
     [KEYProtocol]         $Protocol

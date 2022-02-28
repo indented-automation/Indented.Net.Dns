@@ -20,9 +20,9 @@ class DnsKEYRecord : DnsResourceRecord {
         +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
     #>
 
-    [ushort]              $Flags
+    [UInt16]              $Flags
     [KEYAC]               $AuthenticationConfidentiality
-    [ushort]              $FlagsExtension
+    [UInt16]              $FlagsExtension
     [KEYNameType]         $NameType
     [bool]             $SignatoryField
     [KEYProtocol]         $Protocol

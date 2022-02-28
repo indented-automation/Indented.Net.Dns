@@ -17,15 +17,15 @@ class DnsHeader {
        +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     #>
 
-    [ushort]      $ID
+    [UInt16]      $ID
     [QR]          $QR
     [OpCode]      $OpCode
     [HeaderFlags] $Flags
     [RCode]       $RCode
-    [ushort]      $QuestionCount
-    [ushort]      $AnswerCount
-    [ushort]      $AuthorityCount
-    [ushort]      $AdditionalCount
+    [UInt16]      $QuestionCount
+    [UInt16]      $AnswerCount
+    [UInt16]      $AuthorityCount
+    [UInt16]      $AdditionalCount
 
     DnsHeader() { }
 
@@ -48,9 +48,9 @@ class DnsHeader {
 
     DnsHeader(
         [bool] $recursionDesired,
-        [ushort]  $questionCount
+        [UInt16]  $questionCount
     ) {
-        $this.ID = Get-Random -Minimum 0 -Maximum ([ushort]::MaxValue + 1)
+        $this.ID = Get-Random -Minimum 0 -Maximum ([UInt16]::MaxValue + 1)
 
         if ($recursionDesired) {
             $this.Flags = [HeaderFlags]::RD
@@ -64,9 +64,9 @@ class DnsHeader {
         $bytes[0], $bytes[1] = [EndianBitConverter]::GetBytes($this.ID, $true)
 
         # QR, Flags, OpCode and RCode
-        [ushort]$value = (
+        [UInt16]$value = (
             $this.QR -bor
-            ([ushort]$this.OpCode -shl 11) -bor
+            ([UInt16]$this.OpCode -shl 11) -bor
             $this.Flags -bor
             $this.RCode
         )

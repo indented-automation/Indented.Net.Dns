@@ -15,7 +15,7 @@ class DnsPXRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2163.txt
     #>
 
-    [ushort] $Preference
+    [UInt16] $Preference
     [string] $MAP822
     [string] $MAPX400
 

@@ -10,11 +10,11 @@ class EndianBinaryReader : BinaryReader {
 
     EndianBinaryReader([Stream]$BaseStream) : base($BaseStream) { }
 
-    [ushort] ReadUInt16(
+    [UInt16] ReadUInt16(
         [bool] $isBigEndian
     ) {
         if ($isBigEndian) {
-            return [ushort](([ushort]$this.ReadByte() -shl 8) -bor $this.ReadByte())
+            return [UInt16](([UInt16]$this.ReadByte() -shl 8) -bor $this.ReadByte())
         } else {
             return $this.ReadUInt16()
         }
@@ -178,7 +178,7 @@ class EndianBinaryReader : BinaryReader {
                 }
 
                 # Remove the compression flag bits to calculate the offset value (relative to the start of the message)
-                [ushort]$offset = ([ushort]($length -bxor [MessageCompression]::Enabled) -shl 8) -bor $this.ReadByte()
+                [UInt16]$offset = ([UInt16]($length -bxor [MessageCompression]::Enabled) -shl 8) -bor $this.ReadByte()
                 $null = $this.BaseStream.Seek($offset, 'Begin')
             } else {
                 $null = $name.Append($this.ReadChars($length)).Append('.')

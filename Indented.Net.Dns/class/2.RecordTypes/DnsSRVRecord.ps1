@@ -17,9 +17,9 @@ class DnsSRVRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc2782.txt
     #>
 
-    [ushort] $Priority
-    [ushort] $Weight
-    [ushort] $Port
+    [UInt16] $Priority
+    [UInt16] $Weight
+    [UInt16] $Port
     [string] $Hostname
 
     DnsSRVRecord() : base() { }

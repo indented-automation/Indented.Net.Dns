@@ -15,7 +15,7 @@ class DnsDSRecord : DnsResourceRecord {
         http://www.ietf.org/rfc/rfc4034.txt
     #>
 
-    [ushort]              $KeyTag
+    [UInt16]              $KeyTag
     [EncryptionAlgorithm] $Algorithm
     [DigestType]          $DigestType
     [string]              $Digest
