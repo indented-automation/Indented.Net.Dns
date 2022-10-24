@@ -60,6 +60,12 @@ Get-Dns -Name bind.version. -RecordType TXT -RecordClass CH
 ### Get-DnsZoneTransfer
 
 ```plain
+Get-DnsZoneTransfer [-ZoneName] <String>
+                    [-SerialNumber <UInt32>]
+                    [-Port <UInt16>]
+                    [-Timeout <Byte>]
+                    [-IPv6]
+                    [-ComputerName <String>]
 ```
 
 ### Search-Dns
